@@ -223,7 +223,9 @@ wsServer.on("request", request => {
     if (result.method === "thePlay") {
       const players = result.players
       const player = result.player
+      const dealersTurn = result.dealersTurn
       const currentPlayer = result.currentPlayer
+
 
       const payLoad = {
         "method": "thePlay",
@@ -232,9 +234,12 @@ wsServer.on("request", request => {
       }
 
       // players[currentPlayer].clientId.connection.send(JSON.stringify(payLoad))
-      players.forEach(c => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad))
-      })
+      if (dealersTurn === false) {
+        players.forEach(c => {
+          clients[c.clientId].connection.send(JSON.stringify(payLoad))
+        })        
+      }
+
     }
 
     if (result.method === "joinTable") {

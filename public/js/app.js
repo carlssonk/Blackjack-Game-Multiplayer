@@ -376,6 +376,7 @@ function sendPlayerNext() {
   if(dealersTurn === false) nextPlayer();
   
   if(currentPlayer+1 > players.length) {
+    dealersTurn = true;
     dealerPlay();
   } else {
     sendPlayerThePlay();
@@ -570,8 +571,10 @@ function compareSum() {
       console.log(dealer.sum)
       console.log("111111111111111111111111111111111111")
       setTimeout(outputCardSumDealer, 2000) // compare & output sum for dealer
-    } 
-    if(dealersTurn === false) setTimeout(outputCardSum, 2000) // compare & output sum
+    } else {
+      setTimeout(outputCardSum, 2000) // compare & output sum
+    }
+    
   }  
 }
 
@@ -584,8 +587,10 @@ function compareSumAce() {
   if(dealersTurn === true) {
     console.log("222222222222222222222222222222222222222")
     setTimeout(outputCardSumAceDealer, 2000) // compare & output sum for dealer
-  } 
-  if(dealersTurn === false) setTimeout(outputCardSumAce, 2000) // compare & output sum
+  } else {
+    setTimeout(outputCardSumAce, 2000) // compare & output sum
+  }
+  
 }
 
 // *************************************************************

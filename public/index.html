@@ -235,15 +235,13 @@
     }
 
     function sendPlayerThePlay() {
-      console.log("----")
-      console.log(player)
-      console.log("----")
       const payLoad = {
         "method": "thePlay",
         "players": players,
         "player": player,
         "currentPlayer": currentPlayer,
-        "theClient": theClient
+        "theClient": theClient,
+        "dealersTurn": dealersTurn
       }
       ws.send(JSON.stringify(payLoad));
     }
