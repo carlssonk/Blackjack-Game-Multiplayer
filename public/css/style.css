@@ -1,0 +1,87 @@
+/* #player1 {
+  height: 150px;
+  width: 200px;
+  background-color: brown;
+}
+#sum1 {
+  color: black;
+}
+
+#player2 {
+  height: 150px;
+  width: 200px;
+  background-color: blueviolet;
+}
+#sum2 {
+  color: black;
+}
+#player3 {
+  height: 150px;
+  width: 200px;
+  background-color: yellowgreen;
+}
+#sum3 {
+  color: black;
+} */
+
+#players-container {
+  display: flex;
+  /* flex-flow: wrap; */
+  /* flex-direction: row; */
+  width: 1000px;
+  height: 400px;
+  background-color: green;
+  color: black;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.players {
+  background: white;
+  width: 200px;
+  height: 200px;
+  border: 2px solid black;
+}
+.players:hover {
+  background: rgba(255, 255, 255, 0.500);
+}
+
+.player-name {
+  background: black;
+  color: white;
+}
+.player-balance {
+  background: green;
+}
+.player-bet {
+  background: gold;
+}
+
+.card {
+  height: 90px;
+  width: 60px;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.hiddenCard {
+  height: 90px;
+  width: 60px;
+  color: darkred;
+  background-color: red;
+  border: 1px solid black;
+}
+
+i {
+  background-size: 50px 100px;
+}
+
+/* #dealer {
+  height: 150px;
+  width: 200px;
+  background-color: red;
+}
+#dealerSum {
+  color: black;
+} */

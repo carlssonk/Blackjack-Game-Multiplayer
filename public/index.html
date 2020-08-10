@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Page</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <button id="play">Play</button>
+  <div>
+    <button class="betButtons" value="10">$10</button>
+    <button class="betButtons" value="50">$50</button>
+    <button class="betButtons" value="100">$100</button>
+    <button class="betButtons" value="250">$250</button>
+    <button class="betButtons" value="500">$500</button>
+  </div>
+  <button id="ready">Ready</button>
+  <div>
+    <button class="userAction" id="stand">Stand</button>
+    <button class="userAction" id="hit">Hit</button>
+    <button class="userAction" id="doubleDown">Double Down</button>
+  </div>
+  <div>
+    <button class="countAce">Count as 1</button>
+    <button class="countAce">Count as 11</button>
+  </div>
+  <div id="players-container">
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+    <span class="players">
+      <div class="player-name">A PLAYER</div>
+      <div class="player-balance">balance here</div>
+      <div class="player-bet">bet here</div>
+      <div class="player-cards">
+
+      </div>
+    </span>
+  </div>
+  <button id="leave-table">Leave Table</button>
+  <div id="dealer">
+    <h2 id="dealerSum">Dealer</h2>
+    <div class="dealer-cards">
+
+    </div>
+  </div>
+
+<!--  -->
+  <button id= "btnCreate">New Game</button>
+  <button id="btnJoin">Join Game</button>
+  <input type="text" id="txtGameId">
+  <div id="divPlayers"></div>
+  <div id="divBoard"></div>
+<!--  -->
+
+  <script type="text/javascript" src="/js/app.js"></script>
+
+  <script>
+    // HTML elements
+    let clientId = null;
+    let gameId = null;
+    let theClient = null;
+    players = [];
+    spectators = [];
+    playerSlotHTML = [];
+
+    let clicked = null;
+    let doubleDown = null;
+
+    let ws = new WebSocket("ws://localhost:8080")
+    const btnCreate = document.getElementById("btnCreate");
+    const btnJoin = document.getElementById("btnJoin");
+    const txtGameId = document.getElementById("txtGameId");
+    const divPlayers = document.getElementById("divPlayers");
+    const divBoard = document.getElementById("divBoard");
+
+    // CSS
+    let theSlot = null;
+    let z = null;
+    let aPlayer = null;
+    let joined = false;
+    let playerSlot = document.querySelectorAll(".players")
+    const dealerSlot = document.querySelector("#dealer")
+    // let playerBet = document.querySelectorAll(".player-bet")
+    // let playerBet = document.querySelectorAll(".player-bet")
+
+    const leaveTable = document.querySelector("#leave-table")
+    // CSS
+
+
+    // wiring events
+    btnJoin.addEventListener("click", (e) => {
+      console.log(playerSlot)
+      if (gameId === null) {
+        gameId = txtGameId.value;
+      }
+      const payLoad = {
+        "method": "join",
+        "clientId": clientId,
+        "gameId": gameId,
+        "theClient": theClient,
+        "playerSlot": playerSlot,
+        "playerSlotHTML": playerSlotHTML, 
+        "players": players
+      }
+      ws.send(JSON.stringify(payLoad));
+    });
+
+    btnCreate.addEventListener("click", (e) => {
+      console.log(playerSlot)
+      const payLoad = {
+        "method": "create",
+        "clientId": clientId,
+        "theClient": theClient,
+        "playerSlot": playerSlot,
+        "playerSlotHTML": playerSlotHTML
+      }
+      ws.send(JSON.stringify(payLoad));
+    });
+
+    function sendPlayerBets() {
+      const payLoad = {
+        "method": "bet",
+        "players": players
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function updatePlayerCards() {
+      const payLoad = {
+        "method": "updatePlayerCards",
+        "players": players,
+        "player": player
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function updateDealerCards() {
+      const payLoad = {
+        "method": "updateDealerCards",
+        "players": players,
+        "dealer": dealer,
+        "dealersTurn": dealersTurn
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function sendPlayerDeck() {
+      const payLoad = {
+        "method": "deck",
+        "players": players,
+        "deck": deck
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function clientIsReady() {
+      theClient.isReady = true;
+
+      const payLoad = {
+        "method": "isReady",
+        "players": players,
+        "theClient": theClient
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function updatePlayers() {
+      const payLoad = {
+        "method": "update",
+        "players": players,
+        "dealer": dealer,
+        "deck": deck
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function updateCurrentPlayer() {
+      const payLoad = {
+        "method": "currentPlayer",
+        "players": players,
+        "player": player
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function sendPlayerThePlay() {
+      console.log("----")
+      console.log(player)
+      console.log("----")
+      const payLoad = {
+        "method": "thePlay",
+        "players": players,
+        "player": player,
+        "currentPlayer": currentPlayer,
+        "theClient": theClient
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function joinTable() {
+      const payLoad = {
+        "method": "joinTable",
+        "players": players,
+        "theClient": theClient,
+        "theSlot": theSlot,
+        "playerSlotHTML": playerSlotHTML,
+        "gameId": gameId
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function updateTable() {
+      const payLoad = {
+        "method": "updateTable",
+        "players": players,
+        "theClient": theClient,
+        "theSlot": theSlot,
+        "playerSlot": playerSlot,
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+    function sendDealersTurn() {
+      const payLoad = {
+        "method": "dealersTurn",
+        "players": players,
+        "dealersTurn": dealersTurn
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
+
+
+    ws.onmessage = message => {
+      // message.data
+      const response = JSON.parse(message.data)
+      console.log(response);
+      // connect
+      if (response.method === "connect") {
+        clientId = response.clientId;
+        theClient = response.theClient;
+        console.log("Client id Set successfully " + clientId);
+      }
+
+      // create
+      if (response.method === "create") {
+        gameId = response.game.id;
+        console.log("Game successfully created with id " + response.game.id);
+      }
+
+      // join
+      if (response.method === "join") {
+        game = response.game;
+        players = response.players
+        spectators = response.spectators
+        playerSlotHTML = response.playerSlotHTML
+      }
+      // Assigns the "clientId" to "theClient"
+      if(response.method === "joinClient") {
+        theClient = response.theClient
+      }
+      // Updated players array (i.e. players[i] = theClient)
+      if(response.method === "updateClientArray") {
+        players = response.players
+        spectators = response.spectators
+        playerSlotHTML = response.playerSlotHTML
+      }
+
+      // bet
+      if (response.method === "bet") {
+        players = response.players;
+      }
+      // deck
+      if (response.method === "deck") {
+        deck = response.deck;
+      }
+
+      if (response.method === "isReady") {
+        players = response.players;
+      }
+
+
+      if(response.method === "updatePlayerCards") {
+        // players = response.players
+        player = response.player
+        console.log(player)
+        for(let i = 0; i < playerSlotHTML.length; i++) {
+          // for(let x = 0; x < players.length; x++) {
+
+            if(player.clientId === playerSlotHTML[i]) {
+              z = playerSlotHTML.indexOf(playerSlotHTML[i])
+              playerSlot[z].lastElementChild.innerHTML += 
+              `
+              <div class="card">
+                <div class="value"></div>
+                <div class="suit"></div>
+              </div>
+              `
+              // for(let c = 0; c < player.cards.length; c++) {
+
+                // for(let p = 0; p < players.length; p++) {
+                  if(player.bet === 0) {
+                    playerSlot[z].lastElementChild.innerHTML = "";
+                  } else {
+                    playerSlot[z].lastElementChild.lastElementChild.innerHTML += player.cards.slice(-1)[0].value.card
+                  }
+                    
+
+                // }
+                  
+                
+              // }
+
+            }
+          // }
+        }
+      }
+
+      if (response.method === "updateDealerCards") {
+        dealer = response.dealer
+        // if(dealer.cards === 2) dealerSlot.lastElementChild.innerHTML = ""
+        if(dealer.hiddenCard.length === 0) {
+          dealerSlot.lastElementChild.innerHTML += 
+          `
+          <div class="card">
+            <div class="value"></div>
+            <div class="suit"></div>
+          </div>
+          `
+        } else {
+          dealerSlot.lastElementChild.innerHTML += 
+          `
+          <div class="hiddenCard">
+            <div class="value"></div>
+            <div class="suit"></div>
+          </div>
+          `
+        }
+
+        if(dealer.hiddenCard.length > 0) {
+          dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.hiddenCard.slice(-1)[0].value.card
+        } else {
+          dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.cards.slice(-1)[0].value.card
+        }
+        
+      }
+
+
+
+
+
+
+
+
+
+
+      // currentPlayer
+      if (response.method === "currentPlayer") {
+        player = response.player;
+        console.log(player)
+      }      
+
+      // update
+      if (response.method === "update") {
+        players = response.players;
+        dealer = response.dealer;
+        deck = response.deck;
+        
+      }
+
+      // the playe
+      if (response.method === "thePlay") {
+        player = response.player
+        currentPlayer = response.currentPlayer
+        if(dealersTurn) {
+          return;
+        } else {
+          if(player.clientId === theClient.clientId && player.bet > 0) {
+            clicked = false;
+            console.log("SAY THAT ITS YOUR TURN")
+            thePlay()
+          } else if(player.clientId === theClient.clientId && player.bet === 0) {
+            console.log("you blackjacked or busted")
+            sendPlayerNext()
+          } else {
+            clicked = true;          
+            console.log("WAIT FOR YOUR TURN")    
+          }          
+        }
+
+        
+      }
+
+      // Join Table
+      if(response.method === "joinTable") {
+        game = response.game;
+        spectators = response.spectators
+        players = response.players
+        theSlot = response.theSlot
+        user = response.user
+        // playerSlot[theSlot].innerHTML = user.clientId
+        playerSlotHTML = response.playerSlotHTML
+        console.log(playerSlotHTML)
+        // playerSlot[theSlot].innerHTML = playerSlotHTML
+
+
+
+      }
+
+      if(response.method === "dealersTurn") {
+        dealersTurn = response.dealersTurn
+      }
+
+
+
+      
+      // if(spectators.length > 0) updateAllPlayers();
+
+      // This updates theClient and players array accordingly
+      if (response.method === "connect" || response.method === "create" || response.method === "join" || response.method === "joinClient") {
+        return;
+      } else {
+        updateAllPlayers()
+      }
+
+    }
+    // MUST INCLUDE THIS IN EVERY RESPONSE AFTER ALL PLAYERS HAVE JOINED, TO KEEP "theClient" and players[i] UPDATED
+    function updateAllPlayers() {
+
+      // UPDATE SPECTATORS STATUS (IMPORTANT TO HAVE THIS AVOVE PLAYERS STATUS, ELSE IT WILL OVERRIDE)
+      for(let i = 0; i < spectators.length; i++) {
+        if(spectators[i].clientId === clientId) {
+          theClient = spectators[i]
+        }
+      }
+
+      // UPDATE PLAYERS STATUS
+      for(let i = 0; i < players.length; i++) {
+        if(players[i].clientId === clientId) {
+          theClient = players[i]
+        }
+      }
+
+      // if(spectators.length > 0) {
+      for(let i = 0; i < playerSlotHTML.length; i++) {
+        if(playerSlotHTML[i] === clientId) theClient.clientId = playerSlotHTML[i];
+        
+        for(let x = 0; x < players.length; x++) {
+
+          if(players[x].clientId === playerSlotHTML[i]) {
+            z = playerSlotHTML.indexOf(playerSlotHTML[i])
+            playerSlot[z].firstElementChild.innerHTML = players[x].clientId
+            playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].balance
+            playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
+            // playerSlot[z].lastElementChild.innerHTML += 
+            // `
+            // <div class="card">
+            // <div class="value"></div>
+            // <div class="suit"></div>
+            // </div>
+            // `
+            // for(let c = 0; c < players[x].cards.length; c++) {
+            //   console.log(players[x].cards[c].value.card)
+            //   playerSlot[z].lastElementChild.firstElementChild.innerHTML += players[x].cards[c].value.card
+            // }
+            
+            
+          }
+
+        }
+
+        
+      }
+      player = players[currentPlayer]
+
+
+    }
+    
+
+
+
+
+
+
+      // *******UPDATE CSS*******
+        // for(let i = 0; i < players.length; i++) {
+          for(let s = 0; s < playerSlot.length; s++) {
+            (function(index){
+              playerSlot[s].addEventListener("click", function() {
+                if(joined === false && this.firstElementChild.innerHTML === "A PLAYER") {
+                  joined = true;
+                  theSlot = index
+                  // playerSlot[theSlot].innerHTML = theClient.clientId
+                  joinTable();
+                }
+              })
+            })(s)
+          }
+
+
+        // }
+      // *******UPDATE CSS*******
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+</html>
