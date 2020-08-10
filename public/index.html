@@ -127,6 +127,8 @@
     let joined = false;
     let playerSlot = document.querySelectorAll(".players")
     const dealerSlot = document.querySelector("#dealer")
+    let dealerHiddenCard = null;
+    let dealerHiddenCardRemoveNext = false;
     // let playerBet = document.querySelectorAll(".player-bet")
     // let playerBet = document.querySelectorAll(".player-bet")
 
@@ -182,6 +184,7 @@
     }
 
     function updateDealerCards() {
+      console.log(dealer)
       const payLoad = {
         "method": "updateDealerCards",
         "players": players,
@@ -225,7 +228,8 @@
       const payLoad = {
         "method": "currentPlayer",
         "players": players,
-        "player": player
+        "player": player,
+        "dealersTurn": dealersTurn
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -364,8 +368,18 @@
       }
 
       if (response.method === "updateDealerCards") {
-        dealer = response.dealer
-        // if(dealer.cards === 2) dealerSlot.lastElementChild.innerHTML = ""
+        if(dealersTurn === false) {
+          dealer = response.dealer
+        } else {
+          dealer = player
+        }
+        
+        console.log(dealer.cards.length)
+        if(dealer.cards.length > 1 && dealerHiddenCardRemoveNext === true) {
+          console.log("SGFHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+          dealerHiddenCard.remove()
+          dealerHiddenCardRemoveNext = false;
+        }
         if(dealer.hiddenCard.length === 0) {
           dealerSlot.lastElementChild.innerHTML += 
           `
@@ -381,7 +395,10 @@
             <div class="value"></div>
             <div class="suit"></div>
           </div>
-          `
+          `;
+
+          dealerHiddenCard = document.querySelector(".hiddenCard")
+          dealerHiddenCardRemoveNext = true;
         }
 
         if(dealer.hiddenCard.length > 0) {
@@ -518,7 +535,9 @@
 
         
       }
-      player = players[currentPlayer]
+        player = players[currentPlayer]
+
+      
 
 
     }

@@ -180,6 +180,7 @@ wsServer.on("request", request => {
     if (result.method === "currentPlayer") {
       const players = result.players
       const player = result.player
+      const dealersTurn = result.dealersTurn
       console.log(player)
 
       const payLoad = {
@@ -187,9 +188,19 @@ wsServer.on("request", request => {
         "player": player
       }
 
+      if(dealersTurn === false) {
       players.forEach(c => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad))
       })
+    }
+
+      if(dealersTurn === true) {
+        console.log(2)
+        players.pop(players.slice(-1)[0])
+        players.forEach(c => {
+          clients[c.clientId].connection.send(JSON.stringify(payLoad))
+        })
+      }
     }    
 
     if (result.method === "update") {
@@ -309,17 +320,19 @@ wsServer.on("request", request => {
       const dealersTurn = result.dealersTurn
       const payLoad = {
         "method": "updateDealerCards",
-        // "players": players,
+        "player": player,
         "dealer": dealer
 
       }
       if(dealersTurn === false) {
+        console.log(1)
         players.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
         })
       }
 
       if(dealersTurn === true) {
+        console.log(2)
         players.pop(players.slice(-1)[0])
         players.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
