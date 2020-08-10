@@ -244,7 +244,7 @@ function dealDealerCards() {
       setTimeout(function() {
         naturals();
         sendPlayerThePlay();
-      }, 1000)
+      }, 500)
     } else {
       // If deal has NOT 1 card, push to default card array
       dealer.cards.push(deck[0])
@@ -320,7 +320,6 @@ function thePlay() {
         clicked = true;
         doubleDown = false;
 
-        console.log("stand")
         sendPlayerNext();
 
 
@@ -328,15 +327,13 @@ function thePlay() {
         clicked = true;
         doubleDown = false;
               
-        console.log("Hit")
-        playerHit();
+        playerHit() 
         // updatePlayers();
 
       } else if(this === userAction[2] && player.balance >= player.bet && clicked === false) {
         clicked = true;
         doubleDown = true;
 
-        console.log("Double Dowm")
         playerDoubleDown();
         // updatePlayers();
 
@@ -351,13 +348,10 @@ function thePlay() {
 
 function playerHit() {
   if(player.hasAce === true || deck[0].value.hasAce === true) {
-    console.log("ACE")
     compareSumAce(); // <--- compare sum if an ACE is included in the hit
   }
 
   if(player.hasAce === false && deck[0].value.hasAce === undefined) {
-    console.log("only rafael 2")
-    // console.log(dealersTurn)
     compareSum(); // <--- compare sum if ACE is not included in the hit 
   }
 
@@ -366,7 +360,6 @@ function playerHit() {
 }
 
 function sendPlayerNext() {
-  console.log("sendPlayerNext")
 
   if(player.sum.length === 2) {
     player.sum.shift()
@@ -376,8 +369,7 @@ function sendPlayerNext() {
   if(dealersTurn === false) nextPlayer();
   
   if(currentPlayer+1 > players.length) {
-    dealersTurn = true;
-    dealerPlay();
+    setTimeout(dealerPlay, 500)
   } else {
     sendPlayerThePlay();
   }
@@ -399,7 +391,6 @@ function dealerPlay() {
   // sendDealersTurn();
   // PUSH DEALER TO PLAYER ARRAY
   players.push(dealer);
-  console.log("should be 2 above this")
   //PUSH DEALERS HIDDEN CARD TO DECK[0]
   deck.unshift(dealer.hiddenCard[0])
   // Push dealers hidden card to deck[0] REMOVE
@@ -415,20 +406,15 @@ function dealerPlay() {
   // deck.shift()
   
   // if(dealer.sum > 16 || dealer.sum[1] > 16) {
-  //   console.log("!!!!!!!!!!")
   //   finalCompare();
   // } 
-  //   console.log("hit once")
   //   playerHit()
   // } else {
-  //   console.log("final compare 1")
   //   finalCompare()
   // }
 }
 // If dealer.sum is less than 17, he must keep hitting until he gets 17
 // function dealerSum() {
-//   console.log("DealerSum")
-//   console.log(players)
   // if(dealer.sum < 17) {
   //   playerHit()
   // } else {
@@ -448,8 +434,7 @@ function finalCompare() {
   }
   // remove dealer from player
   players.pop(players.slice(-1)[0])
-  console.log(players)
-  console.log("should not be 0 above this")
+  console.log("show dealer cards")
   // For all players That have NOT busted, compare sum to dealer
   for(let i = 0; i < players.length; i++) {
     if(players[i].cards.length > 0) {
@@ -490,12 +475,11 @@ function playerWin(i) {
 
 // function blackjack() {
 //   nextPlayer()
-//   console.log("BLACKJACK")
+
 
 // }
 
 function bust() {
-  console.log("BUST")
   player.cards = [];
   player.bet = 0;
   // updatePlayerCards()
@@ -513,7 +497,6 @@ function finalResult() {
 
 // If player has Ace && deck[0] has Ace
 function playerAceDeckAce() {
-  console.log("only rafael 1")
   if(player.hasAce && deck[0].value.hasAce) {
     player.sum[0] = player.sum[0] + 1 // add sum
     player.sum[1] = player.sum[1] + 1 // add sum
@@ -557,22 +540,18 @@ function playerAceDeckAce() {
   
 // If no Ace is included
 function compareSum() {
-  // console.log("only rafael 2")
+
   if(!player.hasAce && !deck[0].value.hasAce) {
     player.sum = player.sum + deck[0].value.value // add sum
     player.hasAce = false;
     givePlayerCard() // give player card
     // if(dealer.cards[1] === dealer.cards[2]) dealer.cards.splice(1, 1)
-    // console.log("slice")
-    // console.log(dealer.cards.slice(-1)[0])
-    // console.log(dealer.cards.length)
+
 
     if(dealersTurn === true) {
-      console.log(dealer.sum)
-      console.log("111111111111111111111111111111111111")
-      setTimeout(outputCardSumDealer, 2000) // compare & output sum for dealer
+      setTimeout(outputCardSumDealer, 1000) // compare & output sum for dealer
     } else {
-      setTimeout(outputCardSum, 2000) // compare & output sum
+      setTimeout(outputCardSum, 500) // compare & output sum
     }
     
   }  
@@ -585,10 +564,9 @@ function compareSumAce() {
   // playerAceDeckNoAce() // <--- Check if Player has ACE && next card has NO ACE
   
   if(dealersTurn === true) {
-    console.log("222222222222222222222222222222222222222")
-    setTimeout(outputCardSumAceDealer, 2000) // compare & output sum for dealer
+    setTimeout(outputCardSumAceDealer, 1000) // compare & output sum for dealer
   } else {
-    setTimeout(outputCardSumAce, 2000) // compare & output sum
+    setTimeout(outputCardSumAce, 500) // compare & output sum
   }
   
 }
@@ -603,13 +581,11 @@ function outputCardSum() {
   if(dealersTurn === false) {
     if(player.sum === 21) sendPlayerNext();
     if(player.sum < 21 && doubleDown === false) {
-      console.log("sendPlayerThePlay")
       sendPlayerThePlay();
     } else if(player.sum < 21 && doubleDown === true) {
       sendPlayerNext();
     }
     if(player.sum > 21) {
-      console.log("play bust")
       bust();
     } 
   }
@@ -617,7 +593,6 @@ function outputCardSum() {
 
 // compare && output sum for no aces
 function outputCardSumAce() {
-  console.log("COMPARE ACE IN")
   // Check if the higher value is over 21
   if(player.sum[1] > 21) {
     // Remove the high value from the sum & remove array from sum
@@ -628,11 +603,8 @@ function outputCardSumAce() {
     if(dealersTurn === false) {
       if(player.sum === 21) sendPlayerNext();  
       if(player.sum < 21 && doubleDown === false) {
-        console.log("thePlay")
         sendPlayerThePlay();
       } else {
-        console.log(doubleDown)
-        console.log("NEXT1")
         sendPlayerNext();
       }
     }  
@@ -643,16 +615,14 @@ function outputCardSumAce() {
       if(player.sum[1] === 21) {
         player.sum.shift()
         player.sum = player.sum[0]
-        console.log(doubleDown)
-        console.log("NEXT2")
+
         sendPlayerNext();
       } 
       if(player.sum[1] < 21 && doubleDown === false) {
-        console.log("thePlay")
+
         sendPlayerThePlay();
       } else {
-        console.log(doubleDown)
-        console.log("NEXT3")
+
         sendPlayerNext();
       }
     }
@@ -661,7 +631,6 @@ function outputCardSumAce() {
 
 
 function outputCardSumAceDealer() {
-  console.log(dealer.cards.slice(-1)[0])
   if(player.sum[1] > 21) {
 
     player.sum.pop()
@@ -670,14 +639,8 @@ function outputCardSumAceDealer() {
 
     if(dealersTurn === true) {
       if(dealer.sum < 17) {
-        console.log(dealer.cards[2])
-        // updateDealerCards();
-        // updatePlayers()
         playerHit()
       } else {
-        console.log(dealer.cards[2])
-        // updateDealerCards();
-        // updatePlayers()
         finalCompare()
       }
     }
@@ -686,14 +649,8 @@ function outputCardSumAceDealer() {
 
     if(dealersTurn === true) {
       if(dealer.sum[1] < 17) {
-        console.log(dealer.cards[2])
-        // updateDealerCards();
-        // updatePlayers()
         playerHit()
       } else {
-        console.log(dealer.cards[2])
-        // updateDealerCards();
-        // updatePlayers()
         finalCompare()
       }
     }
@@ -701,22 +658,11 @@ function outputCardSumAceDealer() {
 }
 
 function outputCardSumDealer() {
-  console.log(dealer.cards.slice(-1)[0])
-  console.log("do Stuffy")
   player.hasAce = false;
   if(dealersTurn === true) {
-    console.log("1 mother fucker")
     if(dealer.sum < 17) {
-      console.log("DealerHIT")
-      console.log(dealer.cards[2])
-      // updateDealerCards();
-      // updatePlayers()
       playerHit()
     } else {
-      console.log("final compare 2")
-      console.log(dealer.cards[2])
-      // updateDealerCards();
-      // updatePlayers()
       finalCompare()
   }
 }
@@ -728,7 +674,11 @@ function outputCardSumDealer() {
 // *******************UTILITIES************************
 
 function givePlayerCard() {
-    if(dealersTurn === true) updateDealerCards();
+    console.log("updateDealerCards")
+    if(dealersTurn === true) {
+      updateDealerCards()
+    }
+    
 
     player.cards.push(deck[0])
     deck.shift()

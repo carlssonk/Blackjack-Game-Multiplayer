@@ -138,7 +138,6 @@
 
     // wiring events
     btnJoin.addEventListener("click", (e) => {
-      console.log(playerSlot)
       if (gameId === null) {
         gameId = txtGameId.value;
       }
@@ -155,7 +154,6 @@
     });
 
     btnCreate.addEventListener("click", (e) => {
-      console.log(playerSlot)
       const payLoad = {
         "method": "create",
         "clientId": clientId,
@@ -184,12 +182,13 @@
     }
 
     function updateDealerCards() {
-      console.log(dealer)
       const payLoad = {
         "method": "updateDealerCards",
         "players": players,
+        "player": player,
         "dealer": dealer,
-        "dealersTurn": dealersTurn
+        "dealersTurn": dealersTurn,
+        "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -328,11 +327,17 @@
         players = response.players;
       }
 
+      // currentPlayer
+      if (response.method === "currentPlayer") {
+        player = response.player;
+      }
 
       if(response.method === "updatePlayerCards") {
+        
         // players = response.players
         player = response.player
-        console.log(player)
+        // setTimeout(function() {
+        console.log("give the player the card :DDDD")
         for(let i = 0; i < playerSlotHTML.length; i++) {
           // for(let x = 0; x < players.length; x++) {
 
@@ -363,22 +368,24 @@
             }
           // }
         }
+      // }, 500)     
       }
 
       if (response.method === "updateDealerCards") {
+        dealerHiddenCardRemoveNext = response.dealerHiddenCardRemoveNext
+        dealersTurn = response.dealersTurn
         if(dealersTurn === false) {
           dealer = response.dealer
         } else {
+          player = response.player
           dealer = player
         }
-        
-        console.log(dealer.cards.length)
-        if(dealer.cards.length > 1 && dealerHiddenCardRemoveNext === true) {
-          console.log("SGFHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+
+        if(dealer.cards.length === 1 && dealerHiddenCardRemoveNext === true) {
           dealerHiddenCard.remove()
           dealerHiddenCardRemoveNext = false;
         }
-        if(dealer.hiddenCard.length === 0) {
+        if(dealer.hiddenCard.length === 0 || undefined) {
           dealerSlot.lastElementChild.innerHTML += 
           `
           <div class="card">
@@ -398,29 +405,14 @@
           dealerHiddenCard = document.querySelector(".hiddenCard")
           dealerHiddenCardRemoveNext = true;
         }
-
-        if(dealer.hiddenCard.length > 0) {
+        if(dealer.hiddenCard.length === 0 && dealerHiddenCardRemoveNext === true) {
           dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.hiddenCard.slice(-1)[0].value.card
         } else {
           dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.cards.slice(-1)[0].value.card
         }
-        
       }
 
 
-
-
-
-
-
-
-
-
-      // currentPlayer
-      if (response.method === "currentPlayer") {
-        player = response.player;
-        console.log(player)
-      }      
 
       // update
       if (response.method === "update") {
@@ -462,7 +454,6 @@
         user = response.user
         // playerSlot[theSlot].innerHTML = user.clientId
         playerSlotHTML = response.playerSlotHTML
-        console.log(playerSlotHTML)
         // playerSlot[theSlot].innerHTML = playerSlotHTML
 
 
@@ -522,7 +513,6 @@
             // </div>
             // `
             // for(let c = 0; c < players[x].cards.length; c++) {
-            //   console.log(players[x].cards[c].value.card)
             //   playerSlot[z].lastElementChild.firstElementChild.innerHTML += players[x].cards[c].value.card
             // }
             

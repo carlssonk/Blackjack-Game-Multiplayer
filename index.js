@@ -195,7 +195,6 @@ wsServer.on("request", request => {
     }
 
       if(dealersTurn === true) {
-        console.log(2)
         players.pop(players.slice(-1)[0])
         players.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
@@ -321,23 +320,26 @@ wsServer.on("request", request => {
 
     if(result.method === "updateDealerCards") {
       const players = result.players
+      const player = result.player
       const dealer = result.dealer
       const dealersTurn = result.dealersTurn
+      const dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext
       const payLoad = {
         "method": "updateDealerCards",
         "player": player,
-        "dealer": dealer
+        "dealer": dealer,
+        "players": players,
+        "dealersTurn": dealersTurn,
+        "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
 
       }
       if(dealersTurn === false) {
-        console.log(1)
         players.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
         })
       }
 
       if(dealersTurn === true) {
-        console.log(2)
         players.pop(players.slice(-1)[0])
         players.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
