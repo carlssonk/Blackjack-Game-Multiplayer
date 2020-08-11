@@ -28,59 +28,72 @@
   <div id="players-container">
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
 
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
 
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
 
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
 
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
 
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
 
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
       <div class="player-name">A PLAYER</div>
-      <div class="player-balance">balance here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet">bet here</div>
+      <div class="player-ready">Player ready here</div>
       <div class="player-cards">
-
       </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
   </div>
   <button id="leave-table">Leave Table</button>
@@ -90,6 +103,85 @@
 
     </div>
   </div>
+
+<!-- PRE-LOAD DECK IMAGES -->
+
+<div class="hidden">
+	<script>
+
+			var images = new Array()
+			function preload() {
+				for (i = 0; i < preload.arguments.length; i++) {
+					images[i] = new Image()
+					images[i].src = preload.arguments[i]
+				}
+			}
+			preload(
+        "/imgs/Heart2.svg",
+        "/imgs/Heart3.svg",
+        "/imgs/Heart4.svg",
+        "/imgs/Heart5.svg",
+        "/imgs/Heart6.svg",
+        "/imgs/Heart7.svg",
+        "/imgs/Heart8.svg",
+        "/imgs/Heart9.svg",
+        "/imgs/Heart10.svg",
+        "/imgs/HeartJ.svg",
+        "/imgs/HeartQ.svg",
+        "/imgs/HeartK.svg",
+        "/imgs/HeartA.svg",
+        "/imgs/Diamond2.svg",
+        "/imgs/Diamond3.svg",
+        "/imgs/Diamond4.svg",
+        "/imgs/Diamond5.svg",
+        "/imgs/Diamond6.svg",
+        "/imgs/Diamond7.svg",
+        "/imgs/Diamond8.svg",
+        "/imgs/Diamond9.svg",
+        "/imgs/Diamond10.svg",
+        "/imgs/DiamondJ.svg",
+        "/imgs/DiamondQ.svg",
+        "/imgs/DiamondK.svg",
+        "/imgs/DiamondA.svg",
+        "/imgs/Spade2.svg",
+        "/imgs/Spade3.svg",
+        "/imgs/Spade4.svg",
+        "/imgs/Spade5.svg",
+        "/imgs/Spade6.svg",
+        "/imgs/Spade7.svg",
+        "/imgs/Spade8.svg",
+        "/imgs/Spade9.svg",
+        "/imgs/Spade10.svg",
+        "/imgs/SpadeJ.svg",
+        "/imgs/SpadeQ.svg",
+        "/imgs/SpadeK.svg",
+        "/imgs/SpadeA.svg",
+        "/imgs/Club2.svg",
+        "/imgs/Club3.svg",
+        "/imgs/Club4.svg",
+        "/imgs/Club5.svg",
+        "/imgs/Club6.svg",
+        "/imgs/Club7.svg",
+        "/imgs/Club8.svg",
+        "/imgs/Club9.svg",
+        "/imgs/Club10.svg",
+        "/imgs/ClubJ.svg",
+        "/imgs/ClubQ.svg",
+        "/imgs/ClubK.svg",
+        "/imgs/ClubA.svg"
+			)
+
+	</script>
+</div>
+
+
+
+
+
+
+
+
+
 
 <!--  -->
   <button id= "btnCreate">New Game</button>
@@ -343,32 +435,35 @@
 
             if(player.clientId === playerSlotHTML[i]) {
               z = playerSlotHTML.indexOf(playerSlotHTML[i])
-              playerSlot[z].lastElementChild.innerHTML += 
-              `
-              <div class="card">
-                <div class="value"></div>
-                <div class="suit"></div>
-              </div>
-              `
-              // for(let c = 0; c < player.cards.length; c++) {
+              // playerSlot[z].lastElementChild.innerHTML += 
+              // `
+              // <div class="card">
+              //   <div class="value"></div>
+              //   <div class="suit"></div>
+              // </div>
+              // `
 
-                // for(let p = 0; p < players.length; p++) {
-                  if(player.bet === 0) {
-                    playerSlot[z].lastElementChild.innerHTML = "";
-                  } else {
-                    playerSlot[z].lastElementChild.lastElementChild.innerHTML += player.cards.slice(-1)[0].value.card
-                  }
+            // if(player.bet === 0) {
+            //   playerSlot[z].lastElementChild.innerHTML = "";
+            // } else {
+            //   playerSlot[z].lastElementChild.lastElementChild.innerHTML += player.cards.slice(-1)[0].value.card
+            // }
+
+            for(let c = 0; c < deckImg.length; c++) {
+              if(player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card === deckImg[c]) {
+                console.log(playerSlot[z].lastElementChild)
+                playerSlot[z].lastElementChild.innerHTML += 
+                `<img class="cardImg" src="/imgs/` + deckImg[c] + `.svg">`
+              }
+            }
+
+            // player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card
+
                     
 
-                // }
-                  
-                
-              // }
 
             }
-          // }
-        }
-      // }, 500)     
+        }   
       }
 
       if (response.method === "updateDealerCards") {
@@ -386,13 +481,19 @@
           dealerHiddenCardRemoveNext = false;
         }
         if(dealer.hiddenCard.length === 0 || undefined) {
-          dealerSlot.lastElementChild.innerHTML += 
-          `
-          <div class="card">
-            <div class="value"></div>
-            <div class="suit"></div>
-          </div>
-          `
+          // dealerSlot.lastElementChild.innerHTML += 
+          // `
+          // <div class="card">
+          //   <div class="value"></div>
+          //   <div class="suit"></div>
+          // </div>
+          // `
+          for(let c = 0; c < deckImg.length; c++) {
+          if(dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[c]) {
+            dealerSlot.lastElementChild.innerHTML += 
+            `<img class="cardImg" src="/imgs/` + deckImg[c] + `.svg">`
+          }
+        }
         } else {
           dealerSlot.lastElementChild.innerHTML += 
           `
@@ -405,9 +506,7 @@
           dealerHiddenCard = document.querySelector(".hiddenCard")
           dealerHiddenCardRemoveNext = true;
         }
-        console.log(dealer.hiddenCard.length)
-        console.log(dealerHiddenCardRemoveNext)
-        console.log(dealer.hiddenCard)
+
         if(dealer.hiddenCard.length === 1 && dealerHiddenCardRemoveNext === true) {
           dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.hiddenCard.slice(-1)[0].value.card
         } else {
@@ -506,8 +605,14 @@
           if(players[x].clientId === playerSlotHTML[i]) {
             z = playerSlotHTML.indexOf(playerSlotHTML[i])
             playerSlot[z].firstElementChild.innerHTML = players[x].clientId
-            playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].balance
+            playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].sum
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
+            if(players[x].isReady === true) {
+              playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.innerText = "READY"
+            } else {
+              playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.innerText = "NOT READY"
+            }
+            
             // playerSlot[z].lastElementChild.innerHTML += 
             // `
             // <div class="card">

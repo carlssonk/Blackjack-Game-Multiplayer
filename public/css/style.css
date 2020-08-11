@@ -51,7 +51,7 @@
   background: black;
   color: white;
 }
-.player-balance {
+.player-sum {
   background: green;
 }
 .player-bet {
@@ -75,6 +75,10 @@
 
 i {
   background-size: 50px 100px;
+}
+
+.cardImg {
+  width: 100px;
 }
 
 /* #dealer {
