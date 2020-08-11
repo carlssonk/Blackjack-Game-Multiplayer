@@ -321,6 +321,7 @@ function thePlay() {
         doubleDown = false;
 
         sendPlayerNext();
+        // updatePlayers()
 
 
       } else if(this === userAction[1] && clicked === false) {

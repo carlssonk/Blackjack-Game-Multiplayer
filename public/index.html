@@ -334,7 +334,7 @@
 
       if(response.method === "updatePlayerCards") {
         
-        // players = response.players
+        players = response.players
         player = response.player
         // setTimeout(function() {
         console.log("give the player the card :DDDD")
@@ -405,7 +405,10 @@
           dealerHiddenCard = document.querySelector(".hiddenCard")
           dealerHiddenCardRemoveNext = true;
         }
-        if(dealer.hiddenCard.length === 0 && dealerHiddenCardRemoveNext === true) {
+        console.log(dealer.hiddenCard.length)
+        console.log(dealerHiddenCardRemoveNext)
+        console.log(dealer.hiddenCard)
+        if(dealer.hiddenCard.length === 1 && dealerHiddenCardRemoveNext === true) {
           dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.hiddenCard.slice(-1)[0].value.card
         } else {
           dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.cards.slice(-1)[0].value.card
