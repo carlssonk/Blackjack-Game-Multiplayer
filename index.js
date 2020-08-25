@@ -305,12 +305,14 @@ wsServer.on("request", request => {
     }
 
     if(result.method === "updatePlayerCards") {
+      const resetCards = result.resetCards
       const players = result.players
       const player = result.player
       const payLoad = {
         "method": "updatePlayerCards",
         "players": players,
-        "player": player
+        "player": player,
+        "resetCards": resetCards
 
       }
       players.forEach(c => {
@@ -359,6 +361,20 @@ wsServer.on("request", request => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad))
       })
     }
+
+    // if(result.method === "resetCards") {
+    //   const players = result.players
+    //   const playerCards = result.playerCards
+    //   const dealerCards = result.dealerCards
+    //   const payLoad = {
+    //     "method": "resetCards",
+    //     "playerCards": playerCards,
+    //     "dealerCards": dealerCards
+    //   }
+    //   players.forEach(c => {
+    //     clients[c.clientId].connection.send(JSON.stringify(payLoad))
+    //   })
+    // }
 
 
 

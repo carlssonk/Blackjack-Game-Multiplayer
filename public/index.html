@@ -224,6 +224,7 @@
     let dealerSlot = document.querySelector("#dealer")
     let dealerHiddenCard = null;
     let dealerHiddenCardRemoveNext = false;
+    let resetCards = false;
     // let playerBet = document.querySelectorAll(".player-bet")
     // let playerBet = document.querySelectorAll(".player-bet")
 
@@ -271,7 +272,8 @@
       const payLoad = {
         "method": "updatePlayerCards",
         "players": players,
-        "player": player
+        "player": player,
+        "resetCards": resetCards
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -372,6 +374,16 @@
       ws.send(JSON.stringify(payLoad));
     }
 
+    // function resetCards() {
+    //   const payLoad = {
+    //     "method": "resetCards",
+    //     "players": players,
+    //     "playerCards": playerCards,
+    //     "dealerCards": dealerCards
+    //   }
+    //   ws.send(JSON.stringify(payLoad));
+    // }
+
 
 
     ws.onmessage = message => {
@@ -428,7 +440,7 @@
       }
 
       if(response.method === "updatePlayerCards") {
-        
+        resetCards = response.resetCards
         players = response.players
         player = response.player
         // setTimeout(function() {
@@ -452,6 +464,7 @@
             //   playerSlot[z].lastElementChild.lastElementChild.innerHTML += player.cards.slice(-1)[0].value.card
             // }
 
+            console.log(resetCards)
             for(let c = 0; c < deckImg.length; c++) {
               if(player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card === deckImg[c]) {
                 console.log(playerSlot[z].lastElementChild)
@@ -465,8 +478,16 @@
                     
 
 
-            }
-        }   
+          }        
+        }
+        if(resetCards === true) {
+          for(let s = 0; s < playerSlot.length; s++) {
+            playerSlot[s].lastElementChild.innerHTML = ""
+          }
+          dealerSlot.lastElementChild.innerHTML = "";
+          resetCards = false;
+        }
+
       }
 
       if (response.method === "updateDealerCards") {
@@ -517,6 +538,10 @@
         } else {
           dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.cards.slice(-1)[0].value.card
         }
+
+        // if(resetCards === true) {
+        //   dealerSlot.lastElementChild.innerHTML = "";
+        // }
       }
 
 
@@ -570,6 +595,21 @@
       if(response.method === "dealersTurn") {
         dealersTurn = response.dealersTurn
       }
+
+      // if(response.method === "resetCards") {
+      //   console.log("resetCards")
+      //   playerCards = response.playerCards
+      //   dealerCards = response.dealerCards
+
+      //   console.log(playerCards)
+      //   console.log(dealerCards)
+      //   for(let c = 0; c < playerCards.length; c++) {
+      //     playerCards[c].innerHTML = "";
+      //   }
+      //   for(let d = 0; d < dealerCards.length; d++) {
+      //     dealerCards[d].innerHTML = "";
+      //   }
+      // }
 
 
 

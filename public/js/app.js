@@ -23,6 +23,7 @@ let startedGame = false;
 let currentPlayer = 0;
 let sum = null;
 let dealersTurn = false;
+// resetCards = false;
 
 // Cards (suit)
 const suit = ["Heart", "Diamond", "Spade", "Club"]
@@ -435,7 +436,7 @@ function sendPlayerNext() {
   } else {
     sendPlayerThePlay();
   }
-  // updatePlayers()
+  updatePlayers()
 }
 
 function playerDoubleDown() {
@@ -564,21 +565,15 @@ function resetGame() {
   dealersTurn = false;
   startedGame = false;
   doubleDown = false;
+  resetCards = true;
 
   // Send to all players
-  updatePlayers()
-  updateCurrentPlayer()
-  // update theClient
+  updatePlayerCards();  
+  updateCurrentPlayer();  
+  updatePlayers();
 
-  // Reset Cards on table
-  for(let c = 0; c < playerCards.length; c++) {
-    playerCards[c].innerHTML = "";
-  }
-  for(let d = 0; d < dealerCards.length; d++) {
-    dealerCards[d].innerHTML = "";
-  }
   
-  console.log(players[currentPlayer].balance)
+
 }
 
 // *************************************************************
@@ -805,7 +800,7 @@ function givePlayerCard() {
       updateDealerCards()
     }
     
-    if(dealersTurn === false) updatePlayerCards()
+    if(dealersTurn === false) updatePlayerCards();
 
 }
 
