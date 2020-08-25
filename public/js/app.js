@@ -13,6 +13,11 @@ const doubleDownBtn = document.querySelector("#doubleDown");
 const userAction = document.querySelectorAll(".userAction");
 const countAce = document.querySelectorAll(".countAce")
 
+playerSlot = document.querySelectorAll(".players");
+dealerSlot = document.querySelector("#dealer");
+playerCards = document.querySelectorAll(".player-cards");
+dealerCards = document.querySelectorAll(".dealer-cards");
+
 // Basic utilities to navigate through the game
 let startedGame = false;
 let currentPlayer = 0;
@@ -349,6 +354,7 @@ function naturalBlackjack(i) {
   // Multiply player bet by 1.5 (this is the 3:2 ratio)
   players[i].balance = players[i].balance + (1.5 * players[i].bet + players[i].bet)
   players[i].bet = 0;
+  console.log(player.sum)
 }
 function naturalPlayerAceSum(i) {   
   // This adds .sum[0] to always be the lowest and .sum[1] to always be the highest
@@ -429,6 +435,7 @@ function sendPlayerNext() {
   } else {
     sendPlayerThePlay();
   }
+  // updatePlayers()
 }
 
 function playerDoubleDown() {
@@ -484,10 +491,12 @@ function dealerPlay() {
 
 function finalCompare() {
   // If dealer has 2 sums (i.e. an ace), count the highest only
-  if(player.sum.length === 2) {
-    player.sum.shift()
-    player.sum = player.sum[0]
+  if(dealer.sum.length === 2) {
+    dealer.sum.shift()
+    dealer.sum = dealer.sum[0]
   }
+  console.log(dealer.sum)
+  dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
   // remove dealer from player
   players.pop(players.slice(-1)[0])
   console.log("show dealer cards")
@@ -498,17 +507,15 @@ function finalCompare() {
       if(dealer.sum > 21) {
         playerWin(i)
         console.log("DEALER BUST")
-        return;
       } else if(dealer.sum < players[i].sum) {
         playerWin(i)
         console.log("player win")
-        return;
       } else if(dealer.sum === players[i].sum) {
+        playerDraw(i)
         console.log("Draw!")
-        return;
       } else {
+        dealerWin(i)
         console.log("dealer wins")
-        return;
       }
 
 
@@ -517,11 +524,61 @@ function finalCompare() {
 
     }
   }
+  // Function for RESET GAME
+  setTimeout(resetGame, 2000)
 }
 
 function playerWin(i) {
-  players[i].balance = players[i].balance + (players[i].bet * 2)
+  players[i].balance = players[i].balance + (players[i].bet * 2);
   players[i].bet = 0;
+}
+
+function playerDraw(i) {
+  players[i].balance = players[i].balance + players[i].bet;
+  players[i].bet = 0;
+}
+
+function dealerWin(i) {
+  players[i].bet = 0;
+}
+
+function resetGame() {
+  console.log("reset")
+  // Reset Players
+  for(let i = 0; i < players.length; i++) {
+    players[i].cards = [];
+    players[i].hasAce = false;
+    players[i].sum = null;
+    players[i].isReady = false;
+  }
+  // Reset Dealer
+  dealer.cards = [];
+  dealer.hasAce = false;
+  dealer.sum = null;
+  // Reset Deck
+  deck = [];
+  // getDeck()
+
+  // Utilities
+  currentPlayer = 0;
+  dealersTurn = false;
+  startedGame = false;
+  doubleDown = false;
+
+  // Send to all players
+  updatePlayers()
+  updateCurrentPlayer()
+  // update theClient
+
+  // Reset Cards on table
+  for(let c = 0; c < playerCards.length; c++) {
+    playerCards[c].innerHTML = "";
+  }
+  for(let d = 0; d < dealerCards.length; d++) {
+    dealerCards[d].innerHTML = "";
+  }
+  
+  console.log(players[currentPlayer].balance)
 }
 
 // *************************************************************
@@ -633,22 +690,24 @@ function compareSumAce() {
 
 // compare && output sum for no aces
 function outputCardSum() {
+  console.log(player.sum)
   player.hasAce = false;
   if(dealersTurn === false) {
-    if(player.sum === 21) sendPlayerNext();
-    if(player.sum < 21 && doubleDown === false) {
+    if(player.sum === 21) {
+      sendPlayerNext() 
+    } else if(player.sum < 21 && doubleDown === false) {
       sendPlayerThePlay();
     } else if(player.sum < 21 && doubleDown === true) {
       sendPlayerNext();
-    }
-    if(player.sum > 21) {
+    } else if(player.sum > 21) {
       bust();
-    } 
+    }
   }
 }
 
 // compare && output sum for no aces
 function outputCardSumAce() {
+  console.log(player.sum)
   // Check if the higher value is over 21
   if(player.sum[1] > 21) {
     // Remove the high value from the sum & remove array from sum
@@ -657,8 +716,9 @@ function outputCardSumAce() {
     player.hasAce = false;
     // Take the current value and do the following...
     if(dealersTurn === false) {
-      if(player.sum === 21) sendPlayerNext();  
-      if(player.sum < 21 && doubleDown === false) {
+      if(player.sum === 21) {
+        sendPlayerNext() 
+      } else if(player.sum < 21 && doubleDown === false) {
         sendPlayerThePlay();
       } else {
         sendPlayerNext();
@@ -675,10 +735,8 @@ function outputCardSumAce() {
         sendPlayerNext();
       } 
       if(player.sum[1] < 21 && doubleDown === false) {
-
         sendPlayerThePlay();
       } else {
-
         sendPlayerNext();
       }
     }
@@ -689,14 +747,19 @@ function outputCardSumAce() {
 function outputCardSumAceDealer() {
   if(player.sum[1] > 21) {
 
-    player.sum.pop()
-    player.sum = player.sum[0]
+    player.sum.pop();
+    player.sum = player.sum[0];
     player.hasAce = false;
 
+    console.log("---------")
+    console.log(dealer.sum)
+    console.log(player.sum)
+
     if(dealersTurn === true) {
-      if(dealer.sum < 17) {
+      if(player.sum < 17) {
         playerHit()
       } else {
+        console.log("FINAL COMPARE")
         finalCompare()
       }
     }
@@ -704,9 +767,10 @@ function outputCardSumAceDealer() {
     player.hasAce = true;
 
     if(dealersTurn === true) {
-      if(dealer.sum[1] < 17) {
+      if(player.sum[1] < 17) {
         playerHit()
       } else {
+        console.log("FINAL COMPARE")
         finalCompare()
       }
     }
@@ -716,9 +780,10 @@ function outputCardSumAceDealer() {
 function outputCardSumDealer() {
   player.hasAce = false;
   if(dealersTurn === true) {
-    if(dealer.sum < 17) {
+    if(player.sum < 17) {
       playerHit()
     } else {
+      console.log("FINAL COMPARE")
       finalCompare()
   }
 }
@@ -730,17 +795,17 @@ function outputCardSumDealer() {
 // *******************UTILITIES************************
 
 function givePlayerCard() {
-    console.log("updateDealerCards")
-    if(dealersTurn === true) {
-      updateDealerCards()
-    }
-    
 
+    
     player.cards.push(deck[0])
     deck.shift()
 
+    if(dealersTurn === true) {
+     console.log("updateDealerCards") 
+      updateDealerCards()
+    }
+    
     if(dealersTurn === false) updatePlayerCards()
-
 
 }
 

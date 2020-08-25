@@ -98,7 +98,8 @@
   </div>
   <button id="leave-table">Leave Table</button>
   <div id="dealer">
-    <h2 id="dealerSum">Dealer</h2>
+    <h2>Dealer</h2>
+    <div id="dealerSum">sum here</div>
     <div class="dealer-cards">
 
     </div>
@@ -218,7 +219,9 @@
     let aPlayer = null;
     let joined = false;
     let playerSlot = document.querySelectorAll(".players")
-    const dealerSlot = document.querySelector("#dealer")
+    let playerCards = document.querySelectorAll(".player-cards")
+    let dealerCards = document.querySelectorAll(".dealer-cards")
+    let dealerSlot = document.querySelector("#dealer")
     let dealerHiddenCard = null;
     let dealerHiddenCardRemoveNext = false;
     // let playerBet = document.querySelectorAll(".player-bet")
@@ -476,7 +479,9 @@
           dealer = player
         }
 
-        if(dealer.cards.length === 1 && dealerHiddenCardRemoveNext === true) {
+        console.log(dealer.cards.length)
+        console.log(dealerHiddenCardRemoveNext)
+        if(dealer.cards.length === 2 && dealerHiddenCardRemoveNext === true) {
           dealerHiddenCard.remove()
           dealerHiddenCardRemoveNext = false;
         }
@@ -631,7 +636,11 @@
 
         
       }
-        player = players[currentPlayer]
+
+      // Update Dealer Sum
+      dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
+
+      player = players[currentPlayer]
 
       
 
