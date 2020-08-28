@@ -104,6 +104,9 @@
 
     </div>
   </div>
+  <div>
+      <button>Go To Table</button>
+  </div>
 
 <!-- PRE-LOAD DECK IMAGES -->
 
@@ -198,6 +201,7 @@
     // HTML elements
     let clientId = null;
     let gameId = null;
+    let roomId = null;
     let theClient = null;
     players = [];
     spectators = [];
@@ -231,9 +235,16 @@
     const leaveTable = document.querySelector("#leave-table")
     // CSS
 
-
     // wiring events
     btnJoin.addEventListener("click", (e) => {
+      // window.history.pushState('page2', 'Title', "http://localhost:8081/" + gameId);
+      // location.href = "http://localhost:8081/" + gameId;
+      playerJoin();
+    });
+    function playerJoin() {
+      console.log("-----")
+      console.log(spectators)
+
       if (gameId === null) {
         gameId = txtGameId.value;
       }
@@ -241,13 +252,15 @@
         "method": "join",
         "clientId": clientId,
         "gameId": gameId,
+        "roomId": roomId,
         "theClient": theClient,
         "playerSlot": playerSlot,
         "playerSlotHTML": playerSlotHTML, 
-        "players": players
+        "players": players,
+        "spectators": spectators
       }
       ws.send(JSON.stringify(payLoad));
-    });
+    }
 
     btnCreate.addEventListener("click", (e) => {
       const payLoad = {
@@ -255,7 +268,8 @@
         "clientId": clientId,
         "theClient": theClient,
         "playerSlot": playerSlot,
-        "playerSlotHTML": playerSlotHTML
+        "playerSlotHTML": playerSlotHTML,
+        "roomId": roomId
       }
       ws.send(JSON.stringify(payLoad));
     });
@@ -383,6 +397,15 @@
     //   }
     //   ws.send(JSON.stringify(payLoad));
     // }
+    function terminatePlayer() {
+      const payLoad = {
+        "method": "terminate",
+        "spectators": spectators,
+        "theClient": theClient,
+        "gameId": gameId
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
 
 
 
@@ -395,11 +418,23 @@
         clientId = response.clientId;
         theClient = response.theClient;
         console.log("Client id Set successfully " + clientId);
+
+      }
+
+      if (response.method === "leave") {
+        // theClient = response.theClient;
+        spectators = response.spectators;
+        console.log("heooololololol")
+        console.log(spectators)
+        console.log("heooololololol")
       }
 
       // create
       if (response.method === "create") {
         gameId = response.game.id;
+        roomId = response.roomId;
+        console.log(roomId)
+        console.log(gameId)
         console.log("Game successfully created with id " + response.game.id);
       }
 
@@ -409,6 +444,11 @@
         players = response.players
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
+        roomId = response.roomId;
+
+        roomId = gameId.substring(gameId.length - 6)
+        window.history.pushState('game', 'Title', '/' + roomId);
+        // window.history.pushState('page2', 'Title', "/" + roomId);
       }
       // Assigns the "clientId" to "theClient"
       if(response.method === "joinClient") {
@@ -712,18 +752,29 @@
         // }
       // *******UPDATE CSS*******
 
+      setTimeout(joinByUrl, 200)
+      function joinByUrl() {
+        // If player has a roomId in his url
+        if(window.location.href.length > 22) {
+          // Get last 6 values from url
+          const str = window.location.href
+          roomId = str.substring(str.length - 6)
+          console.log(roomId)
+          // make gameId same as Url
+          // go to line ~413 for more info on roomId
+          gameId = "http://localhost:8081/" + roomId;
+          playerJoin()
+        }
+      }
 
 
 
 
-
-
-
-
-
-
-
-
+    window.addEventListener('beforeunload', function() {
+      // ws.close();
+      terminatePlayer();
+      // ws.close();
+    });
 
 
 

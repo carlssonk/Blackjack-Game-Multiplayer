@@ -6,10 +6,6 @@ const { join } = require("path");
 const app = express();
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
-// app.get("/", (req,res) => {
-//   res.sendFile(__dirname + "/index.html")
-//   res.sendFile(__dirname + "/js/app.js")
-// });
 app.listen(8081, ()=>console.log("Listening on http port 8081"))
 const websocketServer = require("websocket").server
 const httpServer = http.createServer();
@@ -24,11 +20,17 @@ const playerSlotHTML = {};
 const wsServer = new websocketServer({
   "httpServer": httpServer
 });
+
+
 wsServer.on("request", request => {
   // Someone trying to connect
   const connection = request.accept(null, request.origin);
   connection.on("open", () => console.log("opened"))
-  connection.on("close", () => console.log("closed!"))
+  connection.on("close", () => {
+    console.log("closed")
+    // console.log(clients)
+  });
+
   connection.on("message", message => {
     const result = JSON.parse(message.utf8Data)
 
@@ -38,7 +40,11 @@ wsServer.on("request", request => {
       const theClient = result.theClient;
       const playerSlot = result.playerSlot
       const playerSlotHTML = result.playerSlotHTML
-      const gameId = guid();
+      const roomId = partyId();
+      const gameId = "http://localhost:8081/" + roomId;
+      app.get('/' + roomId, (req,res) => {
+        res.sendFile(__dirname +'/public/index.html');
+      });
       games[gameId] = {
         "id": gameId,
         "clients": [],
@@ -59,7 +65,8 @@ wsServer.on("request", request => {
 
       const payLoad = {
         "method": "create",
-        "game": games[gameId]
+        "game": games[gameId],
+        "roomId": roomId
       }
 
       const con = clients[clientId].connection
@@ -68,15 +75,18 @@ wsServer.on("request", request => {
 
     // a client want to join
     if (result.method === "join") {
+      const gameId = result.gameId;      
+      const roomId = result.roomId;
       let theClient = result.theClient;
       const clientId = result.clientId;
-      const gameId = result.gameId;
+      // const gameId = result.gameId;
       const game = games[gameId];
       const players = game.players;
+      // console.log(players)
       const spectators = game.spectators;
       const playerSlot = game.playerSlot;
       const playerSlotHTML = game.playerSlotHTML
-
+      // const partyId = result.partyId;
 
       if (game.spectators.length >= 7) {
         // Max players reached
@@ -95,14 +105,19 @@ wsServer.on("request", request => {
           theClient = game.spectators[i]
         }
       }
+      console.log("------------")
+      console.log(spectators)
+      console.log(game.spectators)
  
       const payLoad = {
         "method": "join",
         "game": game,
         "players": players,
         "spectators": spectators,
-        "playerSlotHTML": playerSlotHTML
+        "playerSlotHTML": playerSlotHTML,
+        "roomId": roomId
       }
+
 
       // loop through all clients and tell them that people has joined
       game.spectators.forEach(c => {
@@ -128,7 +143,6 @@ wsServer.on("request", request => {
       game.spectators.forEach(c => {
         clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray))
       });
-
     }
 
     // bets
@@ -362,21 +376,28 @@ wsServer.on("request", request => {
       })
     }
 
-    // if(result.method === "resetCards") {
-    //   const players = result.players
-    //   const playerCards = result.playerCards
-    //   const dealerCards = result.dealerCards
-    //   const payLoad = {
-    //     "method": "resetCards",
-    //     "playerCards": playerCards,
-    //     "dealerCards": dealerCards
-    //   }
-    //   players.forEach(c => {
-    //     clients[c.clientId].connection.send(JSON.stringify(payLoad))
-    //   })
-    // }
+    if(result.method === "terminate") {
+      const gameId = result.gameId;
+      const game = games[gameId];
+      const spectators = game.spectators
+      const theClient = result.theClient
 
+      // Terminate player from spectators
+      for(let i = 0; i < game.spectators.length; i++) {
+        if(theClient.clientId === game.spectators[i].clientId) {
+          game.spectators.splice(i, 1)
+        }
+      }
+      console.log(games)
 
+      const payLoad = {
+        "method": "leave",
+        "spectators": spectators
+      }
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
 
 
   });
@@ -420,6 +441,7 @@ wsServer.on("request", request => {
 
       // Send the payLoad to the client
       connection.send(JSON.stringify(payLoad))
+
 });
 
 
@@ -433,6 +455,19 @@ const guid=()=> {
   const s4=()=> Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);     
   return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4() + s4() + s4()}`;
 }
+
+// Random Part ID
+function partyId() {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < 6; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+console.log(partyId());
 
 
 
