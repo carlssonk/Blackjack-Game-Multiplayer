@@ -379,8 +379,13 @@ wsServer.on("request", request => {
     if(result.method === "terminate") {
       const gameId = result.gameId;
       const game = games[gameId];
-      const spectators = game.spectators
-      const theClient = result.theClient
+      const spectators = game.spectators;
+      const theClient = result.theClient;
+      const playerSlotHTML = result.playerSlotHTML;
+      const players = result.players;
+
+      // Get what index the player is in so we can later delete him from the table on the client side
+      let playerSlotIndex = null;
 
       // Terminate player from spectators
       for(let i = 0; i < game.spectators.length; i++) {
@@ -388,11 +393,24 @@ wsServer.on("request", request => {
           game.spectators.splice(i, 1)
         }
       }
-      console.log(games)
+      // Terminate player from playerSlotHTML
+      for(let i = 0; i < game.playerSlotHTML.length; i++) {
+        if(theClient.clientId === game.playerSlotHTML[i]) {
+          playerSlotIndex = i;
+          game.playerSlotHTML[i] = {}
+        }
+      }
+      // Terminate player from players array
+      for(let i = 0; i < game.players.length; i++) {
+        if(theClient.clientId === game.players[i].clientId) {
+          game.players.splice(i, 1)
+        }
+      }
 
       const payLoad = {
         "method": "leave",
-        "spectators": spectators
+        "spectators": spectators,
+        "playerSlotIndex": playerSlotIndex
       }
       spectators.forEach(c => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad))

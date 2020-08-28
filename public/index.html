@@ -219,7 +219,7 @@
 
     // CSS
     let theSlot = null;
-    let z = null;
+    let z = null; // last player table index
     let aPlayer = null;
     let joined = false;
     let playerSlot = document.querySelectorAll(".players")
@@ -402,7 +402,9 @@
         "method": "terminate",
         "spectators": spectators,
         "theClient": theClient,
-        "gameId": gameId
+        "gameId": gameId,
+        "playerSlotHTML": playerSlotHTML,
+        "players": players
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -424,9 +426,22 @@
       if (response.method === "leave") {
         // theClient = response.theClient;
         spectators = response.spectators;
-        console.log("heooololololol")
-        console.log(spectators)
-        console.log("heooololololol")
+        playerSlotIndex = response.playerSlotIndex;
+
+        setTimeout(testt, 1000)
+        function testt() {
+        playerSlot[playerSlotIndex].innerHTML = 
+        `
+        <div class="player-name">A PLAYER</div>
+        <div class="player-sum">sum here</div>
+        <div class="player-bet">bet here</div>
+        <div class="player-ready">Player ready here</div>
+        <div class="player-cards">
+
+        </div>
+        `
+        }
+
       }
 
       // create
