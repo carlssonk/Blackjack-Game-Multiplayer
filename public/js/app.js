@@ -23,6 +23,7 @@ let startedGame = false;
 let currentPlayer = 0;
 let sum = null;
 let dealersTurn = false;
+let gameOn = false;
 // resetCards = false;
 
 // Cards (suit)
@@ -259,6 +260,7 @@ ready.addEventListener("click", () => {
   }
 
   if(playersReady === players.length) {
+    gameOn = true;
     getDeck();
     sendPlayerDeck();
     setTimeout(dealCards, 500);
@@ -562,10 +564,11 @@ function resetGame() {
 
   // Utilities
   currentPlayer = 0;
+  resetCards = true;
   dealersTurn = false;
   startedGame = false;
   doubleDown = false;
-  resetCards = true;
+  gameOn = false;
 
   // Send to all players
   updatePlayerCards();  

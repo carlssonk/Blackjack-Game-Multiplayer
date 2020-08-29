@@ -101,7 +101,13 @@
     <h2>Dealer</h2>
     <div id="dealerSum">sum here</div>
     <div class="dealer-cards">
+      <div class="visibleCards">
 
+      </div>
+      <!-- <div class="hiddenCard">
+        <div class="value"></div>
+        <div class="suit"></div>
+      </div> -->
     </div>
   </div>
   <div>
@@ -209,6 +215,7 @@
 
     let clicked = null;
     let doubleDown = null;
+    let reload = null;
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
@@ -242,9 +249,9 @@
       playerJoin();
     });
     function playerJoin() {
-      console.log("-----")
-      console.log(spectators)
-
+      console.log("--x-x--")
+      console.log(gameId)
+      console.log("--x-x--")
       if (gameId === null) {
         gameId = txtGameId.value;
       }
@@ -274,10 +281,16 @@
       ws.send(JSON.stringify(payLoad));
     });
 
+    leaveTable.addEventListener("click", (e) => {
+      joined = false;
+      terminatePlayer();
+    });
+
     function sendPlayerBets() {
       const payLoad = {
         "method": "bet",
-        "players": players
+        "players": players,
+        "spectators": spectators
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -286,6 +299,7 @@
       const payLoad = {
         "method": "updatePlayerCards",
         "players": players,
+        "spectators": spectators,
         "player": player,
         "resetCards": resetCards
       }
@@ -296,6 +310,7 @@
       const payLoad = {
         "method": "updateDealerCards",
         "players": players,
+        "spectators": spectators,
         "player": player,
         "dealer": dealer,
         "dealersTurn": dealersTurn,
@@ -308,7 +323,9 @@
       const payLoad = {
         "method": "deck",
         "players": players,
-        "deck": deck
+        "spectators": spectators,
+        "deck": deck,
+        "gameOn": gameOn
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -319,6 +336,7 @@
       const payLoad = {
         "method": "isReady",
         "players": players,
+        "spectators": spectators,
         "theClient": theClient
       }
       ws.send(JSON.stringify(payLoad));
@@ -328,8 +346,10 @@
       const payLoad = {
         "method": "update",
         "players": players,
+        "spectators": spectators,
         "dealer": dealer,
-        "deck": deck
+        "deck": deck,
+        "gameOn": gameOn
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -338,6 +358,7 @@
       const payLoad = {
         "method": "currentPlayer",
         "players": players,
+        "spectators": spectators,
         "player": player,
         "dealersTurn": dealersTurn
       }
@@ -348,6 +369,7 @@
       const payLoad = {
         "method": "thePlay",
         "players": players,
+        "spectators": spectators,
         "player": player,
         "currentPlayer": currentPlayer,
         "theClient": theClient,
@@ -360,6 +382,7 @@
       const payLoad = {
         "method": "joinTable",
         "players": players,
+        "spectators": spectators,
         "theClient": theClient,
         "theSlot": theSlot,
         "playerSlotHTML": playerSlotHTML,
@@ -372,6 +395,7 @@
       const payLoad = {
         "method": "updateTable",
         "players": players,
+        "spectators": spectators,
         "theClient": theClient,
         "theSlot": theSlot,
         "playerSlot": playerSlot,
@@ -383,6 +407,7 @@
       const payLoad = {
         "method": "dealersTurn",
         "players": players,
+        "spectators": spectators,
         "dealersTurn": dealersTurn
       }
       ws.send(JSON.stringify(payLoad));
@@ -398,13 +423,16 @@
     //   ws.send(JSON.stringify(payLoad));
     // }
     function terminatePlayer() {
+      console.log("terminate")
+      console.log(reload)
       const payLoad = {
         "method": "terminate",
         "spectators": spectators,
         "theClient": theClient,
         "gameId": gameId,
         "playerSlotHTML": playerSlotHTML,
-        "players": players
+        // "players": players,
+        "reload": reload
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -424,23 +452,31 @@
       }
 
       if (response.method === "leave") {
+        console.log("leave")
+        console.log(game.players)
         // theClient = response.theClient;
-        spectators = response.spectators;
+        // spectators = response.spectators;
+        game = response.game
+        players = game.players
+        spectators = game.spectators
+        playerSlotHTML = game.playerSlotHTML
+        console.log(spectators)
+        console.log(players)
+        // players = response.players;
+        // playerSlotHTML = response.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
+        reload = false;
+        console.log(joined)
+          playerSlot[playerSlotIndex].innerHTML = 
+          `
+          <div class="player-name">A PLAYER</div>
+          <div class="player-sum">sum here</div>
+          <div class="player-bet">bet here</div>
+          <div class="player-ready">Player ready here</div>
+          <div class="player-cards">
 
-        setTimeout(testt, 1000)
-        function testt() {
-        playerSlot[playerSlotIndex].innerHTML = 
-        `
-        <div class="player-name">A PLAYER</div>
-        <div class="player-sum">sum here</div>
-        <div class="player-bet">bet here</div>
-        <div class="player-ready">Player ready here</div>
-        <div class="player-cards">
-
-        </div>
-        `
-        }
+          </div>
+          `
 
       }
 
@@ -468,7 +504,67 @@
       // Assigns the "clientId" to "theClient"
       if(response.method === "joinClient") {
         theClient = response.theClient
-      }
+        game = response.game
+        // gameOn = game.gameOn
+
+        // If client joins mid game
+        if(game.gameOn === true) {
+          gameOn = game.gameOn
+          dealer = game.dealer
+          player = game.player
+          if(dealer.hiddenCard.length > 0) {
+            dealerSlot.lastElementChild.innerHTML += 
+          `
+          <div class="hiddenCard">
+            <div class="value"></div>
+            <div class="suit"></div>
+          </div>
+          `;
+
+          dealerHiddenCard = document.querySelector(".hiddenCard")
+          dealerHiddenCardRemoveNext = true;
+          }
+
+          // UPDATE HTML CARDS OF PLAYERS
+          // Find all players and its cards and compare it to the deckImg
+          for(let i = 0; i < players.length; i++) {
+            for(let d = 0; d < deckImg.length; d++) {
+              for(let c = 0; c < players[i].cards.length; c++) {
+                if(players[i].cards[c].suit + players[i].cards[c].value.card === deckImg[d]) {
+
+                  // Now apply the cards to the right table slot.
+                  for(let s = 0; s < playerSlotHTML.length; s++) {
+                    if(players[i].clientId === playerSlotHTML[s]) {
+                      playerSlot[s].lastElementChild.innerHTML += 
+                      `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
+                    }
+                  }
+                }
+              }       
+            }
+          }
+
+          // UPDATE HTML CARDS OF DEALER
+          for(let d = 0; d < deckImg.length; d++) {
+            for(let c = 0; c < dealer.cards.length; c++) {
+              if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
+                dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+                `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
+              }
+            }
+
+              // if(dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card === deckImg[d]) {
+              //   dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+              //   `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
+              // }
+
+            }
+
+          }
+        }
+
+
+
       // Updated players array (i.e. players[i] = theClient)
       if(response.method === "updateClientArray") {
         players = response.players
@@ -479,10 +575,12 @@
       // bet
       if (response.method === "bet") {
         players = response.players;
+        // spectators = response.spectators
       }
       // deck
       if (response.method === "deck") {
         deck = response.deck;
+        gameOn = response.gameOn
       }
 
       if (response.method === "isReady") {
@@ -539,7 +637,7 @@
           for(let s = 0; s < playerSlot.length; s++) {
             playerSlot[s].lastElementChild.innerHTML = ""
           }
-          dealerSlot.lastElementChild.innerHTML = "";
+          dealerSlot.lastElementChild.lastElementChild.innerHTML = "";
           resetCards = false;
         }
 
@@ -571,7 +669,7 @@
           // `
           for(let c = 0; c < deckImg.length; c++) {
           if(dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[c]) {
-            dealerSlot.lastElementChild.innerHTML += 
+            dealerSlot.lastElementChild.firstElementChild.innerHTML += 
             `<img class="cardImg" src="/imgs/` + deckImg[c] + `.svg">`
           }
         }
@@ -588,11 +686,11 @@
           dealerHiddenCardRemoveNext = true;
         }
 
-        if(dealer.hiddenCard.length === 1 && dealerHiddenCardRemoveNext === true) {
-          dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.hiddenCard.slice(-1)[0].value.card
-        } else {
-          dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.cards.slice(-1)[0].value.card
-        }
+        // if(dealer.hiddenCard.length === 1 && dealerHiddenCardRemoveNext === true) {
+        //   dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.hiddenCard.slice(-1)[0].value.card
+        // } else {
+        //   dealerSlot.lastElementChild.lastElementChild.innerHTML += dealer.cards.slice(-1)[0].value.card
+        // }
 
         // if(resetCards === true) {
         //   dealerSlot.lastElementChild.innerHTML = "";
@@ -606,6 +704,7 @@
         players = response.players;
         dealer = response.dealer;
         deck = response.deck;
+        gameOn = response.gameOn;
         
       }
 
@@ -672,7 +771,7 @@
       // if(spectators.length > 0) updateAllPlayers();
 
       // This updates theClient and players array accordingly
-      if (response.method === "connect" || response.method === "create" || response.method === "join" || response.method === "joinClient") {
+      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave") {
         return;
       } else {
         updateAllPlayers()
@@ -696,7 +795,6 @@
         }
       }
 
-      // if(spectators.length > 0) {
       for(let i = 0; i < playerSlotHTML.length; i++) {
         if(playerSlotHTML[i] === clientId) theClient.clientId = playerSlotHTML[i];
         
@@ -712,35 +810,41 @@
             } else {
               playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.innerText = "NOT READY"
             }
-            
-            // playerSlot[z].lastElementChild.innerHTML += 
-            // `
-            // <div class="card">
-            // <div class="value"></div>
-            // <div class="suit"></div>
-            // </div>
-            // `
-            // for(let c = 0; c < players[x].cards.length; c++) {
-            //   playerSlot[z].lastElementChild.firstElementChild.innerHTML += players[x].cards[c].value.card
-            // }
+          
             
             
           }
 
         }
 
-        
       }
+
+      // Keep game.(property) in sync with the actual game, so when a new client joins mid game, it will all sync
+
+      const syncGame = {
+        "method": "syncGame",
+        "gameId": gameId,
+        "player": player,
+        "players": players,
+        "spectators": spectators,
+        "dealer": dealer,
+        "gameOn": gameOn
+      }
+      ws.send(JSON.stringify(syncGame));
+
+
+
+
 
       // Update Dealer Sum
       dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
-
       player = players[currentPlayer]
 
       
 
 
     }
+
     
 
 
@@ -753,7 +857,7 @@
           for(let s = 0; s < playerSlot.length; s++) {
             (function(index){
               playerSlot[s].addEventListener("click", function() {
-                if(joined === false && this.firstElementChild.innerHTML === "A PLAYER") {
+                if(joined === false && this.firstElementChild.innerHTML === "A PLAYER" && gameOn === false) {
                   joined = true;
                   theSlot = index
                   // playerSlot[theSlot].innerHTML = theClient.clientId
@@ -786,6 +890,7 @@
 
 
     window.addEventListener('beforeunload', function() {
+      reload = true;
       // ws.close();
       terminatePlayer();
       // ws.close();
