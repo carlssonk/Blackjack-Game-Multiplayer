@@ -422,13 +422,26 @@ wsServer.on("request", request => {
 
     if(result.method === "terminate") {
       console.log("terminate player")
-      const gameId = result.gameId;
-      const game = games[gameId];
-      const spectators = game.spectators;
+      let gameId = result.gameId;
+      let game = games[gameId];
+      let spectators = result.spectators;
       const theClient = result.theClient;
-      const playerSlotHTML = result.playerSlotHTML;
-      const players = result.players;
+      // const playerSlotHTML = result.playerSlotHTML;
+      // let players = result.players;
       const reload = result.reload;
+
+      // To prevent error when user disconnects outside a game
+      if(game === undefined) {
+        game = {
+          "spectators": {},
+          "players": {},
+          "playerSlotHTML": {}
+        }
+      } 
+      
+      console.log(game)
+      console.log(spectators)
+      console.log(game.spectators)
 
       // Get what index the player is in so we can later delete him from the table on the client side
       let playerSlotIndex = null;
@@ -459,8 +472,8 @@ wsServer.on("request", request => {
 
       console.log("HAHA")
       console.log(spectators)
-      console.log(game.spectators)
       console.log("HAHA")
+      
       const payLoad = {
         "method": "leave",
         // "spectators": game.spectators,

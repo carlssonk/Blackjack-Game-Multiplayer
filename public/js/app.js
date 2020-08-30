@@ -24,6 +24,7 @@ let currentPlayer = 0;
 let sum = null;
 let dealersTurn = false;
 let gameOn = false;
+let bool;
 // resetCards = false;
 
 // Cards (suit)
@@ -848,11 +849,32 @@ function nextPlayer() {
 //   });
 
 // Skicka denna loggen tilla alla clients som har joinat en lobby och tryckt på "ready"
-function alerting() {
-  // dealCards();
-}
-
 
 
 // MULTIPLAYER WIRING EVENTS
+
+
+
+
+// ########## DOM MANIPULATION ##########
+// Note: this section uses jQuery
+// When a player joins with invite link, He can click the button "Join Room"
+if(window.location.href.length > 22) {
+  $("#btnCreate").addClass("hide-element")
+  $("#btnJoin").removeClass("hide-element")
+}
+
+$("#about").click(function() {
+  bool = !bool;
+  if(bool === true) {
+    $("#about-box").css("top", "540px")
+  } else {
+    $("#about-box").css("top", "350px")
+  }
+})
+
+
+
+
+// ########## DOM MANIPULATION ##########
 

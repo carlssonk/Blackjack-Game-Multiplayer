@@ -4,9 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Test Page</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- <link rel="stylesheet" href="/css/lib/normalize.css"> -->
+  <link rel="stylesheet" href="/css/dist/style.css">
+  <link rel="stylesheet" href="/css/style.scss">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <div id="main-menu">
+    <div id="info-rules">
+      <div id="how-to-play">
+        How To Play
+      </div>
+      <div>
+        <h1>About</h1>
+        <p>
+          Age: 18+;
+          Players: 1-7;
+          Tag: Twenty-One Vingt-et-Un;
+          Game modifications: 
+            This game will not allow splitting pairs;
+            If player on first 2 cards gets 2 Aces, it counts as a natural (i.e. 21)</p>
+      </div>
+    </div>
+    <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
+    <div id="main-box">
+      <div id="avatar-box">
+        <i class="fas fa-chevron-left"></i>
+        <img src="/imgs/avatars/zimmster.png" alt="avatar" width="80">
+        <i class="fas fa-chevron-right"></i>
+      </div>
+      <div>
+        <input type="text" placeholder="Nickname">
+      </div>
+      <div>
+        <button id="btnOffline" class="play-btns "><span><i class="fas fa-user"></i></span>Play Offline</button>
+      </div>
+      <div>
+        <button id="btnCreate" class="play-btns "><span><i class="fas fa-users"></i></span>Create Room</button>
+      </div>
+      <div>
+        <button id="btnJoin" class="play-btns hide-element"><span><i class="fas fa-users"></i></span>Join Room</button>
+      </div>
+    </div>
+    <div id="about-box">
+      blackjack21.io is a <strong>free</strong> multiplayer casino game.
+      <ul>
+        <strong>NOTE:</strong>
+        <li>Every game uses ONE standard 52-card pack that shuffles every round.</li>
+        <li>Current version of the game does not support Splitting Cards & Insurance</li>
+        <li>A private room can consist up to 7 players.</li>
+      </ul>
+      <div id="about">
+        About
+      </div>
+    </div>
+
+
+  </div>
+
+  <div id="game-room" class="hide-element">
+
   <button id="play">Play</button>
   <div>
     <button class="betButtons" value="10">$10</button>
@@ -114,11 +173,12 @@
       <button>Go To Table</button>
   </div>
 
-<!-- PRE-LOAD DECK IMAGES -->
 
+</div>
+
+<!-- PRE-LOAD DECK IMAGES -->
 <div class="hidden">
 	<script>
-
 			var images = new Array()
 			function preload() {
 				for (i = 0; i < preload.arguments.length; i++) {
@@ -180,7 +240,6 @@
         "/imgs/ClubK.svg",
         "/imgs/ClubA.svg"
 			)
-
 	</script>
 </div>
 
@@ -189,18 +248,7 @@
 
 
 
-
-
-
-
-<!--  -->
-  <button id= "btnCreate">New Game</button>
-  <button id="btnJoin">Join Game</button>
-  <input type="text" id="txtGameId">
-  <div id="divPlayers"></div>
-  <div id="divBoard"></div>
-<!--  -->
-
+  <script type="text/javascript" src="js/lib/jquery-3.5.1.min.js"></script>
   <script type="text/javascript" src="/js/app.js"></script>
 
   <script>
@@ -246,7 +294,11 @@
     btnJoin.addEventListener("click", (e) => {
       // window.history.pushState('page2', 'Title', "http://localhost:8081/" + gameId);
       // location.href = "http://localhost:8081/" + gameId;
-      playerJoin();
+      setTimeout(function() {
+      playerJoin()
+      $("#main-menu").addClass("hide-element")
+      $("#game-room").removeClass("hide-element")
+      }, 500)
     });
     function playerJoin() {
       console.log("--x-x--")
@@ -279,6 +331,13 @@
         "roomId": roomId
       }
       ws.send(JSON.stringify(payLoad));
+
+      // setTimeout(playerJoin, 500)
+      setTimeout(function() {
+      playerJoin()
+      $("#main-menu").addClass("hide-element")
+      $("#game-room").removeClass("hide-element")
+      }, 500)
     });
 
     leaveTable.addEventListener("click", (e) => {
@@ -466,7 +525,11 @@
         // playerSlotHTML = response.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
-        console.log(joined)
+        // console.log(joined)
+        console.log("SAXAXAX")
+        console.log(playerSlot)
+        console.log(playerSlotIndex)
+        if(!playerSlotIndex === undefined) {
           playerSlot[playerSlotIndex].innerHTML = 
           `
           <div class="player-name">A PLAYER</div>
@@ -477,6 +540,8 @@
 
           </div>
           `
+        }
+
 
       }
 
@@ -503,6 +568,9 @@
       }
       // Assigns the "clientId" to "theClient"
       if(response.method === "joinClient") {
+        console.log("ASDASDASDASASDASDASDADS")
+        // $("#main-menu").addClass("hide-element")
+        // $("#game-room").removeClass("hide-element")
         theClient = response.theClient
         game = response.game
         // gameOn = game.gameOn
@@ -882,7 +950,9 @@
           // make gameId same as Url
           // go to line ~413 for more info on roomId
           gameId = "http://localhost:8081/" + roomId;
-          playerJoin()
+          // playerJoin()
+          // $("#main-menu").addClass("hide-element")
+          // $("#game-room").removeClass("hide-element")
         }
       }
 

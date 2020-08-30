@@ -1,0 +1,219 @@
+.hide-element {
+  display: none !important;
+}
+
+html {
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  background: radial-gradient(#38833c, #1e421f);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#main-menu #blackjack-title {
+  display: flex;
+  margin: 50px auto;
+  margin-bottom: 60px;
+  width: 600px;
+}
+
+#main-box {
+  width: 500px;
+  border: 4px solid black;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 10px;
+  background-color: darkgreen;
+  z-index: 2;
+}
+#main-box div {
+  margin: 20px 0px 20px 0px;
+}
+#main-box #avatar-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#main-box #avatar-box i {
+  color: black;
+  padding: 6px 12px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+}
+#main-box #avatar-box i:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+#main-box input {
+  width: 45%;
+  padding: 6px 0;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  outline: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 2px;
+  transition: 100ms;
+}
+#main-box input:focus {
+  box-shadow: 0 0 1px 2px black;
+}
+#main-box .play-btns {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: 60%;
+  padding: 6px 0;
+  color: white;
+  font-size: 30px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+#main-box .play-btns span i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  width: 38px;
+}
+#main-box #btnOffline {
+  background-color: #003761;
+}
+#main-box #btnOffline:hover {
+  background-color: #002541;
+}
+#main-box #btnCreate, #main-box #btnJoin {
+  background-color: #e50051;
+}
+#main-box #btnCreate:hover, #main-box #btnJoin:hover {
+  background-color: #bd0042;
+}
+
+#info-rules {
+  position: absolute;
+  right: 20px;
+  color: white;
+  width: 500px;
+  border: 2px solid black;
+}
+
+#about-box {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  width: 500px;
+  margin: 0 auto;
+  border: 2px solid white;
+  background-color: white;
+  top: 350px;
+  z-index: -1;
+  transition: 1s;
+}
+
+#about {
+  position: absolute;
+  cursor: pointer;
+  background-color: white;
+}
+
+/* #player1 {
+  height: 150px;
+  width: 200px;
+  background-color: brown;
+}
+#sum1 {
+  color: black;
+}
+
+#player2 {
+  height: 150px;
+  width: 200px;
+  background-color: blueviolet;
+}
+#sum2 {
+  color: black;
+}
+#player3 {
+  height: 150px;
+  width: 200px;
+  background-color: yellowgreen;
+}
+#sum3 {
+  color: black;
+} */
+#players-container {
+  display: flex;
+  /* flex-flow: wrap; */
+  /* flex-direction: row; */
+  width: 1000px;
+  height: 400px;
+  background-color: green;
+  color: black;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.players {
+  background: white;
+  width: 200px;
+  height: 200px;
+  border: 2px solid black;
+}
+
+.players:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.player-name {
+  background: black;
+  color: white;
+}
+
+.player-sum {
+  background: green;
+}
+
+.player-bet {
+  background: gold;
+}
+
+.card {
+  height: 90px;
+  width: 60px;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.hiddenCard {
+  height: 90px;
+  width: 60px;
+  color: darkred;
+  background-color: red;
+  border: 1px solid black;
+}
+
+i {
+  background-size: 50px 100px;
+}
+
+.cardImg {
+  width: 100px;
+}
+
+/* #dealer {
+  height: 150px;
+  width: 200px;
+  background-color: red;
+}
+#dealerSum {
+  color: black;
+} */
