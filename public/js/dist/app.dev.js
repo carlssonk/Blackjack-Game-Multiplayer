@@ -731,8 +731,8 @@ $("#about").click(function () {
   bool = !bool;
 
   if (bool === true) {
-    $("#about-box").css("top", "540px");
+    $("#about-box").css("top", "554px");
   } else {
-    $("#about-box").css("top", "350px");
+    $("#about-box").css("top", "338px");
   }
 }); // ########## DOM MANIPULATION ##########

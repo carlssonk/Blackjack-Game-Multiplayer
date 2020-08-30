@@ -21,11 +21,11 @@ body {
 
 #main-box {
   width: 500px;
-  border: 4px solid black;
+  border: 3px solid #00001e;
   margin: 0 auto;
   text-align: center;
-  border-radius: 10px;
-  background-color: darkgreen;
+  border-radius: 10px 10px 0px 0px;
+  background-color: #2d6b30;
   z-index: 2;
 }
 #main-box div {
@@ -83,6 +83,7 @@ body {
   width: 38px;
 }
 #main-box #btnOffline {
+  margin-top: 40px;
   background-color: #003761;
 }
 #main-box #btnOffline:hover {
@@ -99,29 +100,67 @@ body {
   position: absolute;
   right: 20px;
   color: white;
+  height: 800px;
+  overflow: auto;
+  background-color: #00001e;
   width: 500px;
-  border: 2px solid black;
+  border: 2px solid #00001e;
+}
+#info-rules h1 {
+  color: white;
+  border-top: 2px solid orangered;
 }
 
 #about-box {
   position: absolute;
   margin-left: auto;
   margin-right: auto;
+  font-size: 14px;
   left: 0;
   right: 0;
-  width: 500px;
+  width: 476px;
+  padding: 12px;
   margin: 0 auto;
-  border: 2px solid white;
-  background-color: white;
-  top: 350px;
+  border-radius: 0px 0px 8px 0px;
+  background-color: #e9e9e9;
+  top: 338px;
   z-index: -1;
-  transition: 1s;
+  transition: 500ms;
+}
+#about-box ul {
+  padding: 12px 0px 12px 20px;
+  margin: 0;
 }
 
 #about {
   position: absolute;
   cursor: pointer;
-  background-color: white;
+  font-weight: 700;
+  background-color: #e9e9e9;
+  border: none;
+  outline: none;
+  padding: 3px 32px;
+  border-radius: 0px 0px 12px 12px;
+  bottom: -21px;
+  left: 0;
+}
+
+#about:after {
+  content: "";
+  width: 11px;
+  height: 11px;
+  border: 6px solid #e9e9e9;
+  position: absolute;
+  top: -6px;
+  border-top: 0;
+  z-index: -1;
+}
+
+#about::after {
+  border-right: 0;
+  border-radius: 0 0 0 12px;
+  right: -11px;
+  transform: rotate(90deg);
 }
 
 /* #player1 {
