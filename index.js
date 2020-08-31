@@ -94,7 +94,7 @@ wsServer.on("request", request => {
       const playerSlot = game.playerSlot;
       const playerSlotHTML = game.playerSlotHTML
       // const partyId = result.partyId;
-      console.log("games")
+      console.log("DIN TATTARE")
       console.log(games)
 
       if (game.spectators.length >= 7) {
@@ -470,9 +470,7 @@ wsServer.on("request", request => {
         }
       }
 
-      console.log("HAHA")
-      console.log(spectators)
-      console.log("HAHA")
+      console.log(123456789)
       
       const payLoad = {
         "method": "leave",
@@ -485,14 +483,26 @@ wsServer.on("request", request => {
       spectators.forEach(c => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad))
       })
-      // players.forEach(c => {
-      //   clients[c.clientId].connection.send(JSON.stringify(payLoad))
-      // })
-      // Send to THE client
-      const con = clients[clientId].connection
-      con.send(JSON.stringify(payLoad));
+
+      // // Send to THE client
+      // const con = clients[clientId].connection
+      // con.send(JSON.stringify(payLoad));
       
     }
+
+    if(result.method === "playersLength") {
+      const gameId = result.gameId;
+      const game = games[gameId]
+      const spectators = game.spectators
+
+      const payLoad = {
+        "method": "playersLength",
+        "spectators": spectators
+      }
+      const con = clients[clientId].connection
+      con.send(JSON.stringify(payLoad));
+    }
+
 
     if(result.method === "syncGame") {
       const gameId = result.gameId;

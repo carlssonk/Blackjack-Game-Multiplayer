@@ -867,13 +867,20 @@ if(window.location.href.length > 22) {
 $("#about").click(function() {
   bool = !bool;
   if(bool === true) {
-    $("#about-box").css("top", "554px")
+    $("#about-box").css("top", "504px")
   } else {
-    $("#about-box").css("top", "338px")
+    $("#about-box").css("top", "")
   }
 })
 
-
+$("#how-to-play").click(function() {
+  bool = !bool;
+  if(bool === true) {
+    $("#info-rules").css("right", "14px")
+  } else {
+    $("#info-rules").css("right", "")
+  }
+})
 
 
 // ########## DOM MANIPULATION ##########

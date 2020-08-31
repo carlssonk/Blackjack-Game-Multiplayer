@@ -11,14 +11,75 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
+  <div id="info-rules">
+    <div id="how-to-play">
+      HOW TO PLAY
+    </div>
+    <div id="info-rules-overflow">
+    <div>
+      <h1 id="h1margin">OBJECT OF THE GAME</h1>
+      <P>
+        Each participant attempts to beat the dealer by getting a count as close to 21 as possible, without going above 21.
+      </P>
+    </div>
+    <div>
+      <h1>CARD VALUES/SCORING</h1>
+      <p>
+        Usually it's up to each individual player if an ace is worth 1 or 11. However in this game if a player stands with an ace, it will always count the ace as 11 if your total sum doesn't exceed 21. Face cards are 10 and any other card is its original value.</p>
+    </div>
+    <div>
+      <h1>BETTING</h1>
+      <p>
+        Before the dealer begins dealing out cards, each player must place a bet and hit ready.</p>
+    </div>
+    <div>
+      <h1>THE DEAL</h1>
+      <p>
+        The round starts with the dealer giving out 2 cards to each player. He also gives himself one card facing up & one card facing down.</p>
+    </div>
+    <div>
+      <h1>NATURALS</h1>
+      <p>
+        When the intial 2 cards has been dealt: If a player gets a count to 21 on the first 2 cards, the player gets whats called Blackjack. Blakjack pays out 3:2 directly to the player and he will wait until next round to play again.</p>
+    </div>
+    <div>
+      <h1>THE PLAY</h1>
+      <p>
+        Now its time for the first player to make his move.
+        The player can Hit, Stand, Or Double Down.
+        <ul>
+          <li><strong>Hit</strong> = ask for another card in attempt to get closer to 21.</li>
+          <li><strong>Stand</strong> = Don't ask for any cards, moves on to the next player</li>
+          <li><strong>Double Down</strong> = Double the bet and ask for another card. (Can only double down once per round & can't draw any more cards after double'd down).</li>
+        </ul>
+      </p>
+    </div>
+    <div>
+      <h1>THE DEALER'S PLAY</h1>
+      <p>
+        Dealer starts with taking his card facing down. Dealer will draw until he reaches 17, when dealer's sum is 17 or above, he stops taking cards.
+      </p>
+    </div>
+    <div>
+      <h1>PAYOUT</h1>
+      <p>
+        <ul>
+          <li>If the player busts, he will lose his bet, even if the dealer also busts.</li>
+          <li>If player has higher value cards than the dealer, the player wins.</li>
+          <li>If dealer has higher value cards than the player, the dealer wins.</li>
+        </ul>
+      </p>
+    </div>
+  </div>
+  </div>
   <div id="main-menu">
-    <div id="info-rules">
+    <!-- <div id="info-rules">
       <div id="how-to-play">
-        How To Play
+        HOW TO PLAY
       </div>
+      <div id="info-rules-overflow">
       <div>
-        <h1>OBJECT OF THE GAME</h1>
+        <h1 id="h1margin">OBJECT OF THE GAME</h1>
         <P>
           Each participant attempts to beat the dealer by getting a count as close to 21 as possible, without going above 21.
         </P>
@@ -72,6 +133,7 @@
         </p>
       </div>
     </div>
+    </div> -->
     <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
     <div id="main-box">
       <div id="avatar-box">
@@ -98,14 +160,14 @@
         <strong>NOTE:</strong>
         <li>Every game uses ONE standard 52-card pack that shuffles every round.</li>
         <li>Current version of the game does not support Splitting Cards & Insurance.</li>
-        <li>If a player gets a sum of 21, the next player will automatically begin his turn.</li>
-        <li>A private room can consists up to 7 players.</li>
+        <li>2 aces on the first two cards gives you blackjack (21).</li>
+        <li>A private room can consist up to 7 players.</li>
       </ul>
       <button id="about">
         About
       </button>
     </div>
-
+  <!-- </div> -->
 
   </div>
 
@@ -337,13 +399,22 @@
 
     // wiring events
     btnJoin.addEventListener("click", (e) => {
-      // window.history.pushState('page2', 'Title', "http://localhost:8081/" + gameId);
-      // location.href = "http://localhost:8081/" + gameId;
+      const payLoad = {
+        "method": "playersLength",
+        "gameId": gameId
+      }
+      ws.send(JSON.stringify(payLoad));
       setTimeout(function() {
-      playerJoin()
-      $("#main-menu").addClass("hide-element")
-      $("#game-room").removeClass("hide-element")
-      }, 500)
+        if(spectators.length >= 7) {
+        alert("Game Is full!")
+      } else {
+        setTimeout(function() {
+          playerJoin()
+          $("#main-menu").addClass("hide-element")
+          $("#game-room").removeClass("hide-element")
+          }, 500)        
+        }
+      }, 50)
     });
     function playerJoin() {
       console.log("--x-x--")
@@ -570,11 +641,10 @@
         // playerSlotHTML = response.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
-        // console.log(joined)
-        console.log("SAXAXAX")
-        console.log(playerSlot)
-        console.log(playerSlotIndex)
-        if(!playerSlotIndex === undefined) {
+
+        if(playerSlotIndex === undefined) {
+          return;
+        } else {
           playerSlot[playerSlotIndex].innerHTML = 
           `
           <div class="player-name">A PLAYER</div>
@@ -863,6 +933,10 @@
         dealersTurn = response.dealersTurn
       }
 
+      if(response.method === "playersLength") {
+            spectators = response.spectators
+          }
+
       // if(response.method === "resetCards") {
       //   console.log("resetCards")
       //   playerCards = response.playerCards
@@ -995,6 +1069,7 @@
           // make gameId same as Url
           // go to line ~413 for more info on roomId
           gameId = "http://localhost:8081/" + roomId;
+
           // playerJoin()
           // $("#main-menu").addClass("hide-element")
           // $("#game-room").removeClass("hide-element")

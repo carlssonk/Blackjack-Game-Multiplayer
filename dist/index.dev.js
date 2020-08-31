@@ -93,7 +93,7 @@ wsServer.on("request", function (request) {
       var _playerSlot = game.playerSlot;
       var _playerSlotHTML2 = game.playerSlotHTML; // const partyId = result.partyId;
 
-      console.log("games");
+      console.log("DIN TATTARE");
       console.log(games);
 
       if (game.spectators.length >= 7) {
@@ -441,9 +441,7 @@ wsServer.on("request", function (request) {
         }
       }
 
-      console.log("HAHA");
-      console.log(_spectators12);
-      console.log("HAHA");
+      console.log(123456789);
       var _payLoad13 = {
         "method": "leave",
         // "spectators": game.spectators,
@@ -454,31 +452,39 @@ wsServer.on("request", function (request) {
 
       _spectators12.forEach(function (c) {
         clients[c.clientId].connection.send(JSON.stringify(_payLoad13));
-      }); // players.forEach(c => {
-      //   clients[c.clientId].connection.send(JSON.stringify(payLoad))
-      // })
-      // Send to THE client
+      }); // // Send to THE client
+      // const con = clients[clientId].connection
+      // con.send(JSON.stringify(payLoad));
 
+    }
 
+    if (result.method === "playersLength") {
+      var _gameId4 = result.gameId;
+      var _game3 = games[_gameId4];
+      var _spectators13 = _game3.spectators;
+      var _payLoad14 = {
+        "method": "playersLength",
+        "spectators": _spectators13
+      };
       var _con = clients[clientId].connection;
 
-      _con.send(JSON.stringify(_payLoad13));
+      _con.send(JSON.stringify(_payLoad14));
     }
 
     if (result.method === "syncGame") {
-      var _gameId4 = result.gameId;
-      var _game3 = games[_gameId4];
+      var _gameId5 = result.gameId;
+      var _game4 = games[_gameId5];
       var _gameOn3 = result.gameOn;
       var _dealer3 = result.dealer;
       var _players12 = result.players;
       var _player5 = result.player;
-      var _spectators13 = result.spectators; // Sync players & spectators arrays
+      var _spectators14 = result.spectators; // Sync players & spectators arrays
 
-      _game3.gameOn = _gameOn3;
-      _game3.dealer = _dealer3;
-      _game3.players = _players12;
-      _game3.player = _player5;
-      _game3.spectators = _spectators13; // console.log(game)
+      _game4.gameOn = _gameOn3;
+      _game4.dealer = _dealer3;
+      _game4.players = _players12;
+      _game4.player = _player5;
+      _game4.spectators = _spectators14; // console.log(game)
     }
   }); // The ClientId
 
