@@ -73,7 +73,7 @@
   </div>
   </div>
 
-  <div id="main-menu" class="hide-element">
+  <div id="main-menu">
     <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
     <div id="main-box">
       <div id="avatar-box">
@@ -109,7 +109,7 @@
     </div>
   </div>
 
-  <div id="game-room">
+  <div id="game-room" class="hide-element">
   <button id="play">Play</button>
   <div>
     <button class="betButtons" value="10">$10</button>
@@ -131,7 +131,7 @@
   <div id="players-container">
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -142,7 +142,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -153,29 +153,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">A PLAYER</div>
-      <div class="player-sum hide-element">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
-      <div class="player-ready hide-element">Player ready here</div>
-      <div class="player-cards">
-
-      </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
-    </span>
-    <span class="players">
-      <!-- <div class="empty-slot"><i class="fas fa-user-plus"></i></div> -->
-      <div class="player-name">plexer</div>
-      <div class="player-sum">7</div>
-      <div class="player-bet">1k</div>
-      <div class="player-ready">NOT READY</div>
-      <div class="player-cards">
-
-      </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
-    </span>
-    <span class="players">
-      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -186,7 +164,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element highlight">A PLAYER</div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -197,7 +175,29 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
+      <div class="player-cards">
+
+      </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
+    </span>
+    <span class="players">
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
+      <div class="player-cards">
+
+      </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
+    </span>
+    <span class="players">
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -909,7 +909,7 @@
         } else {
           if(player.clientId === theClient.clientId && player.bet > 0) {
             clicked = false;
-            console.log("SAY THAT ITS YOUR TURN")
+            alert("SAY THAT ITS YOUR TURN")
             thePlay()
           } else if(player.clientId === theClient.clientId && player.bet === 0) {
             console.log("you blackjacked or busted")
@@ -1015,11 +1015,14 @@
             z = playerSlotHTML.indexOf(playerSlotHTML[i])
             if(playerSlot[z].firstElementChild.classList.value === "empty-slot") playerSlot[z].firstElementChild.remove();
             playerSlot[z].firstElementChild.classList.remove("hide-element")
-            playerSlot[z].firstElementChild.nextElementSibling.classList.remove("hide-element")
+            // playerSlot[z].firstElementChild.nextElementSibling.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
 
-            playerSlot[z].firstElementChild.innerHTML = players[x].nickname
+            if(players[x].nickname === "") players[x].nickname = "Player";
+            playerSlot[z].firstElementChild.innerText = players[x].nickname
+            playerSlot[z].firstElementChild.innerHTML += `<span><img class="player-avatar" src="" alt="avatar"></span>`
+
             // MAKE SO INSTEAD SUM SAYS 9,19 make it 9|19
             playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].sum
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
