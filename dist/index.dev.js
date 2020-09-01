@@ -81,12 +81,16 @@ wsServer.on("request", function (request) {
 
 
     if (result.method === "join") {
+      var nickname = result.nickname;
       var _gameId = result.gameId;
       var _roomId = result.roomId;
       var _theClient2 = result.theClient;
       var _clientId2 = result.clientId; // const gameId = result.gameId;
 
       var game = games[_gameId];
+      console.log("#####");
+      console.log(game);
+      console.log("------");
       var _players = game.players; // console.log(players)
 
       var _spectators = game.spectators;
@@ -94,7 +98,8 @@ wsServer.on("request", function (request) {
       var _playerSlotHTML2 = game.playerSlotHTML; // const partyId = result.partyId;
 
       console.log("DIN TATTARE");
-      console.log(games);
+      console.log(game.players);
+      _theClient2.nickname = nickname;
 
       if (game.spectators.length >= 7) {
         // Max players reached
@@ -308,12 +313,18 @@ wsServer.on("request", function (request) {
         "game": _game,
         "players": _players8,
         "spectators": _spectators8,
-        "playerSlotHTML": _playerSlotHTML3
+        "playerSlotHTML": _playerSlotHTML3,
+        "theClient": _theClient4
       };
 
       _spectators8.forEach(function (c) {
         clients[c.clientId].connection.send(JSON.stringify(_payLoad9));
-      });
+      }); // Send this to the client who pressed join
+
+
+      var _payLoadClient = {
+        "method": "joinTableClient"
+      };
     }
 
     if (result.method === "updateTable") {
@@ -462,13 +473,20 @@ wsServer.on("request", function (request) {
       var _gameId4 = result.gameId;
       var _game3 = games[_gameId4];
       var _spectators13 = _game3.spectators;
-      var _payLoad14 = {
+      var playersLength = _game3.spectators.length;
+      console.log(playersLength);
+      var payLoadLength = {
         "method": "playersLength",
-        "spectators": _spectators13
+        "playersLength": playersLength
       };
-      var _con = clients[clientId].connection;
+      console.log("tattare");
+      console.log(_game3); // const con = clients[clientId].connection
+      // con.send(JSON.stringify(payLoadLength));
+      // spectators.forEach(c => {
+      //   clients[c.clientId].connection.send(JSON.stringify(payLoadLength))
+      // })
 
-      _con.send(JSON.stringify(_payLoad14));
+      connection.send(JSON.stringify(payLoadLength));
     }
 
     if (result.method === "syncGame") {
@@ -495,6 +513,7 @@ wsServer.on("request", function (request) {
   }; // The client object
 
   var theClient = {
+    "nickname": "",
     "cards": [],
     "bet": 0,
     "balance": 1000,

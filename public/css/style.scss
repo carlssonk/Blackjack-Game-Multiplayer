@@ -125,29 +125,6 @@ body {
 
 }
 
-
-// #info-rules {
-  // position: absolute;
-  // right: 100px;
-  // color: white;
-  // height: 800px;
-  // // overflow: auto;
-  // background-color: rgb(0, 0, 30);
-  // width: 500px;
-  // border: 2px solid rgb(0, 0, 30);
-  // padding: 0px 12px;
-  // opacity: 1;
-  // transition: 500ms;
-  // h1 {
-//     color: white;
-//     border-top: 2px solid orangered;
-//   }
-//   #h1margin {
-//     margin-top: 64px;
-//     border-top: 0px solid rgba(255, 255, 255, 0);
-//   }
-// }
-
 #info-rules {
   position: absolute;
   right: -504px;
@@ -181,8 +158,6 @@ body {
   padding: 0 12px 0 0;
   overflow: auto;
 }  
-
-
 
 
 #how-to-play {
@@ -283,72 +258,108 @@ body {
 
 
 
+// #############GAME MENU#############
 
 
-
-
-
-
-
-/* #player1 {
-  height: 150px;
-  width: 200px;
-  background-color: brown;
-}
-#sum1 {
-  color: black;
-}
-
-#player2 {
-  height: 150px;
-  width: 200px;
-  background-color: blueviolet;
-}
-#sum2 {
-  color: black;
-}
-#player3 {
-  height: 150px;
-  width: 200px;
-  background-color: yellowgreen;
-}
-#sum3 {
-  color: black;
-} */
 
 #players-container {
+  position:absolute;
+  width: 80%;
+  height: 600px;
+  // background: #063;
+  bottom: 0;
+  left: 50%;
+  margin-left: -40%;
   display: flex;
   /* flex-flow: wrap; */
   /* flex-direction: row; */
-  width: 1000px;
-  height: 400px;
-  background-color: green;
+  // background-color: green;
+  border: 2px solid black;
   color: black;
   text-align: center;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .players {
-  background: white;
-  width: 200px;
-  height: 200px;
-  border: 2px solid black;
+  position: relative;
+  // background: white;
+  width: 100px;
+  height: 100px;
+  border: 2px solid white;
+  border-radius: 100%;
+  cursor: pointer;
 }
 .players:hover {
   background: rgba(255, 255, 255, 0.500);
 }
 
+.players:nth-of-type(4) {
+  margin-bottom: 100px;
+}
+.players:nth-of-type(1), .players:nth-of-type(7) {
+  margin-bottom: 250px;
+}
+.players:nth-of-type(2), .players:nth-of-type(6) {
+  margin-bottom: 175px;
+}
+.players:nth-of-type(3), .players:nth-of-type(5) {
+  margin-bottom: 125px;
+}
+
 .player-name {
-  background: black;
+  position: absolute;
+  bottom: -30px;
+  // background: black;
+  text-shadow: 1px 1px 10px black;
   color: white;
 }
+.highlight {
+  color: rgb(224, 224, 0);
+}
 .player-sum {
-  background: green;
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  margin-left: -10px;
+  color: rgb(224, 224, 0);
+  background: rgba(0, 0, 0, 0.5);
+  // border: 2px solid black;
+  border-radius: 4px;
+  z-index: 4;
+}
+.player-ready {
+  position: absolute;
+  top: -50px;
+  margin-left: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid red;
+  color: white;
 }
 .player-bet {
-  background: gold;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.empty-slot {
+  position: absolute;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  border-radius: 100%;
+  margin-left: 24px;
+  margin-top: -2px;
+  color: rgb(0, 255, 0);
+}
+
+.empty-slot i {
+  text-shadow: 0 0 4px rgb(0, 255, 0);
+}
+
 
 .card {
   height: 90px;

@@ -82,12 +82,16 @@ wsServer.on("request", request => {
 
     // a client want to join
     if (result.method === "join") {
+      const nickname = result.nickname
       const gameId = result.gameId;      
       const roomId = result.roomId;
       let theClient = result.theClient;
       const clientId = result.clientId;
       // const gameId = result.gameId;
       const game = games[gameId];
+      console.log("#####")
+      console.log(game)
+      console.log("------")
       let players = game.players;
       // console.log(players)
       const spectators = game.spectators;
@@ -95,7 +99,9 @@ wsServer.on("request", request => {
       const playerSlotHTML = game.playerSlotHTML
       // const partyId = result.partyId;
       console.log("DIN TATTARE")
-      console.log(games)
+      console.log(game.players)
+
+      theClient.nickname = nickname
 
       if (game.spectators.length >= 7) {
         // Max players reached
@@ -332,12 +338,18 @@ wsServer.on("request", request => {
         "game": game,
         "players": players,
         "spectators": spectators,
-        "playerSlotHTML": playerSlotHTML
+        "playerSlotHTML": playerSlotHTML,
+        "theClient": theClient
       }
 
       spectators.forEach(c => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad))
       })
+
+      // Send this to the client who pressed join
+      const payLoadClient = {
+        "method": "joinTableClient"
+      }
     }
 
     if (result.method === "updateTable") {
@@ -494,13 +506,21 @@ wsServer.on("request", request => {
       const gameId = result.gameId;
       const game = games[gameId]
       const spectators = game.spectators
+      const playersLength = game.spectators.length
+      console.log(playersLength)
 
-      const payLoad = {
+      const payLoadLength = {
         "method": "playersLength",
-        "spectators": spectators
+        "playersLength": playersLength
       }
-      const con = clients[clientId].connection
-      con.send(JSON.stringify(payLoad));
+      console.log("tattare")
+      console.log(game)
+      // const con = clients[clientId].connection
+      // con.send(JSON.stringify(payLoadLength));
+      // spectators.forEach(c => {
+      //   clients[c.clientId].connection.send(JSON.stringify(payLoadLength))
+      // })
+      connection.send(JSON.stringify(payLoadLength))
     }
 
 
@@ -531,6 +551,7 @@ wsServer.on("request", request => {
 
       // The client object
       let theClient = {
+        "nickname": "",
         "cards": [],
         "bet": 0,
         "balance": 1000,

@@ -72,68 +72,8 @@
     </div>
   </div>
   </div>
+
   <div id="main-menu">
-    <!-- <div id="info-rules">
-      <div id="how-to-play">
-        HOW TO PLAY
-      </div>
-      <div id="info-rules-overflow">
-      <div>
-        <h1 id="h1margin">OBJECT OF THE GAME</h1>
-        <P>
-          Each participant attempts to beat the dealer by getting a count as close to 21 as possible, without going above 21.
-        </P>
-      </div>
-      <div>
-        <h1>CARD VALUES/SCORING</h1>
-        <p>
-          Usually it's up to each individual player if an ace is worth 1 or 11. However in this game if a player stands with an ace, it will always count the ace as 11 if your total sum doesn't exceed 21. Face cards are 10 and any other card is its original value.</p>
-      </div>
-      <div>
-        <h1>BETTING</h1>
-        <p>
-          Before the dealer begins dealing out cards, each player must place a bet and hit ready.</p>
-      </div>
-      <div>
-        <h1>THE DEAL</h1>
-        <p>
-          The round starts with the dealer giving out 2 cards to each player. He also gives himself one card facing up & one card facing down.</p>
-      </div>
-      <div>
-        <h1>NATURALS</h1>
-        <p>
-          When the intial 2 cards has been dealt: If a player gets a count to 21 on the first 2 cards, the player gets whats called Blackjack. Blakjack pays out 3:2 directly to the player and he will wait until next round to play again.</p>
-      </div>
-      <div>
-        <h1>THE PLAY</h1>
-        <p>
-          Now its time for the first player to make his move.
-          The player can Hit, Stand, Or Double Down.
-          <ul>
-            <li><strong>Hit</strong> = ask for another card in attempt to get closer to 21.</li>
-            <li><strong>Stand</strong> = Don't ask for any cards, moves on to the next player</li>
-            <li><strong>Double Down</strong> = Double the bet and ask for another card. (Can only double down once per round & can't draw any more cards after double'd down).</li>
-          </ul>
-        </p>
-      </div>
-      <div>
-        <h1>THE DEALER'S PLAY</h1>
-        <p>
-          Dealer starts with taking his card facing down. Dealer will draw until he reaches 17, when dealer's sum is 17 or above, he stops taking cards.
-        </p>
-      </div>
-      <div>
-        <h1>PAYOUT</h1>
-        <p>
-          <ul>
-            <li>If the player busts, he will lose his bet, even if the dealer also busts.</li>
-            <li>If player has higher value cards than the dealer, the player wins.</li>
-            <li>If dealer has higher value cards than the player, the dealer wins.</li>
-          </ul>
-        </p>
-      </div>
-    </div>
-    </div> -->
     <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
     <div id="main-box">
       <div id="avatar-box">
@@ -142,7 +82,7 @@
         <i class="fas fa-chevron-right"></i>
       </div>
       <div>
-        <input type="text" placeholder="Nickname">
+        <input id="nickname" type="text" placeholder="Nickname">
       </div>
       <div>
         <button id="btnOffline" class="play-btns "><span><i class="fas fa-user"></i></span>Play Offline</button>
@@ -167,12 +107,9 @@
         About
       </button>
     </div>
-  <!-- </div> -->
-
   </div>
 
   <div id="game-room" class="hide-element">
-
   <button id="play">Play</button>
   <div>
     <button class="betButtons" value="10">$10</button>
@@ -193,70 +130,77 @@
   </div>
   <div id="players-container">
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
 
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
 
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
 
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element">plexer</div>
+      <div class="player-sum hide-element"></div>
+      <div class="player-bet hide-element">1k</div>
+      <div class="player-ready hide-element">NOT READY</div>
       <div class="player-cards">
 
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
 
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element highlight">A PLAYER</div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
 
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="player-name">A PLAYER</div>
-      <div class="player-sum">sum here</div>
-      <div class="player-bet">bet here</div>
-      <div class="player-ready">Player ready here</div>
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element">A PLAYER</div>
+      <div class="player-sum hide-element">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
@@ -380,6 +324,8 @@
     const divBoard = document.getElementById("divBoard");
 
     // CSS
+    let nickname = document.querySelector("#nickname");
+    let playersLength = null;
     let theSlot = null;
     let z = null; // last player table index
     let aPlayer = null;
@@ -388,6 +334,7 @@
     let playerCards = document.querySelectorAll(".player-cards")
     let dealerCards = document.querySelectorAll(".dealer-cards")
     let dealerSlot = document.querySelector("#dealer")
+    let playerName = document.querySelectorAll(".player-name")
     let dealerHiddenCard = null;
     let dealerHiddenCardRemoveNext = false;
     let resetCards = false;
@@ -399,17 +346,19 @@
 
     // wiring events
     btnJoin.addEventListener("click", (e) => {
-      const payLoad = {
+      const payLoadLength = {
         "method": "playersLength",
         "gameId": gameId
       }
-      ws.send(JSON.stringify(payLoad));
+      ws.send(JSON.stringify(payLoadLength));
+
       setTimeout(function() {
-        if(spectators.length >= 7) {
+        if(playersLength >= 7) {
         alert("Game Is full!")
+        return;
       } else {
+        playerJoin()
         setTimeout(function() {
-          playerJoin()
           $("#main-menu").addClass("hide-element")
           $("#game-room").removeClass("hide-element")
           }, 500)        
@@ -417,9 +366,11 @@
       }, 50)
     });
     function playerJoin() {
-      console.log("--x-x--")
-      console.log(gameId)
-      console.log("--x-x--")
+      console.log("##################")
+      nickname = nickname.value
+      console.log(nickname)
+      theClient.nickname = nickname.value
+      console.log("##################")
       if (gameId === null) {
         gameId = txtGameId.value;
       }
@@ -432,7 +383,8 @@
         "playerSlot": playerSlot,
         "playerSlotHTML": playerSlotHTML, 
         "players": players,
-        "spectators": spectators
+        "spectators": spectators,
+        "nickname": nickname
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -647,10 +599,11 @@
         } else {
           playerSlot[playerSlotIndex].innerHTML = 
           `
-          <div class="player-name">A PLAYER</div>
-          <div class="player-sum">sum here</div>
-          <div class="player-bet">bet here</div>
-          <div class="player-ready">Player ready here</div>
+          <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+          <div class="player-name hide-element">A PLAYER</div>
+          <div class="player-sum hide-element">sum here</div>
+          <div class="player-bet hide-element">bet here</div>
+          <div class="player-ready hide-element">Player ready here</div>
           <div class="player-cards">
 
           </div>
@@ -672,7 +625,7 @@
       // join
       if (response.method === "join") {
         game = response.game;
-        players = response.players
+        // players = response.players
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
         roomId = response.roomId;
@@ -921,9 +874,16 @@
         players = response.players
         theSlot = response.theSlot
         user = response.user
+        theClient = response.theClient
         // playerSlot[theSlot].innerHTML = user.clientId
         playerSlotHTML = response.playerSlotHTML
+        console.log(theClient.nickname)
         // playerSlot[theSlot].innerHTML = playerSlotHTML
+        // playerSlot[theSlot].firstElementChild.remove()
+        // playerSlot[theSlot].firstElementChild.classList.remove("hide-element")
+        // playerSlot[theSlot].firstElementChild.nextElementSibling.classList.remove("hide-element")
+        // playerSlot[theSlot].firstElementChild.nextElementSibling.nextElementSibling.classList.remove("hide-element")
+        // playerSlot[theSlot].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
 
 
 
@@ -934,7 +894,8 @@
       }
 
       if(response.method === "playersLength") {
-            spectators = response.spectators
+            playersLength = response.playersLength
+            console.log("it WORKRKRRSRS")
           }
 
       // if(response.method === "resetCards") {
@@ -963,6 +924,11 @@
       } else {
         updateAllPlayers()
       }
+      if (response.method === "playersLength") {
+        return;
+      } else {
+        syncTheGame()
+      }
 
     }
     // MUST INCLUDE THIS IN EVERY RESPONSE AFTER ALL PLAYERS HAVE JOINED, TO KEEP "theClient" and players[i] UPDATED
@@ -989,7 +955,14 @@
 
           if(players[x].clientId === playerSlotHTML[i]) {
             z = playerSlotHTML.indexOf(playerSlotHTML[i])
-            playerSlot[z].firstElementChild.innerHTML = players[x].clientId
+            console.log("DADADADADADADADAD")
+            if(playerSlot[z].firstElementChild.classList.value === "empty-slot") playerSlot[z].firstElementChild.remove();
+            playerSlot[z].firstElementChild.classList.remove("hide-element")
+            playerSlot[z].firstElementChild.nextElementSibling.classList.remove("hide-element")
+            playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.classList.remove("hide-element")
+            playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
+
+            playerSlot[z].firstElementChild.innerHTML = players[x].nickname
             playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].sum
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
             if(players[x].isReady === true) {
@@ -1006,18 +979,8 @@
 
       }
 
-      // Keep game.(property) in sync with the actual game, so when a new client joins mid game, it will all sync
+      
 
-      const syncGame = {
-        "method": "syncGame",
-        "gameId": gameId,
-        "player": player,
-        "players": players,
-        "spectators": spectators,
-        "dealer": dealer,
-        "gameOn": gameOn
-      }
-      ws.send(JSON.stringify(syncGame));
 
 
 
@@ -1031,6 +994,19 @@
 
 
     }
+          // Keep game.(property) in sync with the actual game, so when a new client joins mid game, it will all sync
+          function syncTheGame() {
+        const syncGame = {
+          "method": "syncGame",
+          "gameId": gameId,
+          "player": player,
+          "players": players,
+          "spectators": spectators,
+          "dealer": dealer,
+          "gameOn": gameOn
+        }
+        ws.send(JSON.stringify(syncGame));          
+      }
 
     
 
@@ -1044,11 +1020,13 @@
           for(let s = 0; s < playerSlot.length; s++) {
             (function(index){
               playerSlot[s].addEventListener("click", function() {
-                if(joined === false && this.firstElementChild.innerHTML === "A PLAYER" && gameOn === false) {
+                console.log(this)
+                if(joined === false && this.firstElementChild.classList.value === "empty-slot" && gameOn === false) {
                   joined = true;
                   theSlot = index
-                  // playerSlot[theSlot].innerHTML = theClient.clientId
                   joinTable();
+                  // Make player text yellow
+                  $(this).children("div:nth-child(2)").addClass("highlight")
                 }
               })
             })(s)
