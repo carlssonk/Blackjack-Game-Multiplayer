@@ -149,7 +149,7 @@ wsServer.on("request", request => {
         // "gameOn": gameOn
       }
       // Send theClient to THE CLIENT
-      clients[clientId].connection.send(JSON.stringify(payLoadClient))
+        clients[clientId].connection.send(JSON.stringify(payLoadClient))
 
       // Important to send this payLoad last, because it needs to know the the theClient.clientId
       const payLoadClientArray = {
@@ -554,7 +554,7 @@ wsServer.on("request", request => {
         "nickname": "",
         "cards": [],
         "bet": 0,
-        "balance": 1000,
+        "balance": 100000,
         "sum": null,
         "hasAce": false,
         "isReady": false

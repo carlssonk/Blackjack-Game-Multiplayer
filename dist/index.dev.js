@@ -516,7 +516,7 @@ wsServer.on("request", function (request) {
     "nickname": "",
     "cards": [],
     "bet": 0,
-    "balance": 1000,
+    "balance": 100000,
     "sum": null,
     "hasAce": false,
     "isReady": false

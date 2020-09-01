@@ -293,12 +293,17 @@ body {
 
 .player-sum {
   position: absolute;
+  width: 34px;
+  height: 30px;
   top: -50px;
   left: 50%;
-  margin-left: -10px;
+  margin-left: -14px;
   color: #e0e000;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 4;
 }
 
@@ -312,6 +317,7 @@ body {
 }
 
 .player-bet {
+  position: absolute;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -354,7 +360,110 @@ i {
   background-size: 50px 100px;
 }
 
+.player-cards {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.players:nth-of-type(1) .player-cards {
+  transform: rotate(30deg);
+}
+
+.players:nth-of-type(2) .player-cards {
+  transform: rotate(20deg);
+}
+
+.players:nth-of-type(3) .player-cards {
+  transform: rotate(10deg);
+}
+
+.players:nth-of-type(5) .player-cards {
+  transform: rotate(-10deg);
+}
+
+.players:nth-of-type(6) .player-cards {
+  transform: rotate(-20deg);
+}
+
+.players:nth-of-type(7) .player-cards {
+  transform: rotate(-30deg);
+}
+
 .cardImg {
+  position: absolute;
+  top: -152px;
+  left: 0;
+  width: 100px;
+}
+
+.card1 {
+  z-index: 1;
+}
+
+.card2 {
+  z-index: 2;
+  margin-left: 20px;
+  top: -182px;
+}
+
+.card3 {
+  z-index: 3;
+  margin-left: 40px;
+  top: -212px;
+}
+
+.card4 {
+  z-index: 4;
+  margin-left: 60px;
+  top: -242px;
+}
+
+.card5 {
+  z-index: 5;
+  margin-left: 80px;
+  top: -272px;
+}
+
+.card6 {
+  z-index: 6;
+  margin-left: 100px;
+  top: -302px;
+}
+
+.card7 {
+  z-index: 7;
+  margin-left: 120px;
+  top: -332px;
+}
+
+.card8 {
+  z-index: 8;
+  margin-left: 140px;
+  top: -362px;
+}
+
+.card9 {
+  z-index: 9;
+  margin-left: 160px;
+  top: -392px;
+}
+
+.card10 {
+  z-index: 10;
+  margin-left: 180px;
+  top: -422px;
+}
+
+.card11 {
+  z-index: 11;
+  margin-left: 200px;
+  top: -452px;
+}
+
+.dealerCardImg {
   width: 100px;
 }
 

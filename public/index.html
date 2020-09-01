@@ -73,7 +73,7 @@
   </div>
   </div>
 
-  <div id="main-menu">
+  <div id="main-menu" class="hide-element">
     <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
     <div id="main-box">
       <div id="avatar-box">
@@ -109,7 +109,7 @@
     </div>
   </div>
 
-  <div id="game-room" class="hide-element">
+  <div id="game-room">
   <button id="play">Play</button>
   <div>
     <button class="betButtons" value="10">$10</button>
@@ -163,11 +163,11 @@
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
     <span class="players">
-      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">plexer</div>
-      <div class="player-sum hide-element"></div>
-      <div class="player-bet hide-element">1k</div>
-      <div class="player-ready hide-element">NOT READY</div>
+      <!-- <div class="empty-slot"><i class="fas fa-user-plus"></i></div> -->
+      <div class="player-name">plexer</div>
+      <div class="player-sum">7</div>
+      <div class="player-bet">1k</div>
+      <div class="player-ready">NOT READY</div>
       <div class="player-cards">
 
       </div>
@@ -202,6 +202,7 @@
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
       <div class="player-cards">
+
       </div>
       <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
@@ -315,6 +316,8 @@
     let clicked = null;
     let doubleDown = null;
     let reload = null;
+    let cardIndex = null;
+    let cardIndexJoin = 1;
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
@@ -352,6 +355,7 @@
       }
       ws.send(JSON.stringify(payLoadLength));
 
+      // Set 50ms delay so above method response before below function starts
       setTimeout(function() {
         if(playersLength >= 7) {
         alert("Game Is full!")
@@ -636,7 +640,6 @@
       }
       // Assigns the "clientId" to "theClient"
       if(response.method === "joinClient") {
-        console.log("ASDASDASDASASDASDASDADS")
         // $("#main-menu").addClass("hide-element")
         // $("#game-room").removeClass("hide-element")
         theClient = response.theClient
@@ -661,24 +664,30 @@
           dealerHiddenCardRemoveNext = true;
           }
 
+
           // UPDATE HTML CARDS OF PLAYERS
           // Find all players and its cards and compare it to the deckImg
-          for(let i = 0; i < players.length; i++) {
-            for(let d = 0; d < deckImg.length; d++) {
-              for(let c = 0; c < players[i].cards.length; c++) {
-                if(players[i].cards[c].suit + players[i].cards[c].value.card === deckImg[d]) {
+          // setTimeout(function() {
+          // for(let i = 0; i < players.length; i++) {
+          //   for(let d = 0; d < deckImg.length; d++) {
+          //     for(let c = 0; c < players[i].cards.length; c++) {
 
-                  // Now apply the cards to the right table slot.
-                  for(let s = 0; s < playerSlotHTML.length; s++) {
-                    if(players[i].clientId === playerSlotHTML[s]) {
-                      playerSlot[s].lastElementChild.innerHTML += 
-                      `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
-                    }
-                  }
-                }
-              }       
-            }
-          }
+          //       if(players[i].cards[c].suit + players[i].cards[c].value.card === deckImg[d]) {
+
+          //         // Now apply the cards to the right table slot.
+          //         for(let s = 0; s < playerSlotHTML.length; s++) {
+          //           if(players[i].clientId === playerSlotHTML[s]) {
+          //             playerSlot[s].lastElementChild.innerHTML += 
+          //             `<img class="cardImg" src="/imgs/` + deckImg[c] + `.svg">`
+          //             //  ` + " card" + cardIndexJoin++ + `
+          //           }
+          //         }
+          //       }
+          //     }       
+          //   }
+          // }
+          // }, 1000)
+
 
           // UPDATE HTML CARDS OF DEALER
           for(let d = 0; d < deckImg.length; d++) {
@@ -706,6 +715,37 @@
         players = response.players
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
+
+
+        // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
+        for(let i = 0; i < players.length; i++) {
+          cardIndexJoin = 1;
+            for(let d = 0; d < deckImg.length; d++) {
+              for(let c = 0; c < players[i].cards.length; c++) {
+
+                if(players[i].cards[c].suit + players[i].cards[c].value.card === deckImg[d]) {
+
+                  // Now apply the cards to the right table slot.
+                  for(let s = 0; s < playerSlotHTML.length; s++) {
+                    if(players[i].clientId === playerSlotHTML[s]) {
+                      playerSlot[s].lastElementChild.innerHTML += 
+                      `<img class="cardImg` + " card" + cardIndexJoin++ + `" src="/imgs/` + deckImg[c] + `.svg">`
+                      //  ` + " card" + cardIndexJoin++ + `
+                    }
+                  }
+                }
+              }       
+            }
+          }
+        // UPDATE DEALER CARDS IF A USER JOINS MID GAME
+          for(let d = 0; d < deckImg.length; d++) {
+            for(let c = 0; c < dealer.cards.length; c++) {
+              if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
+                dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+                `<img class="dealerCardImg" src="/imgs/` + deckImg[d] + `.svg">`
+              }
+            }
+            }
       }
 
       // bet
@@ -732,6 +772,20 @@
         resetCards = response.resetCards
         players = response.players
         player = response.player
+        cardIndex = player.cards.length
+
+        console.log("BRODER")
+          console.log("BRODER")
+          console.log("BRODER")
+          console.log("BRODER")
+          console.log(cardIndex)
+          console.log("BRODER")
+          console.log("BRODER")
+          console.log("BRODER")
+          console.log("BRODER")
+
+
+
         // setTimeout(function() {
         console.log("give the player the card :DDDD")
         for(let i = 0; i < playerSlotHTML.length; i++) {
@@ -758,7 +812,7 @@
               if(player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card === deckImg[c]) {
                 console.log(playerSlot[z].lastElementChild)
                 playerSlot[z].lastElementChild.innerHTML += 
-                `<img class="cardImg" src="/imgs/` + deckImg[c] + `.svg">`
+                `<img class="cardImg ` + " card" + cardIndex + `" src="/imgs/` + deckImg[c] + `.svg">`
               }
             }
 
@@ -803,10 +857,12 @@
           //   <div class="suit"></div>
           // </div>
           // `
+
+          
           for(let c = 0; c < deckImg.length; c++) {
           if(dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[c]) {
             dealerSlot.lastElementChild.firstElementChild.innerHTML += 
-            `<img class="cardImg" src="/imgs/` + deckImg[c] + `.svg">`
+            `<img class="dealerCardImg" src="/imgs/` + deckImg[c] + `.svg">`
           }
         }
         } else {
@@ -919,16 +975,17 @@
       // if(spectators.length > 0) updateAllPlayers();
 
       // This updates theClient and players array accordingly
-      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave") {
+      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave" || response.method === "playersLength") {
         return;
       } else {
         updateAllPlayers()
-      }
-      if (response.method === "playersLength") {
-        return;
-      } else {
         syncTheGame()
       }
+      // if (response.method === "playersLength") {
+      //   return;
+      // } else {
+      //   syncTheGame()
+      // }
 
     }
     // MUST INCLUDE THIS IN EVERY RESPONSE AFTER ALL PLAYERS HAVE JOINED, TO KEEP "theClient" and players[i] UPDATED
@@ -948,6 +1005,7 @@
         }
       }
 
+
       for(let i = 0; i < playerSlotHTML.length; i++) {
         if(playerSlotHTML[i] === clientId) theClient.clientId = playerSlotHTML[i];
         
@@ -955,7 +1013,6 @@
 
           if(players[x].clientId === playerSlotHTML[i]) {
             z = playerSlotHTML.indexOf(playerSlotHTML[i])
-            console.log("DADADADADADADADAD")
             if(playerSlot[z].firstElementChild.classList.value === "empty-slot") playerSlot[z].firstElementChild.remove();
             playerSlot[z].firstElementChild.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.classList.remove("hide-element")
@@ -963,6 +1020,7 @@
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
 
             playerSlot[z].firstElementChild.innerHTML = players[x].nickname
+            // MAKE SO INSTEAD SUM SAYS 9,19 make it 9|19
             playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].sum
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
             if(players[x].isReady === true) {
@@ -977,7 +1035,8 @@
 
         }
 
-      }
+      }        
+
 
       
 
