@@ -489,20 +489,44 @@ wsServer.on("request", function (request) {
       connection.send(JSON.stringify(payLoadLength));
     }
 
+    if (result.method === "resetRound") {
+      var _spectators14 = result.spectators;
+      var _payLoad14 = {
+        "method": "resetRound"
+      };
+
+      _spectators14.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad14));
+      });
+    }
+
+    if (result.method === "playerResult") {
+      var _spectators15 = result.spectators;
+      var _players12 = result.players;
+      var _payLoad15 = {
+        "method": "playerResult",
+        "players": _players12
+      };
+
+      _spectators15.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad15));
+      });
+    }
+
     if (result.method === "syncGame") {
       var _gameId5 = result.gameId;
       var _game4 = games[_gameId5];
       var _gameOn3 = result.gameOn;
       var _dealer3 = result.dealer;
-      var _players12 = result.players;
+      var _players13 = result.players;
       var _player5 = result.player;
-      var _spectators14 = result.spectators; // Sync players & spectators arrays
+      var _spectators16 = result.spectators; // Sync players & spectators arrays
 
       _game4.gameOn = _gameOn3;
       _game4.dealer = _dealer3;
-      _game4.players = _players12;
+      _game4.players = _players13;
       _game4.player = _player5;
-      _game4.spectators = _spectators14; // console.log(game)
+      _game4.spectators = _spectators16; // console.log(game)
     }
   }); // The ClientId
 

@@ -496,40 +496,41 @@ function dealerPlay() {
 // ***********************FINAL COMPARE*************************
 
 function finalCompare() {
-  // If dealer has 2 sums (i.e. an ace), count the highest only
-  if(dealer.sum.length === 2) {
-    dealer.sum.shift()
-    dealer.sum = dealer.sum[0]
-  }
-  console.log(dealer.sum)
-  dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
-  // remove dealer from player
-  players.pop(players.slice(-1)[0])
-  console.log("show dealer cards")
-  // For all players That have NOT busted, compare sum to dealer
-  for(let i = 0; i < players.length; i++) {
-    if(players[i].cards.length > 0) {
-      // Also check if dealer has bust
-      if(dealer.sum > 21) {
-        playerWin(i)
-        console.log("DEALER BUST")
-      } else if(dealer.sum < players[i].sum) {
-        playerWin(i)
-        console.log("player win")
-      } else if(dealer.sum === players[i].sum) {
-        playerDraw(i)
-        console.log("Draw!")
-      } else {
-        dealerWin(i)
-        console.log("dealer wins")
-      }
+  // // If dealer has 2 sums (i.e. an ace), count the highest only
+  // if(dealer.sum.length === 2) {
+  //   dealer.sum.shift()
+  //   dealer.sum = dealer.sum[0]
+  // }
+  // console.log(dealer.sum)
+  // dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
+  // // remove dealer from player
+  // players.pop(players.slice(-1)[0])
+  // console.log("show dealer cards")
+  // // For all players That have NOT busted, compare sum to dealer
+  // for(let i = 0; i < players.length; i++) {
+  //   if(players[i].cards.length > 0) {
+  //     // Also check if dealer has bust
+  //     if(dealer.sum > 21) {
+  //       playerWin(i)
+  //       console.log("DEALER BUST")
+  //     } else if(dealer.sum < players[i].sum) {
+  //       playerWin(i)
+  //       console.log("player win")
+  //     } else if(dealer.sum === players[i].sum) {
+  //       playerDraw(i)
+  //       console.log("Draw!")
+  //     } else {
+  //       dealerWin(i)
+  //       console.log("dealer wins")
+  //     }
 
 
 
 
 
-    }
-  }
+  //   }
+  // }
+  playerResult();
   // Function for RESET GAME
   setTimeout(resetGame, 2000)
 }
@@ -578,6 +579,7 @@ function resetGame() {
   updatePlayerCards();  
   updateCurrentPlayer();  
   updatePlayers();
+  resetRound();
 
   
 

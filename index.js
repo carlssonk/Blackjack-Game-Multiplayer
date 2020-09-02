@@ -523,6 +523,32 @@ wsServer.on("request", request => {
       connection.send(JSON.stringify(payLoadLength))
     }
 
+    if(result.method === "resetRound") {
+      const spectators = result.spectators
+
+      const payLoad = {
+        "method": "resetRound"
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
+
+    if(result.method === "playerResult") {
+      const spectators = result.spectators
+      const players = result.players
+
+      const payLoad = {
+        "method": "playerResult",
+        "players": players
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
+
 
     if(result.method === "syncGame") {
       const gameId = result.gameId;
