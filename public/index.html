@@ -110,6 +110,17 @@
   </div>
 
   <div id="game-room" class="hide-element">
+  <div id="dealer">
+    <h1>Dealer</h1>
+    <div id="dealerSum">sum here</div>
+    <div class="dealer-cards">
+      <div class="visibleCards">
+        <!-- <img class="dealerCardImg" src="/imgs/Spade3.svg">
+        <img class="dealerCardImg" src="/imgs/Spade3.svg">
+        <img class="dealerCardImg" src="/imgs/Spade3.svg"> -->
+      </div>
+    </div>
+  </div>
   <button id="play">Play</button>
   <div>
     <button class="betButtons" value="10">$10</button>
@@ -131,7 +142,7 @@
   <div id="players-container">
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -142,7 +153,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -153,7 +164,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -164,7 +175,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -175,7 +186,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -186,7 +197,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -197,7 +208,7 @@
     </span>
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum hide-element">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-ready hide-element">Player ready here</div>
@@ -208,21 +219,28 @@
     </span>
   </div>
   <button id="leave-table">Leave Table</button>
-  <div id="dealer">
+  <!-- <div id="dealer">
     <h2>Dealer</h2>
     <div id="dealerSum">sum here</div>
     <div class="dealer-cards">
       <div class="visibleCards">
 
       </div>
-      <!-- <div class="hiddenCard">
-        <div class="value"></div>
-        <div class="suit"></div>
-      </div> -->
+ 
     </div>
-  </div>
+  </div> -->
   <div>
       <button>Go To Table</button>
+  </div>
+  <div id="balance-bet-box">
+    <div class="balance-bet">
+      Balance
+      <div id="balance"></div>
+    </div>
+    <div class="balance-bet">
+      Total Bet
+      <div id="total-bet"></div>
+    </div>
   </div>
 
 
@@ -365,7 +383,7 @@
         setTimeout(function() {
           $("#main-menu").addClass("hide-element")
           $("#game-room").removeClass("hide-element")
-          }, 500)        
+          }, 500)
         }
       }, 50)
     });
@@ -655,8 +673,7 @@
             dealerSlot.lastElementChild.innerHTML += 
           `
           <div class="hiddenCard">
-            <div class="value"></div>
-            <div class="suit"></div>
+            <img src="/imgs/Card_back.svg" alt="">
           </div>
           `;
 
@@ -687,23 +704,36 @@
           //   }
           // }
           // }, 1000)
+          // setTimeout(function() {
+          //   for(let i = 0; i < players.length; i++) {
+          //   for(let s = 0; s < playerSlotHTML.length; s++) {
+          //             if(players[i].clientId === playerSlotHTML[s]) {
+
+          //               playerSlot[s].firstElementChild.nextElementSibling.classList.remove("hide-element");
+          //               playerSlot[s].firstElementChild.nextElementSibling.style.opacity = "1";
+          //               playerSlot[s].firstElementChild.nextElementSibling.style.transform = "scale(1)";
+          //             }
+          //           }
+          //         }
+          // }, 500)
+
 
 
           // UPDATE HTML CARDS OF DEALER
-          for(let d = 0; d < deckImg.length; d++) {
-            for(let c = 0; c < dealer.cards.length; c++) {
-              if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
-                dealerSlot.lastElementChild.firstElementChild.innerHTML += 
-                `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
-              }
-            }
+          // for(let d = 0; d < deckImg.length; d++) {
+          //   for(let c = 0; c < dealer.cards.length; c++) {
+          //     if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
+          //       dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+          //       `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
+          //     }
+          //   }
 
               // if(dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card === deckImg[d]) {
               //   dealerSlot.lastElementChild.firstElementChild.innerHTML += 
               //   `<img class="cardImg" src="/imgs/` + deckImg[d] + `.svg">`
               // }
 
-            }
+            // }
 
           }
         }
@@ -716,9 +746,16 @@
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
 
+      }
 
-        // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
-        for(let i = 0; i < players.length; i++) {
+
+      // Update Style for users that join mid game
+      if (response.method === "joinMidGame") {
+        theClient = response.theClient
+        game = response.game
+
+          // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
+          for(let i = 0; i < players.length; i++) {
           cardIndexJoin = 1;
             for(let d = 0; d < deckImg.length; d++) {
               for(let c = 0; c < players[i].cards.length; c++) {
@@ -729,15 +766,21 @@
                   for(let s = 0; s < playerSlotHTML.length; s++) {
                     if(players[i].clientId === playerSlotHTML[s]) {
                       playerSlot[s].lastElementChild.innerHTML += 
-                      `<img class="cardImg` + " card" + cardIndexJoin++ + `" src="/imgs/` + deckImg[c] + `.svg">`
+                      `<img class="cardImg` + " card" + cardIndexJoin++ + `" src="/imgs/` + deckImg[c] + `.svg">`;
                       //  ` + " card" + cardIndexJoin++ + `
+
+                      // playerSlot[s].firstElementChild.nextElementSibling.classList.remove("hide-element");
+                      // playerSlot[s].firstElementChild.nextElementSibling.style.opacity = "1";
+                      // playerSlot[s].firstElementChild.nextElementSibling.style.transform = "scale(1)";
                     }
                   }
                 }
               }       
             }
           }
-        // UPDATE DEALER CARDS IF A USER JOINS MID GAME
+
+        // // UPDATE DEALER CARDS IF A USER JOINS MID GAME
+        if(game.spectators.splice(-1)[0].clientId === theClient.clientId) {
           for(let d = 0; d < deckImg.length; d++) {
             for(let c = 0; c < dealer.cards.length; c++) {
               if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
@@ -745,7 +788,19 @@
                 `<img class="dealerCardImg" src="/imgs/` + deckImg[d] + `.svg">`
               }
             }
+          }
+        }
+
+        for(let i = 0; i < players.length; i++) {
+          for(let s = 0; s < playerSlotHTML.length; s++) {
+            if(players[i].clientId === playerSlotHTML[s]) {
+              playerSlot[s].firstElementChild.nextElementSibling.classList.remove("hide-element");
+              playerSlot[s].firstElementChild.nextElementSibling.style.opacity = "1";
+              playerSlot[s].firstElementChild.nextElementSibling.style.transform = "scale(1)";
             }
+          }
+        }
+
       }
 
       // bet
@@ -869,8 +924,7 @@
           dealerSlot.lastElementChild.innerHTML += 
           `
           <div class="hiddenCard">
-            <div class="value"></div>
-            <div class="suit"></div>
+            <img src="/imgs/Card_back.svg" alt="">
           </div>
           `;
 
@@ -909,7 +963,9 @@
         } else {
           if(player.clientId === theClient.clientId && player.bet > 0) {
             clicked = false;
-            alert("SAY THAT ITS YOUR TURN")
+            setTimeout(function() { // remove timeout later if needed
+              console.log("SAY THAT ITS YOUR TURN")
+            }, 50)
             thePlay()
           } else if(player.clientId === theClient.clientId && player.bet === 0) {
             console.log("you blackjacked or busted")
@@ -920,7 +976,19 @@
           }          
         }
 
-        
+        // Show sum for each player
+        for(let i = 0; i < playerSlotHTML.length; i++) {
+          // if(playerSlotHTML[i] === theClient.clientId) {
+            // Actually unhide hide element
+              playerSlot[i].firstElementChild.nextElementSibling.classList.remove("hide-element")
+              // Set opacity to 1 (for fade in animation purpose)
+              setTimeout(function () { // add 1ms timeout so fade in effect works
+                playerSlot[i].firstElementChild.nextElementSibling.style.opacity = "1"
+                playerSlot[i].firstElementChild.nextElementSibling.style.transform = "scale(1)"
+              }, 100)
+
+        }
+
       }
 
       // Join Table
@@ -969,7 +1037,7 @@
       //   }
       // }
 
-
+   
 
       
       // if(spectators.length > 0) updateAllPlayers();
@@ -1038,7 +1106,8 @@
 
         }
 
-      }        
+      }
+      
 
 
       
@@ -1051,11 +1120,17 @@
       // Update Dealer Sum
       dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
       player = players[currentPlayer]
-
+      $("#balance").text(theClient.balance)
       
 
 
     }
+
+
+
+
+
+
           // Keep game.(property) in sync with the actual game, so when a new client joins mid game, it will all sync
           function syncTheGame() {
         const syncGame = {

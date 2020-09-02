@@ -267,7 +267,7 @@ body {
 #players-container {
   position:absolute;
   width: 80%;
-  height: 600px;
+  height: 400px;
   // background: #063;
   bottom: 0;
   left: 50%;
@@ -280,7 +280,7 @@ body {
   color: black;
   text-align: center;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .players {
@@ -348,7 +348,7 @@ body {
   height: 30px;
   top: -50px;
   left: 50%;
-  margin-left: -14px;
+  margin-left: -17px;
   color: rgb(224, 224, 0);
   background: rgba(0, 0, 0, 0.8);
   // border: 1px solid black;
@@ -358,6 +358,9 @@ body {
   justify-content: center;
   pointer-events:none;
   z-index: 4;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: 100ms ease-in-out;
 
 }
 .player-ready {
@@ -404,14 +407,6 @@ body {
   border: 1px solid black;
 }
 
-.hiddenCard {
-  height: 90px;
-  width: 60px;
-  color: darkred;
-  background-color: red;
-  border: 1px solid black;
-}
-
 
 i {
   background-size: 50px 100px;
@@ -428,22 +423,22 @@ i {
   pointer-events:none;
 }
 .players:nth-of-type(1) .player-cards {
-  transform: rotate(30deg);
+  transform: rotate(15deg);
 }
 .players:nth-of-type(2) .player-cards {
-  transform: rotate(20deg);
-}
-.players:nth-of-type(3) .player-cards {
   transform: rotate(10deg);
 }
+.players:nth-of-type(3) .player-cards {
+  transform: rotate(5deg);
+}
 .players:nth-of-type(5) .player-cards {
-  transform: rotate(-10deg);
+  transform: rotate(-5deg);
 }
 .players:nth-of-type(6) .player-cards {
-  transform: rotate(-20deg);
+  transform: rotate(-10deg);
 }
 .players:nth-of-type(7) .player-cards {
-  transform: rotate(-30deg);
+  transform: rotate(-15deg);
 }
 
 .cardImg {
@@ -467,15 +462,88 @@ i {
 .card11 {z-index: 11; margin-left: 200px; top: -452px;}
 // Card Seperation
 
-
 .dealerCardImg{
  width: 100px;
 }
-/* #dealer {
-  height: 150px;
+
+#balance-bet-box {
+  position: absolute;
+  display:flex;
+  bottom: 50px;
   width: 200px;
-  background-color: red;
+  color: white;
+  text-align: center;
+  border-radius: 10px;
 }
-#dealerSum {
-  color: black;
-} */
+
+.balance-bet {
+  background-color: rgba(0, 0, 0, 0.658);
+  padding: 4px;
+  border: 1px solid white;
+  width: 100px;
+  border-radius: 10px;
+  div {
+    color: rgb(224, 224, 0);
+  }
+}
+
+ #dealer {
+  position: relative;
+  margin: 20px auto;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  h1 {
+    display: flex;
+    font-size: 64px;
+    margin: 0;
+  }
+  #dealerSum {
+    position: absolute;
+    // font-size: 16px;
+    width: 34px;
+    height: 30px;
+    bottom: -120px;
+    left: 50%;
+    margin-left: -17px;
+    color: rgb(224, 224, 0);
+    background: rgba(0, 0, 0, 0.8);
+    // border: 1px solid black;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    pointer-events:none;
+    z-index: 4;
+    // transform: scale(0.5);
+    // transition: 100ms ease-in-out;
+  }
+
+
+  .dealer-cards {
+    margin-top: 80px;
+    position: absolute;
+    display: inline-flex;
+    transition: 1s;
+  }
+  .visibleCard {
+    display: flex;
+  }
+  .hiddenCard {
+    position: relative;
+    display: flex;
+    height: 150px;
+    width: 100px;
+    text-align: center;
+    margin: 0 auto;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+  }
+
+}
+
+

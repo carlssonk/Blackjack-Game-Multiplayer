@@ -172,11 +172,11 @@ wsServer.on("request", request => {
       // If a player joins mid-game
       const payLoadMidGame = {
         "method": "joinMidGame",
+        "theClient": theClient,
         "game": game
       }
-      console.log("TORKEL")
-      console.log(game)
-      console.log("TORKEL")
+
+      clients[clientId].connection.send(JSON.stringify(payLoadMidGame))
 
     }
 

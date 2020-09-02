@@ -160,11 +160,11 @@ wsServer.on("request", function (request) {
 
       var payLoadMidGame = {
         "method": "joinMidGame",
+        "theClient": _theClient2,
         "game": game
       };
-      console.log("TORKEL");
-      console.log(game);
-      console.log("TORKEL");
+
+      clients[_clientId2].connection.send(JSON.stringify(payLoadMidGame));
     } // bets
 
 

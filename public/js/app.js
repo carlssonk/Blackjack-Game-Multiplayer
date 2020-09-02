@@ -25,6 +25,7 @@ let sum = null;
 let dealersTurn = false;
 let gameOn = false;
 let bool;
+let showSum = false;
 // resetCards = false;
 
 // Cards (suit)
@@ -351,6 +352,7 @@ function naturals() {
   dealer.sum = dealer.cards[0].value.value;
   if(dealer.cards[0].value.card === "A") dealer.hasAce = true;
   updatePlayers()
+  showSum = true;
 }
 function naturalBlackjack(i) {
   players[i].sum = 21;
@@ -570,6 +572,7 @@ function resetGame() {
   startedGame = false;
   doubleDown = false;
   gameOn = false;
+  $("#total-bet").text(0)
 
   // Send to all players
   updatePlayerCards();  
@@ -881,6 +884,16 @@ $("#how-to-play").click(function() {
     $("#info-rules").css("right", "")
   }
 })
+
+// $("#total-bet")
+
+$(".betButtons").click(function() {
+  $("#total-bet").text(theClient.bet)
+  // $("#balance").text(theClient.balance)
+})
+
+
+
 
 
 // ########## DOM MANIPULATION ##########
