@@ -513,20 +513,35 @@ wsServer.on("request", function (request) {
       });
     }
 
+    if (result.method === "playerResultNatural") {
+      var _spectators16 = result.spectators;
+      var _players13 = result.players;
+      var playerNaturalIndex = result.playerNaturalIndex;
+      var _payLoad16 = {
+        "method": "playerResultNatural",
+        "players": _players13,
+        "playerNaturalIndex": playerNaturalIndex
+      };
+
+      _spectators16.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad16));
+      });
+    }
+
     if (result.method === "syncGame") {
       var _gameId5 = result.gameId;
       var _game4 = games[_gameId5];
       var _gameOn3 = result.gameOn;
       var _dealer3 = result.dealer;
-      var _players13 = result.players;
+      var _players14 = result.players;
       var _player5 = result.player;
-      var _spectators16 = result.spectators; // Sync players & spectators arrays
+      var _spectators17 = result.spectators; // Sync players & spectators arrays
 
       _game4.gameOn = _gameOn3;
       _game4.dealer = _dealer3;
-      _game4.players = _players13;
+      _game4.players = _players14;
       _game4.player = _player5;
-      _game4.spectators = _spectators16; // console.log(game)
+      _game4.spectators = _spectators17; // console.log(game)
     }
   }); // The ClientId
 

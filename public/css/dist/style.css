@@ -321,7 +321,7 @@ body {
   position: absolute;
   width: 34px;
   height: 30px;
-  top: -50px;
+  top: -45px;
   left: 50%;
   margin-left: -17px;
   color: #e0e000;
@@ -331,7 +331,7 @@ body {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 4;
+  z-index: 15;
   opacity: 0;
   transform: scale(0.5);
   transition: 100ms ease-in-out;
@@ -339,12 +339,49 @@ body {
 
 .player-result {
   position: absolute;
-  top: -50px;
-  margin-left: 8px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid red;
-  color: white;
+  height: 50px;
+  width: 50px;
+  top: -110px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -27px;
+  font-size: 15px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid black;
+  background: #1f1f1f;
+  background: linear-gradient(0deg, #1f1f1f 0%, #414141 50%, #222222 100%);
+  border-radius: 100%;
+  box-shadow: 0 0 5px black;
   pointer-events: none;
+  z-index: 20;
+}
+
+.result-lose {
+  color: #f20000;
+  border: 2px solid #f20000;
+  text-shadow: 0 0 4px #8e0000;
+}
+
+.result-draw {
+  border: 2px solid #c8c8c8;
+  color: #c8c8c8;
+  text-shadow: 0 0 4px #646464;
+}
+
+.result-win {
+  border: 2px solid #00de00;
+  color: #00de00;
+  text-shadow: 0 0 4px #007a00;
+}
+
+.result-blackjack {
+  border: 2px solid gold;
+  color: gold;
+  text-shadow: 0 0 4px #9b7300;
+  font-size: 17px;
 }
 
 .player-bet {

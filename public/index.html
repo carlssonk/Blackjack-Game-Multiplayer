@@ -110,6 +110,7 @@
   </div>
 
   <div id="game-room" class="hide-element">
+  <div id="player-result-big">Win/Lose/Draw</div>
   <div id="dealer">
     <h1>Dealer</h1>
     <div id="dealerSum">sum here</div>
@@ -143,7 +144,7 @@
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
@@ -154,7 +155,7 @@
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
@@ -165,7 +166,40 @@
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
+      <div class="player-sum">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-result hide-element">WIN</div>
+      <div class="player-cards">
+
+      </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
+    </span>
+    <span class="players">
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-sum">21</div>
+      <div class="player-bet hide-element">5000</div>
+      <div class="player-result hide-element">BJ</div>
+      <div class="player-cards">
+
+      </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
+    </span>
+    <span class="players">
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-sum">sum here</div>
+      <div class="player-bet hide-element">bet here</div>
+      <div class="player-result hide-element">LOSE</div>
+      <div class="player-cards">
+
+      </div>
+      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
+    </span>
+    <span class="players">
+      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
@@ -176,40 +210,7 @@
     <span class="players">
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
-      <div class="player-result hide-element">Win/Lose/Draw</div>
-      <div class="player-cards">
-
-      </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
-    </span>
-    <span class="players">
-      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
-      <div class="player-result hide-element">Win/Lose/Draw</div>
-      <div class="player-cards">
-
-      </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
-    </span>
-    <span class="players">
-      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
-      <div class="player-result hide-element">Win/Lose/Draw</div>
-      <div class="player-cards">
-
-      </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
-    </span>
-    <span class="players">
-      <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-      <div class="player-sum hide-element">sum here</div>
+      <div class="player-sum">sum here</div>
       <div class="player-bet hide-element">bet here</div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
@@ -332,6 +333,7 @@
     let reload = null;
     let cardIndex = null;
     let cardIndexJoin = 1;
+    let playerNaturalIndex = null;
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
@@ -584,6 +586,16 @@
       ws.send(JSON.stringify(payLoad));
     }
 
+    function playerResultNatural() {
+      const payLoad = {
+        "method": "playerResultNatural",
+        "spectators": spectators,
+        "players": players,
+        "playerNaturalIndex": playerNaturalIndex
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
 
 
     ws.onmessage = message => {
@@ -614,7 +626,7 @@
           `
           <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
           <div class="player-name hide-element">A PLAYER</div>
-          <div class="player-sum hide-element">sum here</div>
+          <div class="player-sum">sum here</div>
           <div class="player-bet hide-element">bet here</div>
           <div class="player-result hide-element">Win/Lose/Draw</div>
           <div class="player-cards">
@@ -723,18 +735,18 @@
         }
 
         // Update player sum if user joins mid game
+        if(dealer.sum > 0) {
         for(let i = 0; i < players.length; i++) {
           for(let s = 0; s < playerSlotHTML.length; s++) {
             if(players[i].clientId === playerSlotHTML[s]) {
-              playerSlot[s].firstElementChild.nextElementSibling.classList.remove("hide-element");
+              // playerSlot[s].firstElementChild.nextElementSibling.classList.remove("hide-element");
               playerSlot[s].firstElementChild.nextElementSibling.style.opacity = "1";
               playerSlot[s].firstElementChild.nextElementSibling.style.transform = "scale(1)";
             }
           }
         }
         // Update dealer sum if user joins mid game
-        if(dealer.sum > 0) {
-          $("#dealerSum").removeClass("hide-element")
+          // $("#dealerSum").removeClass("hide-element")
           dealerSlot.firstElementChild.nextElementSibling.style.opacity = "1"
           dealerSlot.firstElementChild.nextElementSibling.style.transform = "scale(1)"          
         }
@@ -865,19 +877,19 @@
         // Show sum for each player
         for(let i = 0; i < playerSlotHTML.length; i++) {
             // Actually unhide hide element
-              playerSlot[i].firstElementChild.nextElementSibling.classList.remove("hide-element")
-              // Set opacity to 1 (for fade in animation purpose)
-              setTimeout(function () { // add 1ms timeout so fade in effect works
+              // playerSlot[i].firstElementChild.nextElementSibling.classList.remove("hide-element")
+              // // Set opacity to 1 (for fade in animation purpose)
+              // setTimeout(function () { // add 1ms timeout so fade in effect works
                 playerSlot[i].firstElementChild.nextElementSibling.style.opacity = "1"
                 playerSlot[i].firstElementChild.nextElementSibling.style.transform = "scale(1)"
-              }, 100)
+              // }, 100)
 
         }
-        $("#dealerSum").removeClass("hide-element")
-        setTimeout(function () {
+        // $("#dealerSum").removeClass("hide-element")
+        // setTimeout(function () {
           dealerSlot.firstElementChild.nextElementSibling.style.opacity = "1"
           dealerSlot.firstElementChild.nextElementSibling.style.transform = "scale(1)"
-        }, 100)
+        // }, 100)
 
       }
 
@@ -904,13 +916,40 @@
           }
 
 
+      if(response.method === "playerResultNatural") {
+        players = response.players;
+        console.log(playerNaturalIndex)
+        playerNaturalIndex = response.playerNaturalIndex;
+        console.log(playerNaturalIndex)
+
+        // for(let i = 0; i < players.length; i++) {
+        //   if (Array.isArray(players[i].cards[0].value.value) || Array.isArray(players[i].cards[1].value.value)) {
+        //     if (players[i].cards[0].value.value === 10 || players[i].cards[1].value.value === 10 || players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") { // Checks if player has a TEN
+        //       for(let x = 0; x < playerSlotHTML.length; x++) {
+        //         if(players[i].clientId === playerSlotHTML[x]) {
+        //           $(".player-result:eq("+x+")").removeClass("hide-element")
+        //           $(".player-result:eq("+x+")").addClass("result-win")
+        //           $(".player-result:eq("+x+")").text("BLACKJACK!")
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+        $(".player-result:eq("+playerNaturalIndex+")").removeClass("hide-element")
+        $(".player-result:eq("+playerNaturalIndex+")").addClass("result-blackjack")
+        $(".player-result:eq("+playerNaturalIndex+")").text("BJ")
+
+
+      }
 
       if(response.method === "playerResult") {
         players = response.players
         //         // If dealer has 2 sums (i.e. an ace), count the highest only
+
         if(dealer.sum.length === 2) {
           dealer.sum.shift()
           dealer.sum = dealer.sum[0]
+          console.log(dealer.sum)
         }
 
         dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
@@ -927,6 +966,8 @@
               console.log("DEALER BUST")
               for(let x = 0; x < playerSlotHTML.length; x++) {
                 if(players[i].clientId === playerSlotHTML[x]) {
+                  $(".player-result:eq("+x+")").removeClass("hide-element")
+                  $(".player-result:eq("+x+")").addClass("result-win")
                   $(".player-result:eq("+x+")").text("WIN")
                 }
               }
@@ -935,6 +976,8 @@
               console.log("player win")
               for(let x = 0; x < playerSlotHTML.length; x++) {
                 if(players[i].clientId === playerSlotHTML[x]) {
+                  $(".player-result:eq("+x+")").removeClass("hide-element")
+                  $(".player-result:eq("+x+")").addClass("result-win")
                   $(".player-result:eq("+x+")").text("WIN")
                 }
               }
@@ -943,6 +986,8 @@
               console.log("Draw!")
               for(let x = 0; x < playerSlotHTML.length; x++) {
                 if(players[i].clientId === playerSlotHTML[x]) {
+                  $(".player-result:eq("+x+")").removeClass("hide-element")
+                  $(".player-result:eq("+x+")").addClass("result-draw")
                   $(".player-result:eq("+x+")").text("DRAW")
                 }
               }
@@ -950,7 +995,9 @@
               dealerWin(i)
               for(let x = 0; x < playerSlotHTML.length; x++) {
                 if(players[i].clientId === playerSlotHTML[x]) {
-                  $(".player-result:eq("+x+")").text("LOST")
+                  $(".player-result:eq("+x+")").removeClass("hide-element")
+                  $(".player-result:eq("+x+")").addClass("result-lose")
+                  $(".player-result:eq("+x+")").text("LOSE")
                 }
               }
             }
@@ -963,15 +1010,17 @@
 
       // This resets styling only every round
       if(response.method === "resetRound") {
-        $(".player-sum").addClass("hide-element");
-        $("#dealerSum").addClass("hide-element");
+        $(".player-result").addClass("hide-element")
+        $(".player-result").removeClass("result-lose result-draw result-win")
+        // $(".player-sum").addClass("hide-element");
+        // $("#dealerSum").addClass("hide-element");
 
         $(".player-sum").css({"opacity": "", "transform": ""});
         $("#dealerSum").css({"opacity": "", "transform": ""});
       }
 
       // This updates theClient and players array accordingly
-      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave" || response.method === "playersLength" || response.method === "playerResult") {
+      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural") {
         return;
       } else {
         updateAllPlayers()
@@ -1007,7 +1056,7 @@
             if(playerSlot[z].firstElementChild.classList.value === "empty-slot") playerSlot[z].firstElementChild.remove();
             playerSlot[z].firstElementChild.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.classList.remove("hide-element")
-            playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
+            // playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
             if(players[x].nickname === "") players[x].nickname = "Player";
             playerSlot[z].firstElementChild.innerText = players[x].nickname
             playerSlot[z].firstElementChild.innerHTML += `<span><img class="player-avatar" src="" alt="avatar"></span>`

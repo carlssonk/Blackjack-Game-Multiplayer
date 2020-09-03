@@ -549,6 +549,22 @@ wsServer.on("request", request => {
       })
     }
 
+    if(result.method === "playerResultNatural") {
+      const spectators = result.spectators
+      const players = result.players
+      const playerNaturalIndex = result.playerNaturalIndex
+
+      const payLoad = {
+        "method": "playerResultNatural",
+        "players": players,
+        "playerNaturalIndex": playerNaturalIndex
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
+
 
     if(result.method === "syncGame") {
       const gameId = result.gameId;

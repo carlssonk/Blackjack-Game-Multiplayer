@@ -346,7 +346,7 @@ body {
   position: absolute;
   width: 34px;
   height: 30px;
-  top: -50px;
+  top: -45px;
   left: 50%;
   margin-left: -17px;
   color: rgb(224, 224, 0);
@@ -357,7 +357,7 @@ body {
   align-items: center;
   justify-content: center;
   pointer-events:none;
-  z-index: 4;
+  z-index: 15;
   opacity: 0;
   transform: scale(0.5);
   transition: 100ms ease-in-out;
@@ -365,13 +365,51 @@ body {
 }
 .player-result {
   position: absolute;
-  top: -50px;
-  margin-left: 8px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid red;
-  color: white;
+  height: 50px;
+  width: 50px;
+  top: -110px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -27px;
+  font-size: 15px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid black;
+  background: rgb(31,31,31);
+  background: linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(65,65,65,1) 50%, rgba(34,34,34,1) 100%);
+  border-radius: 100%;
+  // border: 2px solid rgb(245, 245, 245);
+  // color: rgb(245, 245, 245);
+  // text-shadow: 0 0 4px gray;
+  box-shadow: 0 0 5px black;
   pointer-events:none;
+  z-index: 20;
 }
+.result-lose {
+  color: rgb(242, 0, 0);
+  border: 2px solid rgb(242, 0, 0);
+  text-shadow: 0 0 4px rgb(142, 0, 0);;
+}
+.result-draw {
+  border: 2px solid rgb(200, 200, 200);
+  color: rgb(200, 200, 200);
+  text-shadow: 0 0 4px rgb(100, 100, 100);
+}
+.result-win {
+  border: 2px solid rgb(0, 222, 0);
+  color: rgb(0, 222, 0);
+  text-shadow: 0 0 4px rgb(0, 122, 0);
+}
+.result-blackjack {
+  border: 2px solid gold;
+  color: gold;
+  text-shadow: 0 0 4px rgb(155, 115, 0);
+  font-size: 17px;
+
+}
+
 .player-bet {
   position: absolute;
   height: 100%;

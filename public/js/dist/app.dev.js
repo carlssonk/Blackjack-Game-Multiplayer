@@ -258,12 +258,26 @@ function naturals() {
         // Checks if player has a TEN
         console.log("A ten & and ace");
         naturalBlackjack(i);
-        players[i].hasAce = true;
+        players[i].hasAce = true; // Send player index to webSocket
+
+        for (var x = 0; x < playerSlotHTML.length; x++) {
+          if (players[i].clientId === playerSlotHTML[x]) {
+            playerNaturalIndex = x;
+            playerResultNatural();
+          }
+        }
       } else if (players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {
         // Checks if player has TWO aces
         console.log("TWO aces");
         naturalBlackjack(i);
-        players[i].hasAce = true;
+        players[i].hasAce = true; // Send player index to webSocket
+
+        for (var _x = 0; _x < playerSlotHTML.length; _x++) {
+          if (players[i].clientId === playerSlotHTML[_x]) {
+            playerNaturalIndex = _x;
+            playerResultNatural();
+          }
+        }
       } else {
         // Checks all cards except for ACE and TEN
         console.log("an ace with a defualt card");
@@ -290,7 +304,6 @@ function naturalBlackjack(i) {
 
   players[i].balance = players[i].balance + (1.5 * players[i].bet + players[i].bet);
   players[i].bet = 0;
-  console.log(player.sum);
 }
 
 function naturalPlayerAceSum(i) {
@@ -405,38 +418,9 @@ function dealerPlay() {
 
 
 function finalCompare() {
-  // // If dealer has 2 sums (i.e. an ace), count the highest only
-  // if(dealer.sum.length === 2) {
-  //   dealer.sum.shift()
-  //   dealer.sum = dealer.sum[0]
-  // }
-  // console.log(dealer.sum)
-  // dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
-  // // remove dealer from player
-  // players.pop(players.slice(-1)[0])
-  // console.log("show dealer cards")
-  // // For all players That have NOT busted, compare sum to dealer
-  // for(let i = 0; i < players.length; i++) {
-  //   if(players[i].cards.length > 0) {
-  //     // Also check if dealer has bust
-  //     if(dealer.sum > 21) {
-  //       playerWin(i)
-  //       console.log("DEALER BUST")
-  //     } else if(dealer.sum < players[i].sum) {
-  //       playerWin(i)
-  //       console.log("player win")
-  //     } else if(dealer.sum === players[i].sum) {
-  //       playerDraw(i)
-  //       console.log("Draw!")
-  //     } else {
-  //       dealerWin(i)
-  //       console.log("dealer wins")
-  //     }
-  //   }
-  // }
   playerResult(); // Function for RESET GAME
 
-  setTimeout(resetGame, 2000);
+  setTimeout(resetGame, 4000);
 }
 
 function playerWin(i) {
