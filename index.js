@@ -599,7 +599,8 @@ wsServer.on("request", request => {
         "balance": 100000,
         "sum": null,
         "hasAce": false,
-        "isReady": false
+        "isReady": false,
+        "blackjack": false
       }
       let player = null;
       // The players Array

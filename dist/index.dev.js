@@ -558,7 +558,8 @@ wsServer.on("request", function (request) {
     "balance": 100000,
     "sum": null,
     "hasAce": false,
-    "isReady": false
+    "isReady": false,
+    "blackjack": false
   };
   var player = null; // The players Array
 

@@ -172,7 +172,7 @@ body {
   padding: 12px 18px;
   border-radius: 30px 0px 0px 30px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 50;
 }
 #how-to-play:hover {
   color: rgb(204, 204, 204);
@@ -262,7 +262,32 @@ body {
 
 // #############GAME MENU#############
 
-
+#player-result-big {
+  position: absolute;
+  width: 400px;
+  height: 80px;
+  top: 50%;
+  margin-top: -190px;
+  left: 50%;
+  margin-left: -200px;
+  font-size: 18px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgb(0,0,0);
+  background: rgb(0,0,0,.25);
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 20%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%);
+  text-shadow: 0 0 10px black;
+  z-index: 30;
+}
+.color-green {
+  color: rgb(0, 222, 0);
+}
+.color-red {
+  color: rgb(242, 0, 0);
+}
 
 #players-container {
   position:absolute;
@@ -407,7 +432,6 @@ body {
   color: gold;
   text-shadow: 0 0 4px rgb(155, 115, 0);
   font-size: 17px;
-
 }
 
 .player-bet {
@@ -520,20 +544,23 @@ i {
   border: 1px solid white;
   width: 100px;
   border-radius: 10px;
-  div {
+  #total-bet {
     color: rgb(224, 224, 0);
   }
 }
 
  #dealer {
   position: relative;
-  margin: 20px auto;
+  margin: 0 auto;
   height: 150px;
   display: flex;
   justify-content: center;
   h1 {
     display: flex;
-    font-size: 64px;
+    align-items: flex-start;
+    font-size: 48px;
+    color: white;
+    text-shadow: 0 0 10px black;
     margin: 0;
   }
   #dealerSum {

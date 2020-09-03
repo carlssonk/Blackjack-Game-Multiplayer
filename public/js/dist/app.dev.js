@@ -299,11 +299,11 @@ function naturals() {
 }
 
 function naturalBlackjack(i) {
-  players[i].sum = 21;
-  players[i].cards = []; // Multiply player bet by 1.5 (this is the 3:2 ratio)
+  players[i].blackjack = true;
+  players[i].sum = 21; // players[i].cards = [];
+  // Multiply player bet by 1.5 (this is the 3:2 ratio)
 
-  players[i].balance = players[i].balance + (1.5 * players[i].bet + players[i].bet);
-  players[i].bet = 0;
+  players[i].balance = players[i].balance + (1.5 * players[i].bet + players[i].bet); // players[i].bet = 0;
 }
 
 function naturalPlayerAceSum(i) {
@@ -418,22 +418,51 @@ function dealerPlay() {
 
 
 function finalCompare() {
-  playerResult(); // Function for RESET GAME
+  playerResult(); // Make balance & bet fill animation here
+
+  $("#player-result-big").removeClass("hide-element");
+
+  if (theClient.sum > 21) {
+    $("#player-result-big-answer").text("YOU BUSTED");
+  } else if (theClient.blackjack === true) {
+    $("#player-result-big-answer").text("BLACKJACK");
+    $("#player-result-big-sum").text(1.5 * theClient.bet + theClient.bet);
+    $("#player-result-big-plus-minus").text("+");
+    $("#player-result-sum-box").addClass("color-green");
+  } else if (dealer.sum > 21) {
+    $("#player-result-big-answer").text("YOU WIN");
+    $("#player-result-big-sum").text(theClient.bet * 2);
+    $("#player-result-big-plus-minus").text("+");
+    $("#player-result-sum-box").addClass("color-green");
+  } else if (dealer.sum < theClient.sum) {
+    $("#player-result-big-answer").text("YOU WIN");
+    $("#player-result-big-sum").text(theClient.bet * 2);
+    $("#player-result-big-plus-minus").text("+");
+    $("#player-result-sum-box").addClass("color-green");
+  } else if (dealer.sum === theClient.sum) {
+    $("#player-result-big-answer").text("DRAW");
+    $("#player-result-big-sum").text(theClient.bet);
+    $("#player-result-big-plus-minus").text("+");
+  } else {
+    $("#player-result-big-answer").text("DEALER WINS");
+  } // Function for RESET GAME
+
 
   setTimeout(resetGame, 4000);
 }
 
 function playerWin(i) {
-  players[i].balance = players[i].balance + players[i].bet * 2;
+  if (players[i].blackjack === false) players[i].balance = players[i].balance + players[i].bet * 2;
   players[i].bet = 0;
 }
 
 function playerDraw(i) {
-  players[i].balance = players[i].balance + players[i].bet;
+  if (players[i].blackjack === false) players[i].balance = players[i].balance + players[i].bet;
   players[i].bet = 0;
 }
 
 function dealerWin(i) {
+  console.log(players[i].sum);
   players[i].bet = 0;
 }
 
@@ -445,6 +474,7 @@ function resetGame() {
     players[i].hasAce = false;
     players[i].sum = null;
     players[i].isReady = false;
+    players[i].blackjack = false;
   } // Reset Dealer
 
 
@@ -461,7 +491,12 @@ function resetGame() {
   startedGame = false;
   doubleDown = false;
   gameOn = false;
-  $("#total-bet").text(0); // Send to all players
+  $("#total-bet").text("");
+  $("#player-result-big").addClass("hide-element");
+  $("#player-result-sum-box").removeClass("color-green");
+  $("#player-result-big-answer").text("");
+  $("#player-result-big-sum").text("");
+  $("#player-result-big-plus-minus").text(""); // Send to all players
 
   updatePlayerCards();
   updateCurrentPlayer();
@@ -475,8 +510,8 @@ function resetGame() {
 
 
 function bust() {
-  player.cards = [];
-  player.bet = 0; // updatePlayerCards()
+  player.cards = []; // player.bet = 0;
+  // updatePlayerCards()
   // updatePlayers();
 
   sendPlayerNext();

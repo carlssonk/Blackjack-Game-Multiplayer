@@ -110,7 +110,13 @@
   </div>
 
   <div id="game-room" class="hide-element">
-  <div id="player-result-big">Win/Lose/Draw</div>
+  <div id="player-result-big" class="hide-element">
+    <div id="player-result-big-answer"></div>
+    <div id="player-result-sum-box">
+      <span id="player-result-big-plus-minus"></span>
+      <span id="player-result-big-sum"></span>
+    </div>
+  </div>
   <div id="dealer">
     <h1>Dealer</h1>
     <div id="dealerSum">sum here</div>
@@ -859,13 +865,13 @@
         if(dealersTurn) {
           return;
         } else {
-          if(player.clientId === theClient.clientId && player.bet > 0) {
+          if(player.clientId === theClient.clientId && player.sum < 21 || player.sum.length > 1) {
             clicked = false;
             setTimeout(function() { // remove timeout later if needed
               console.log("ITS YOUR TURN")
             }, 50)
             thePlay()
-          } else if(player.clientId === theClient.clientId && player.bet === 0) {
+          } else if(player.clientId === theClient.clientId && player.sum >= 21) {
             console.log("you blackjacked or busted")
             sendPlayerNext()
           } else {
@@ -916,31 +922,6 @@
           }
 
 
-      if(response.method === "playerResultNatural") {
-        players = response.players;
-        console.log(playerNaturalIndex)
-        playerNaturalIndex = response.playerNaturalIndex;
-        console.log(playerNaturalIndex)
-
-        // for(let i = 0; i < players.length; i++) {
-        //   if (Array.isArray(players[i].cards[0].value.value) || Array.isArray(players[i].cards[1].value.value)) {
-        //     if (players[i].cards[0].value.value === 10 || players[i].cards[1].value.value === 10 || players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") { // Checks if player has a TEN
-        //       for(let x = 0; x < playerSlotHTML.length; x++) {
-        //         if(players[i].clientId === playerSlotHTML[x]) {
-        //           $(".player-result:eq("+x+")").removeClass("hide-element")
-        //           $(".player-result:eq("+x+")").addClass("result-win")
-        //           $(".player-result:eq("+x+")").text("BLACKJACK!")
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        $(".player-result:eq("+playerNaturalIndex+")").removeClass("hide-element")
-        $(".player-result:eq("+playerNaturalIndex+")").addClass("result-blackjack")
-        $(".player-result:eq("+playerNaturalIndex+")").text("BJ")
-
-
-      }
 
       if(response.method === "playerResult") {
         players = response.players
@@ -958,7 +939,8 @@
         console.log("show dealer cards")
         // For all players That have NOT busted, compare sum to dealer
         for(let i = 0; i < players.length; i++) {
-
+          // exclude all players that already have blackjack
+          if(players[i].blackjack === false) {
           if(players[i].cards.length > 0) {
             // Also check if dealer has bust
             if(dealer.sum > 21) {
@@ -1005,13 +987,24 @@
 
           }
         }
+        }
 
       }
+
+      if(response.method === "playerResultNatural") {
+        players = response.players;
+        playerNaturalIndex = response.playerNaturalIndex;
+        $(".player-result:eq("+playerNaturalIndex+")").removeClass("hide-element")
+        $(".player-result:eq("+playerNaturalIndex+")").addClass("result-blackjack")
+        $(".player-result:eq("+playerNaturalIndex+")").text("BJ")
+      }
+
 
       // This resets styling only every round
       if(response.method === "resetRound") {
         $(".player-result").addClass("hide-element")
-        $(".player-result").removeClass("result-lose result-draw result-win")
+        $(".player-result").removeClass("result-lose result-draw result-win result-blackjack")
+
         // $(".player-sum").addClass("hide-element");
         // $("#dealerSum").addClass("hide-element");
 
@@ -1061,7 +1054,14 @@
             playerSlot[z].firstElementChild.innerText = players[x].nickname
             playerSlot[z].firstElementChild.innerHTML += `<span><img class="player-avatar" src="" alt="avatar"></span>`
             playerSlot[z].firstElementChild.nextElementSibling.innerHTML = players[x].sum
-            playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet          
+            playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
+            // Player busts
+            if(players[x].sum > 21) {
+              $(".player-result:eq("+z+")").removeClass("hide-element")
+              $(".player-result:eq("+z+")").addClass("result-lose")
+              $(".player-result:eq("+z+")").text("BUST")        
+            }
+   
           }
         }
       }
@@ -1071,7 +1071,7 @@
       // Update player
       player = players[currentPlayer]
       // Keep user style balance in sync
-      $("#balance").text(theClient.balance)
+      if(theClient.blackjack === false) $("#balance").text(theClient.balance);
     }
 
     // Keep game.(property) in sync with the actual game, so when a new client joins mid game, all "LOGIC" will syn.
