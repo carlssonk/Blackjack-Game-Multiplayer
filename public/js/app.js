@@ -443,10 +443,15 @@ function playerHit() {
 
 function sendPlayerNext() {
 
-  if(player.sum.length === 2) {
+  // if player sum.length === 2. Fix players sum before going to next player
+  if(player.sum.length === 2 && player.sum[1] <= 21) {
     player.sum.shift()
     player.sum = player.sum[0]
+  } else if(player.sum.length === 2 && player.sum[1] > 21) {
+    player.sum.pop()
+    player.sum = player.sum[0]
   }
+
 
   if(dealersTurn === false) nextPlayer();
   
@@ -511,12 +516,21 @@ function dealerPlay() {
 
 function finalCompare() {
   playerResult();
-  // Make balance & bet fill animation here
-  
-  $("#player-result-big").removeClass("hide-element")
+  // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
+  if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
+    dealer.sum.shift()
+    dealer.sum = dealer.sum[0]
+  } else if(dealer.sum.length === 2 && dealer.sum[1] > 21) {
+    dealer.sum.pop()
+    dealer.sum = dealer.sum[0]
+  }
 
+  $("#player-result-big").removeClass("hide-element")
   if(theClient.sum > 21) {
     $("#player-result-big-answer").text("YOU BUSTED")
+    $("#player-result-big-sum").text(theClient.bet)
+    $("#player-result-big-plus-minus").text("-")
+    $("#player-result-sum-box").addClass("color-red")
   } else if(theClient.blackjack === true) {
       $("#player-result-big-answer").text("BLACKJACK")
       $("#player-result-big-sum").text(1.5 * theClient.bet + theClient.bet)
@@ -534,10 +548,13 @@ function finalCompare() {
           $("#player-result-sum-box").addClass("color-green")
         } else if(dealer.sum === theClient.sum) {
             $("#player-result-big-answer").text("DRAW")
-            $("#player-result-big-sum").text(theClient.bet)
-            $("#player-result-big-plus-minus").text("+")
+            // $("#player-result-big-sum").text(theClient.bet)
+            // $("#player-result-big-plus-minus").text("+")
           } else {
               $("#player-result-big-answer").text("DEALER WINS")
+              $("#player-result-big-sum").text(theClient.bet)
+              $("#player-result-big-plus-minus").text("-")
+              $("#player-result-sum-box").addClass("color-red")
           }
 
   // Function for RESET GAME
@@ -545,6 +562,7 @@ function finalCompare() {
 }
 
 function playerWin(i) {
+  // The blackjack payout has already been dealt. (in naturalBlackjack(i))
   if(players[i].blackjack === false) players[i].balance = players[i].balance + (players[i].bet * 2);
   players[i].bet = 0;
 }
@@ -555,7 +573,6 @@ function playerDraw(i) {
 }
 
 function dealerWin(i) {
-  console.log(players[i].sum)
   players[i].bet = 0;
 }
 
@@ -568,6 +585,7 @@ function resetGame() {
     players[i].sum = null;
     players[i].isReady = false;
     players[i].blackjack = false;
+    // players[i].bet = 0;
   }
   // Reset Dealer
   dealer.cards = [];
@@ -586,7 +604,7 @@ function resetGame() {
   gameOn = false;
   $("#total-bet").text("")
   $("#player-result-big").addClass("hide-element")
-  $("#player-result-sum-box").removeClass("color-green")
+  $("#player-result-sum-box").removeClass("color-green color-red")
   $("#player-result-big-answer").text("")
   $("#player-result-big-sum").text("")
   $("#player-result-big-plus-minus").text("")

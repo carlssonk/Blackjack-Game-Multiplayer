@@ -925,12 +925,14 @@
 
       if(response.method === "playerResult") {
         players = response.players
-        //         // If dealer has 2 sums (i.e. an ace), count the highest only
 
-        if(dealer.sum.length === 2) {
+        // if dealer sum.length === 2. Fix dealer sum before proceeding
+        if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
           dealer.sum.shift()
           dealer.sum = dealer.sum[0]
-          console.log(dealer.sum)
+        } else if(dealer.sum.length === 2 && dealer.sum[1] > 21) {
+          dealer.sum.pop()
+          dealer.sum = dealer.sum[0]
         }
 
         dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
@@ -984,8 +986,13 @@
               }
             }
 
-
+            // If player busted, make him Bust!
+          } else {
+            dealerWin(i)
           }
+          // If player has blackjack, make him win!
+        } else {
+          playerWin(i)
         }
         }
 
