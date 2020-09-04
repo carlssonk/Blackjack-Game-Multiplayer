@@ -715,13 +715,17 @@
       // join
       if (response.method === "join") {
         game = response.game;
-        // players = response.players
+        player = response.player
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
         roomId = response.roomId;
 
         roomId = gameId.substring(gameId.length - 6)
         window.history.pushState('game', 'Title', '/' + roomId);
+
+        console.log(player)
+        console.log(player)
+        console.log(player)
 
       }
 
@@ -758,6 +762,9 @@
         players = response.players
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
+        console.log(player)
+        console.log(player)
+        console.log(player)
 
       }
 
@@ -766,7 +773,9 @@
       if (response.method === "joinMidGame") {
         theClient = response.theClient
         game = response.game
-        player = game.player
+        console.log(player)
+        console.log(player)
+        console.log(player)
 
           // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
           for(let i = 0; i < players.length; i++) {
@@ -1098,6 +1107,12 @@
       }
 
       if(response.method === "finalCompare") {
+        console.log("final compare go")
+        console.log("final compare go")
+        console.log("final compare go")
+        console.log("final compare go")
+        console.log("final compare go")
+        console.log("final compare go")
         finalCompareGo();
       }
 

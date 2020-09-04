@@ -553,7 +553,7 @@ function dealerPlay() {
 
 // ***********************FINAL COMPARE*************************
 
-function finalCompareGo() {
+function finalCompareGo() { // This should fire up for all players
   playerResult();
   // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
   if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
@@ -753,6 +753,9 @@ function playerAceDeckAce() {
   
 // If no Ace is included
 function compareSum() {
+  console.log(player)
+  console.log(player)
+  console.log(player)
 
   if(!player.hasAce && !deck[0].value.hasAce) {
     player.sum = player.sum + deck[0].value.value // add sum
@@ -762,8 +765,14 @@ function compareSum() {
 
 
     if(dealersTurn === true) {
+      console.log(player)
+      console.log(player)
+      console.log(player)
       setTimeout(outputCardSumDealer, 1000) // compare & output sum for dealer
     } else {
+      console.log(player)
+      console.log(player)
+      console.log(player)
       setTimeout(outputCardSum, 500) // compare & output sum
     }
     
@@ -777,8 +786,14 @@ function compareSumAce() {
   // playerAceDeckNoAce() // <--- Check if Player has ACE && next card has NO ACE
   
   if(dealersTurn === true) {
+    console.log(player)
+    console.log(player)
+    console.log(player)
     setTimeout(outputCardSumAceDealer, 1000) // compare & output sum for dealer
   } else {
+    console.log(player)
+    console.log(player)
+    console.log(player)
     setTimeout(outputCardSumAce, 500) // compare & output sum
   }
   
@@ -860,7 +875,7 @@ function outputCardSumAceDealer() {
         playerHit()
       } else {
         console.log("FINAL COMPARE")
-        finalCompareGo()
+        finalCompare();
       }
     }
   } else {
@@ -871,7 +886,7 @@ function outputCardSumAceDealer() {
         playerHit()
       } else {
         console.log("FINAL COMPARE")
-        finalCompareGo()
+        finalCompare();
       }
     }
   }
@@ -884,7 +899,7 @@ function outputCardSumDealer() {
       playerHit()
     } else {
       console.log("FINAL COMPARE")
-      finalCompareGo()
+      finalCompare();
   }
 }
 }
