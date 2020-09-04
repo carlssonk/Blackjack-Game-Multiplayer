@@ -239,6 +239,19 @@ function playerBets() {
       });
     }
 }
+
+// CLEAR AND MAX
+$(".max-clear").click(function() {
+  console.log(this.innerText)
+  if(this.innerText === "CLEAR") {
+    theClient.balance = theClient.balance + theClient.bet;
+    theClient.bet = 0;
+  } else if(this.innerText === "MAX") {
+    theClient.bet = theClient.balance;
+    theClient.balance = 0;
+  }
+});
+
 // function sendPlayerBets() {
 //   const payLoad = {
 //     "method": "bet",
@@ -923,9 +936,9 @@ $("#how-to-play").click(function() {
 
 // $("#total-bet")
 
-$(".betButtons").click(function() {
+$(".update-balance-bet").click(function() {
   $("#total-bet").text(theClient.bet)
-  // $("#balance").text(theClient.balance)
+  $("#balance").text(theClient.balance)
 })
 
 

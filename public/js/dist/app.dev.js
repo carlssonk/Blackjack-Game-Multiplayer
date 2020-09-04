@@ -166,7 +166,20 @@ function playerBets() {
   for (var b = 0; b < betButtons.length; b++) {
     _loop(b);
   }
-} // function sendPlayerBets() {
+} // CLEAR AND MAX
+
+
+$(".max-clear").click(function () {
+  console.log(this.innerText);
+
+  if (this.innerText === "CLEAR") {
+    theClient.balance = theClient.balance + theClient.bet;
+    theClient.bet = 0;
+  } else if (this.innerText === "MAX") {
+    theClient.bet = theClient.balance;
+    theClient.balance = 0;
+  }
+}); // function sendPlayerBets() {
 //   const payLoad = {
 //     "method": "bet",
 //     "gameId": gameId,
@@ -177,7 +190,6 @@ function playerBets() {
 // }
 // When all bets placed, fire up Deal the cards
 // Loop through all players to check if they'r ready
-
 
 ready.addEventListener("click", function () {
   player = players[currentPlayer];
@@ -785,6 +797,7 @@ $("#how-to-play").click(function () {
   }
 }); // $("#total-bet")
 
-$(".betButtons").click(function () {
-  $("#total-bet").text(theClient.bet); // $("#balance").text(theClient.balance)
+$(".update-balance-bet").click(function () {
+  $("#total-bet").text(theClient.bet);
+  $("#balance").text(theClient.balance);
 }); // ########## DOM MANIPULATION ##########

@@ -292,7 +292,7 @@ body {
 #players-container {
   position:absolute;
   width: 80%;
-  height: 400px;
+  height: 420px;
   // background: #063;
   bottom: 0;
   left: 50%;
@@ -608,6 +608,84 @@ i {
       object-fit: cover;
       border-radius: 12px;
     }
+  }
+
+}
+
+#bets-container {
+  position:absolute;
+  width: 950px;
+  height: 150px;
+  margin: 0 auto;
+  // background: #063;
+  bottom: 0;
+  left: 50%;
+  margin-left: -475px;
+  display: flex;
+  /* flex-flow: wrap; */
+  /* flex-direction: row; */
+  // background-color: green;
+  border: 2px solid red;
+  color: black;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    // background-size: cover;
+    display: inline-block;
+    font-weight: 1000;
+    -webkit-text-stroke: 1px black;
+    color: gold;
+    border-radius: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px black;
+    cursor: pointer;
+    border: none;
+    outline:none;
+  }
+  .max-clear {
+    border-radius: 10px;
+    height: 30px;
+    background-color: white;
+    border: 2px solid black;
+  }
+  #chip10 {
+    background: url("/imgs/chips/Casino_Chip_White2.svg") no-repeat;
+  }
+  #chip50 {
+    background: url("/imgs/chips/Casino_Chip_Red.svg") no-repeat;
+    margin-bottom: 20px;
+  }
+  #chip100 {
+    background: url("/imgs/chips/Casino_Chip_Blue.svg") no-repeat;
+    margin-bottom: 30px;
+  }
+  #chip500 {
+    background: url("/imgs/chips/Casino_Chip_Green.svg") no-repeat;
+    margin-bottom: 40px;
+  }
+  #chip1k {
+    background: url("/imgs/chips/Casino_Chip_Gray.svg") no-repeat;
+    margin-bottom: 50px;
+  }
+  #chip5k {
+    background: url("/imgs/chips/Casino_Chip_Orange.svg") no-repeat;
+    margin-bottom: 40px;
+  }
+  #chip10k {
+    background: url("/imgs/chips/Casino_Chip_Purple.svg") no-repeat;
+    margin-bottom: 30px;
+  }
+  #chip50k {
+    background: url("/imgs/chips/Casino_Chip_Brown.svg") no-repeat;
+    margin-bottom: 20px;
+  }
+  #chip100k {
+    background: url("/imgs/chips/Casino_Chip_Black.svg") no-repeat;
   }
 
 }
