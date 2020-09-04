@@ -528,20 +528,33 @@ wsServer.on("request", function (request) {
       });
     }
 
+    if (result.method === "finalCompare") {
+      var _spectators17 = result.spectators;
+      var _players14 = result.players;
+      var _payLoad17 = {
+        "method": "finalCompare" // "players": players
+
+      };
+
+      _spectators17.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad17));
+      });
+    }
+
     if (result.method === "syncGame") {
       var _gameId5 = result.gameId;
       var _game4 = games[_gameId5];
       var _gameOn3 = result.gameOn;
       var _dealer3 = result.dealer;
-      var _players14 = result.players;
+      var _players15 = result.players;
       var _player5 = result.player;
-      var _spectators17 = result.spectators; // Sync players & spectators arrays
+      var _spectators18 = result.spectators; // Sync players & spectators arrays
 
       _game4.gameOn = _gameOn3;
       _game4.dealer = _dealer3;
-      _game4.players = _players14;
+      _game4.players = _players15;
       _game4.player = _player5;
-      _game4.spectators = _spectators17; // console.log(game)
+      _game4.spectators = _spectators18; // console.log(game)
     }
   }); // The ClientId
 

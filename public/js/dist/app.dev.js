@@ -6,7 +6,7 @@
 // HTML
 var play = document.querySelector("#play");
 var betButtons = document.querySelectorAll(".betButtons");
-var ready = document.querySelector("#ready");
+var ready = document.querySelector(".ready");
 var standBtn = document.querySelector("#stand");
 var hitBtn = document.querySelector("#hit");
 var doubleDownBtn = document.querySelector("#doubleDown");
@@ -19,11 +19,13 @@ dealerCards = document.querySelectorAll(".dealer-cards"); // Basic utilities to 
 
 var startedGame = false;
 var currentPlayer = 0;
+var playersReady = 0;
 var sum = null;
 var dealersTurn = false;
 var gameOn = false;
 var bool;
-var showSum = false; // resetCards = false;
+var showSum = false;
+var chipIndex = null; // resetCards = false;
 // Cards (suit)
 
 var suit = ["Heart", "Diamond", "Spade", "Club"]; // Cards (values)
@@ -69,7 +71,8 @@ var values = [{
   "card": "K",
   "value": 10
 }];
-var deckImg = ["Heart2", "Heart3", "Heart4", "Heart5", "Heart6", "Heart7", "Heart8", "Heart9", "Heart10", "HeartJ", "HeartQ", "HeartK", "HeartA", "Diamond2", "Diamond3", "Diamond4", "Diamond5", "Diamond6", "Diamond7", "Diamond8", "Diamond9", "Diamond10", "DiamondJ", "DiamondQ", "DiamondK", "DiamondA", "Spade2", "Spade3", "Spade4", "Spade5", "Spade6", "Spade7", "Spade8", "Spade9", "Spade10", "SpadeJ", "SpadeQ", "SpadeK", "SpadeA", "Club2", "Club3", "Club4", "Club5", "Club6", "Club7", "Club8", "Club9", "Club10", "ClubJ", "ClubQ", "ClubK", "ClubA"]; // Actual deck (suit & values combined)
+var deckImg = ["Heart2", "Heart3", "Heart4", "Heart5", "Heart6", "Heart7", "Heart8", "Heart9", "Heart10", "HeartJ", "HeartQ", "HeartK", "HeartA", "Diamond2", "Diamond3", "Diamond4", "Diamond5", "Diamond6", "Diamond7", "Diamond8", "Diamond9", "Diamond10", "DiamondJ", "DiamondQ", "DiamondK", "DiamondA", "Spade2", "Spade3", "Spade4", "Spade5", "Spade6", "Spade7", "Spade8", "Spade9", "Spade10", "SpadeJ", "SpadeQ", "SpadeK", "SpadeA", "Club2", "Club3", "Club4", "Club5", "Club6", "Club7", "Club8", "Club9", "Club10", "ClubJ", "ClubQ", "ClubK", "ClubA"];
+var chipImg = ["White", "Red", "Blue", "Green", "Gray", "Orange", "Purple", "Brown", "Black"]; // Actual deck (suit & values combined)
 
 var deck = []; // theDeal is false when the deal is done
 
@@ -103,8 +106,7 @@ var player = players[currentPlayer]; // let lastPlayer = players.slice(-1)[0];
 Init();
 
 function Init() {
-  // getPlayers
-  playerBets();
+  playerBets(); // placeBet() // = player Ready
 } // Get deck
 
 
@@ -175,9 +177,11 @@ $(".max-clear").click(function () {
   if (this.innerText === "CLEAR") {
     theClient.balance = theClient.balance + theClient.bet;
     theClient.bet = 0;
+    $(".player-bet").text(theClient.bet);
   } else if (this.innerText === "MAX") {
     theClient.bet = theClient.balance;
     theClient.balance = 0;
+    $(".player-bet").text(theClient.bet);
   }
 }); // function sendPlayerBets() {
 //   const payLoad = {
@@ -190,11 +194,19 @@ $(".max-clear").click(function () {
 // }
 // When all bets placed, fire up Deal the cards
 // Loop through all players to check if they'r ready
+// function placeBet() {
 
-ready.addEventListener("click", function () {
+$(document).on("click", ".ready", function () {
+  console.log("halloooooo");
+  console.log("halloooooo");
+  console.log("halloooooo");
+  console.log("halloooooo");
+  console.log("halloooooo");
+  console.log("halloooooo");
+  $(".ready").addClass("hide-element");
   player = players[currentPlayer];
-  updateCurrentPlayer();
-  var playersReady = 0;
+  updateCurrentPlayer(); // let playersReady = 0;
+
   clientIsReady(); // Loop through all players and check if they'r READY
 
   for (var i = 0; i < players.length; i++) {
@@ -205,9 +217,10 @@ ready.addEventListener("click", function () {
     gameOn = true;
     getDeck();
     sendPlayerDeck();
-    setTimeout(dealCards, 500);
+    setTimeout(dealCards, 1000);
   }
-}); // ***************INITIALIZE ROUND / ROUND START*******************
+}); // }
+// ***************INITIALIZE ROUND / ROUND START*******************
 
 function dealCards() {
   // Set current player
@@ -414,11 +427,11 @@ function dealerPlay() {
     compareSum();
   } // deck.shift()
   // if(dealer.sum > 16 || dealer.sum[1] > 16) {
-  //   finalCompare();
+  //   finalCompareGo();
   // } 
   //   playerHit()
   // } else {
-  //   finalCompare()
+  //   finalCompareGo()
   // }
 
 } // If dealer.sum is less than 17, he must keep hitting until he gets 17
@@ -426,14 +439,14 @@ function dealerPlay() {
 // if(dealer.sum < 17) {
 //   playerHit()
 // } else {
-//   finalCompare()
+//   finalCompareGo()
 // }
 // }
 // *************************************************************
 // ***********************FINAL COMPARE*************************
 
 
-function finalCompare() {
+function finalCompareGo() {
   playerResult(); // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
 
   if (dealer.sum.length === 2 && dealer.sum[1] <= 21) {
@@ -477,7 +490,9 @@ function finalCompare() {
   } // Function for RESET GAME
 
 
-  setTimeout(resetGame, 4000);
+  setTimeout(function () {
+    resetRound();
+  }, 4000);
 }
 
 function playerWin(i) {
@@ -496,14 +511,14 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  console.log("reset"); // Reset Players
-
+  // Reset Players
   for (var i = 0; i < players.length; i++) {
     players[i].cards = [];
     players[i].hasAce = false;
     players[i].sum = null;
     players[i].isReady = false;
-    players[i].blackjack = false; // players[i].bet = 0;
+    players[i].blackjack = false;
+    players[i].bet = 0;
   } // Reset Dealer
 
 
@@ -512,9 +527,11 @@ function resetGame() {
   dealer.sum = null; // Reset Deck
 
   deck = []; // getDeck()
+  // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
   // Utilities
 
   currentPlayer = 0;
+  playersReady = 0;
   resetCards = true;
   dealersTurn = false;
   startedGame = false;
@@ -525,12 +542,36 @@ function resetGame() {
   $("#player-result-sum-box").removeClass("color-green color-red");
   $("#player-result-big-answer").text("");
   $("#player-result-big-sum").text("");
-  $("#player-result-big-plus-minus").text(""); // Send to all players
+  $("#player-result-big-plus-minus").text("");
+  $(".players .player-bet").css("background", "");
+  $(".players .player-bet").css("opacity", "");
+  $("#bets-container").removeClass("noclick");
+  $(".player-result").addClass("hide-element");
+  $(".player-result").removeClass("result-lose result-draw result-win result-blackjack");
+  $(".player-sum").css({
+    "opacity": "",
+    "transform": ""
+  });
+  $("#dealerSum").css({
+    "opacity": "",
+    "transform": ""
+  }); // Send to all players
+  // updatePlayerCards();
 
-  updatePlayerCards();
+  if (resetCards === true) {
+    for (var s = 0; s < playerSlot.length; s++) {
+      playerSlot[s].lastElementChild.innerHTML = "";
+    }
+
+    dealerSlot.lastElementChild.lastElementChild.innerHTML = "";
+    resetCards = false;
+  }
+
+  console.log(players);
+  console.log(players);
+  console.log(players);
   updateCurrentPlayer();
   updatePlayers();
-  resetRound();
 } // *************************************************************
 // ******************PLAYER ACTION ANSWERS**********************
 // function blackjack() {
@@ -698,7 +739,7 @@ function outputCardSumAceDealer() {
         playerHit();
       } else {
         console.log("FINAL COMPARE");
-        finalCompare();
+        finalCompareGo();
       }
     }
   } else {
@@ -709,7 +750,7 @@ function outputCardSumAceDealer() {
         playerHit();
       } else {
         console.log("FINAL COMPARE");
-        finalCompare();
+        finalCompareGo();
       }
     }
   }
@@ -723,7 +764,7 @@ function outputCardSumDealer() {
       playerHit();
     } else {
       console.log("FINAL COMPARE");
-      finalCompare();
+      finalCompareGo();
     }
   }
 } // *************************************************************
@@ -800,4 +841,14 @@ $("#how-to-play").click(function () {
 $(".update-balance-bet").click(function () {
   $("#total-bet").text(theClient.bet);
   $("#balance").text(theClient.balance);
+
+  if (theClient.bet > 0) {
+    for (var i = 0; i < playerSlotHTML.length; i++) {
+      if (playerSlotHTML[i] === theClient.clientId) {
+        $(".ready:eq(" + i + ")").removeClass("hide-element");
+      }
+    }
+  } else if (theClient.bet === 0) {
+    $(".ready").addClass("hide-element");
+  }
 }); // ########## DOM MANIPULATION ##########

@@ -1,7 +1,3 @@
-.hide-element {
-  display: none !important;
-}
-
 html {
   overflow: hidden;
   font-family: "Open Sans", sans-serif;
@@ -15,6 +11,15 @@ body {
   background: radial-gradient(#38833c, #1e421f);
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+.hide-element {
+  display: none !important;
+}
+
+.noclick {
+  pointer-events: none;
+  opacity: 0.3;
 }
 
 #main-menu {
@@ -289,11 +294,6 @@ body {
   border: 2px solid white;
   border-radius: 100%;
   background-color: rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-}
-
-.players:hover {
-  background: rgba(255, 255, 255, 0.5);
 }
 
 .players:nth-of-type(4) {
@@ -314,7 +314,7 @@ body {
 
 .player-name {
   position: absolute;
-  bottom: -30px;
+  bottom: -35px;
   right: 40px;
   text-shadow: 1px 1px 10px black;
   color: white;
@@ -336,6 +336,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .player-avatar {
@@ -344,6 +345,7 @@ body {
   height: 100%;
   color: white;
   object-fit: contain;
+  pointer-events: none;
 }
 
 .player-sum {
@@ -415,25 +417,39 @@ body {
 
 .player-bet {
   position: absolute;
-  height: 100%;
-  width: 100%;
+  width: 70px;
+  height: 70px;
+  left: 50%;
+  margin-left: -35px;
+  top: 50%;
+  margin-top: -35px;
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  background: url("") no-repeat;
+  opacity: 0;
+  transition: 100ms;
 }
 
 .empty-slot {
   position: absolute;
   height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 50px;
   border-radius: 100%;
-  margin-left: 24px;
+  margin-left: -2px;
   margin-top: -2px;
+  border: 2px solid rgba(255, 255, 255, 0);
   color: lime;
+  cursor: pointer;
+}
+
+.empty-slot:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .empty-slot i {
@@ -650,7 +666,6 @@ i {
   display: flex;
   /* flex-flow: wrap; */
   /* flex-direction: row; */
-  border: 2px solid red;
   color: black;
   text-align: center;
   justify-content: space-between;
@@ -671,6 +686,12 @@ i {
   border: none;
   outline: none;
 }
+#bets-container button:hover {
+  transform: scale(1.05);
+}
+#bets-container button:active {
+  transform: scale(1);
+}
 #bets-container .max-clear {
   border-radius: 10px;
   height: 30px;
@@ -678,7 +699,7 @@ i {
   border: 2px solid black;
 }
 #bets-container #chip10 {
-  background: url("/imgs/chips/Casino_Chip_White2.svg") no-repeat;
+  background: url("/imgs/chips/Casino_Chip_White.svg") no-repeat;
 }
 #bets-container #chip50 {
   background: url("/imgs/chips/Casino_Chip_Red.svg") no-repeat;
@@ -710,4 +731,31 @@ i {
 }
 #bets-container #chip100k {
   background: url("/imgs/chips/Casino_Chip_Black.svg") no-repeat;
+}
+
+.ready {
+  position: absolute;
+  cursor: pointer;
+  width: 100px;
+  height: 50px;
+  left: 50%;
+  margin-left: -50px;
+  top: 50%;
+  margin-top: -25px;
+  border-radius: 25px;
+  outline: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: gold;
+  box-shadow: 0 0 10px gold;
+}
+
+.ready:hover {
+  background-color: #dfbd00;
+}
+
+.ready:active {
+  transform: scale(0.95);
 }
