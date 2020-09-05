@@ -161,7 +161,8 @@ function playerBets() {
         alert("Need more balance");
       }
 
-      console.log("sendPlayerBets"); // sendPlayerBets()
+      console.log("sendPlayerBets");
+      sendPlayerBets();
     });
   };
 
@@ -197,12 +198,6 @@ $(".max-clear").click(function () {
 // function placeBet() {
 
 $(document).on("click", ".ready", function () {
-  console.log("halloooooo");
-  console.log("halloooooo");
-  console.log("halloooooo");
-  console.log("halloooooo");
-  console.log("halloooooo");
-  console.log("halloooooo");
   $(".ready").addClass("hide-element");
   player = players[currentPlayer];
   updateCurrentPlayer(); // let playersReady = 0;
@@ -258,6 +253,7 @@ function dealDealerCards() {
       setTimeout(function () {
         naturals();
         sendPlayerThePlay();
+        sendShowSum();
       }, 500);
     } else {
       // If deal has NOT 1 card, push to default card array
@@ -355,7 +351,7 @@ function thePlay() {
         clicked = true;
         doubleDown = false;
         playerHit(); // updatePlayers();
-      } else if (this === userAction[2] && player.balance >= player.bet && clicked === false) {
+      } else if (this === userAction[2] && theClient.balance >= theClient.bet && clicked === false) {
         clicked = true;
         doubleDown = true;
         playerDoubleDown(); // updatePlayers();
@@ -448,8 +444,7 @@ function dealerPlay() {
 
 function finalCompareGo() {
   // This should fire up for all players
-  playerResult(); // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
-
+  // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
   if (dealer.sum.length === 2 && dealer.sum[1] <= 21) {
     dealer.sum.shift();
     dealer.sum = dealer.sum[0];
@@ -458,7 +453,9 @@ function finalCompareGo() {
     dealer.sum = dealer.sum[0];
   }
 
-  $("#player-result-big").removeClass("hide-element");
+  if (players.some(function (e) {
+    return e.clientId === clientId;
+  })) $("#player-result-big").removeClass("hide-element");
 
   if (theClient.sum > 21) {
     $("#player-result-big-answer").text("YOU BUSTED");
@@ -488,12 +485,88 @@ function finalCompareGo() {
     $("#player-result-big-sum").text(theClient.bet);
     $("#player-result-big-plus-minus").text("-");
     $("#player-result-sum-box").addClass("color-red");
-  } // Function for RESET GAME
+  } // Function for display win/lose/draw/bj coins as well as payout
 
+
+  winLoseComponents(); // Function for RESET GAME
 
   setTimeout(function () {
-    resetRound();
+    resetGame();
   }, 4000);
+}
+
+function winLoseComponents() {
+  // if dealer sum.length === 2. Fix dealer sum before proceeding
+  // if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
+  //   dealer.sum.shift()
+  //   dealer.sum = dealer.sum[0]
+  // } else if(dealer.sum.length === 2 && dealer.sum[1] > 21) {
+  //   dealer.sum.pop()
+  //   dealer.sum = dealer.sum[0]
+  // }
+  dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum; // // remove dealer from player
+  // players.splice(-1)[0]
+  // sendPlayerBets() // <--- this only updates players array
+  // For all players That have NOT busted, compare sum to dealer
+
+  for (var i = 0; i < players.length; i++) {
+    // exclude all players that already have blackjack
+    if (players[i].blackjack === false) {
+      if (players[i].cards.length > 0) {
+        // Also check if dealer has bust
+        if (dealer.sum > 21) {
+          playerWin(i);
+          console.log("DEALER BUST");
+
+          for (var x = 0; x < playerSlotHTML.length; x++) {
+            if (players[i].clientId === playerSlotHTML[x]) {
+              $(".player-result:eq(" + x + ")").removeClass("hide-element");
+              $(".player-result:eq(" + x + ")").addClass("result-win");
+              $(".player-result:eq(" + x + ")").text("WIN");
+            }
+          }
+        } else if (dealer.sum < players[i].sum) {
+          playerWin(i);
+          console.log("player win");
+
+          for (var _x2 = 0; _x2 < playerSlotHTML.length; _x2++) {
+            if (players[i].clientId === playerSlotHTML[_x2]) {
+              $(".player-result:eq(" + _x2 + ")").removeClass("hide-element");
+              $(".player-result:eq(" + _x2 + ")").addClass("result-win");
+              $(".player-result:eq(" + _x2 + ")").text("WIN");
+            }
+          }
+        } else if (dealer.sum === players[i].sum) {
+          playerDraw(i);
+          console.log("Draw!");
+
+          for (var _x3 = 0; _x3 < playerSlotHTML.length; _x3++) {
+            if (players[i].clientId === playerSlotHTML[_x3]) {
+              $(".player-result:eq(" + _x3 + ")").removeClass("hide-element");
+              $(".player-result:eq(" + _x3 + ")").addClass("result-draw");
+              $(".player-result:eq(" + _x3 + ")").text("DRAW");
+            }
+          }
+        } else {
+          dealerWin(i);
+
+          for (var _x4 = 0; _x4 < playerSlotHTML.length; _x4++) {
+            if (players[i].clientId === playerSlotHTML[_x4]) {
+              $(".player-result:eq(" + _x4 + ")").removeClass("hide-element");
+              $(".player-result:eq(" + _x4 + ")").addClass("result-lose");
+              $(".player-result:eq(" + _x4 + ")").text("LOSE");
+            }
+          }
+        } // If player busted, make him Bust!
+
+      } else {
+        dealerWin(i);
+      } // If player has blackjack, make him win!
+
+    } else {
+      playerWin(i);
+    }
+  }
 }
 
 function playerWin(i) {
@@ -512,7 +585,7 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  // Reset Players
+  // Reset Players 
   for (var i = 0; i < players.length; i++) {
     players[i].cards = [];
     players[i].hasAce = false;
@@ -546,7 +619,16 @@ function resetGame() {
   $("#player-result-big-plus-minus").text("");
   $(".players .player-bet").css("background", "");
   $(".players .player-bet").css("opacity", "");
-  $("#bets-container").removeClass("noclick");
+
+  for (var _i = 0; _i < players.length; _i++) {
+    if (players[_i].clientId === clientId) {
+      $("#bets-container").removeClass("noclick");
+    }
+  }
+
+  if (!players.some(function (e) {
+    return e.clientId === clientId;
+  })) $(".empty-slot").removeClass("noclick");
   $(".player-result").addClass("hide-element");
   $(".player-result").removeClass("result-lose result-draw result-win result-blackjack");
   $(".player-sum").css({
@@ -557,7 +639,6 @@ function resetGame() {
     "opacity": "",
     "transform": ""
   }); // Send to all players
-  // updatePlayerCards();
 
   if (resetCards === true) {
     for (var s = 0; s < playerSlot.length; s++) {
@@ -568,11 +649,8 @@ function resetGame() {
     resetCards = false;
   }
 
-  console.log(players);
-  console.log(players);
-  console.log(players);
-  updateCurrentPlayer();
-  updatePlayers();
+  console.log("SYNCTHEGAME1"); // updateCurrentPlayer();
+  // updatePlayers();
 } // *************************************************************
 // ******************PLAYER ACTION ANSWERS**********************
 // function blackjack() {
@@ -640,10 +718,6 @@ function playerAceDeckAce() {
 
 
 function compareSum() {
-  console.log(player);
-  console.log(player);
-  console.log(player);
-
   if (!player.hasAce && !deck[0].value.hasAce) {
     player.sum = player.sum + deck[0].value.value; // add sum
 
@@ -652,14 +726,8 @@ function compareSum() {
     // if(dealer.cards[1] === dealer.cards[2]) dealer.cards.splice(1, 1)
 
     if (dealersTurn === true) {
-      console.log(player);
-      console.log(player);
-      console.log(player);
       setTimeout(outputCardSumDealer, 1000); // compare & output sum for dealer
     } else {
-      console.log(player);
-      console.log(player);
-      console.log(player);
       setTimeout(outputCardSum, 500); // compare & output sum
     }
   }
@@ -672,14 +740,8 @@ function compareSumAce() {
   // playerAceDeckNoAce() // <--- Check if Player has ACE && next card has NO ACE
 
   if (dealersTurn === true) {
-    console.log(player);
-    console.log(player);
-    console.log(player);
     setTimeout(outputCardSumAceDealer, 1000); // compare & output sum for dealer
   } else {
-    console.log(player);
-    console.log(player);
-    console.log(player);
     setTimeout(outputCardSumAce, 500); // compare & output sum
   }
 } // *************************************************************
@@ -688,7 +750,6 @@ function compareSumAce() {
 
 
 function outputCardSum() {
-  console.log(player.sum);
   player.hasAce = false;
 
   if (dealersTurn === false) {
@@ -706,8 +767,7 @@ function outputCardSum() {
 
 
 function outputCardSumAce() {
-  console.log(player.sum); // Check if the higher value is over 21
-
+  // Check if the higher value is over 21
   if (player.sum[1] > 21) {
     // Remove the high value from the sum & remove array from sum
     player.sum.pop();
@@ -747,15 +807,18 @@ function outputCardSumAceDealer() {
     player.sum.pop();
     player.sum = player.sum[0];
     player.hasAce = false;
-    console.log("---------");
-    console.log(dealer.sum);
-    console.log(player.sum);
 
     if (dealersTurn === true) {
       if (player.sum < 17) {
         playerHit();
       } else {
-        console.log("FINAL COMPARE");
+        console.log("FINAL COMPARE"); // Remove dealer from players array, then compare
+
+        setTimeout(function () {
+          resetGameState();
+          console.log("SYNCTHEGAME2");
+        }, 4050);
+        players.splice(-1)[0];
         finalCompare();
       }
     }
@@ -766,7 +829,13 @@ function outputCardSumAceDealer() {
       if (player.sum[1] < 17) {
         playerHit();
       } else {
-        console.log("FINAL COMPARE");
+        console.log("FINAL COMPARE"); // Remove dealer from players array, then compare
+
+        setTimeout(function () {
+          resetGameState();
+          console.log("SYNCTHEGAME2");
+        }, 4050);
+        players.splice(-1)[0];
         finalCompare();
       }
     }
@@ -780,7 +849,13 @@ function outputCardSumDealer() {
     if (player.sum < 17) {
       playerHit();
     } else {
-      console.log("FINAL COMPARE");
+      console.log("FINAL COMPARE"); // Remove dealer from players array, then compare
+
+      setTimeout(function () {
+        resetGameState();
+        console.log("SYNCTHEGAME2");
+      }, 4050);
+      players.splice(-1)[0];
       finalCompare();
     }
   }
@@ -861,7 +936,7 @@ $(".update-balance-bet").click(function () {
 
   if (theClient.bet > 0) {
     for (var i = 0; i < playerSlotHTML.length; i++) {
-      if (playerSlotHTML[i] === theClient.clientId) {
+      if (playerSlotHTML[i] === clientId) {
         $(".ready:eq(" + i + ")").removeClass("hide-element");
       }
     }

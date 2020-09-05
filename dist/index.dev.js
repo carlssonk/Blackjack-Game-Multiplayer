@@ -114,7 +114,8 @@ wsServer.on("request", function (request) {
 
       for (var i = 0; i < game.spectators.length; i++) {
         if (game.spectators[i].clientId === _clientId2) {
-          _theClient2 = game.spectators[i];
+          // theClient = game.spectators[i]
+          game.spectators[i] = _theClient2;
         }
       }
 
@@ -142,7 +143,7 @@ wsServer.on("request", function (request) {
 
       }; // Send theClient to THE CLIENT
 
-      clients[_clientId2].connection.send(JSON.stringify(payLoadClient)); // Important to send this payLoad last, because it needs to know the the theClient.clientId
+      clients[_clientId2].connection.send(JSON.stringify(payLoadClient)); // Important to send this payLoad last, because it needs to know the the clientId
 
 
       var payLoadClientArray = {
@@ -261,6 +262,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "thePlay") {
       var _players7 = result.players;
+      var _gameId2 = result.gameId;
+      var _game = games[_gameId2];
       var _player2 = result.player;
       var _dealersTurn = result.dealersTurn;
       var currentPlayer = result.currentPlayer;
@@ -272,53 +275,67 @@ wsServer.on("request", function (request) {
       }; // players[currentPlayer].clientId.connection.send(JSON.stringify(payLoad))
 
       if (_dealersTurn === false) {
-        _spectators7.forEach(function (c) {
+        _game.players.forEach(function (c) {
           clients[c.clientId].connection.send(JSON.stringify(_payLoad8));
         });
       }
+    }
+
+    if (result.method === "showSum") {
+      var _players8 = result.players;
+      var _spectators8 = result.spectators;
+      var _payLoad9 = {
+        "method": "showSum",
+        "players": _players8
+      };
+
+      _spectators8.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad9));
+      });
     }
 
     if (result.method === "joinTable") {
       var _theClient4 = result.theClient;
       var user = result.theClient;
       var theSlot = result.theSlot;
-      var _gameId2 = result.gameId;
-      var _game = games[_gameId2];
-      var _spectators8 = _game.spectators;
-      var _players8 = _game.players;
-      var _playerSlotHTML3 = _game.playerSlotHTML; // Update all palyerSlots
+      var _gameId3 = result.gameId;
+      var _game2 = games[_gameId3];
+      var _spectators9 = _game2.spectators;
+      var _players9 = _game2.players;
+      var _playerSlotHTML3 = _game2.playerSlotHTML; // Update all palyerSlots
       // for(let i = 0; i < playerSlot.length; i++) {
-      //   if(playerSlot[i].innerHTML === theClient.clientId) {
+      //   if(playerSlot[i].innerHTML === clientId) {
       //     playerSlotHMTL
       //   }
       // }
       // Push client to players array
 
-      _game.players.push(_theClient4); // Push client Id to playerSlotHTML array
+      _game2.players.push(_theClient4); // Push client Id to playerSlotHTML array
 
 
-      _game.playerSlotHTML[theSlot] = _theClient4.clientId;
+      _game2.playerSlotHTML[theSlot] = clientId;
       console.log(_playerSlotHTML3); // Assign theClient to game.players[i]
 
-      for (var _i = 0; _i < _game.players.length; _i++) {
-        if (_game.players[_i].clientId === clientId) {
-          _theClient4 = _game.players[_i];
+      for (var _i = 0; _i < _game2.players.length; _i++) {
+        if (_game2.players[_i].clientId === clientId) {
+          // theClient = game.players[i]
+          _game2.players[_i] = _theClient4;
         }
       }
 
-      var _payLoad9 = {
+      var _payLoad10 = {
         "method": "joinTable",
         "theSlot": theSlot,
         "user": user,
-        "game": _game,
-        "players": _players8,
-        "spectators": _spectators8,
+        "game": _game2,
+        "players": _players9,
+        "spectators": _spectators9,
         "playerSlotHTML": _playerSlotHTML3,
         "theClient": _theClient4
       };
 
-      _spectators8.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(_payLoad9));
+      _spectators9.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad10));
       }); // Send this to the client who pressed join
 
 
@@ -344,125 +361,125 @@ wsServer.on("request", function (request) {
 
     if (result.method === "updatePlayerCards") {
       var resetCards = result.resetCards;
-      var _players9 = result.players;
+      var _players10 = result.players;
       var _player3 = result.player;
-      var _spectators9 = result.spectators;
-      var _payLoad10 = {
+      var _spectators10 = result.spectators;
+      var _payLoad11 = {
         "method": "updatePlayerCards",
-        "players": _players9,
+        "players": _players10,
         "player": _player3,
         "resetCards": resetCards
       };
 
-      _spectators9.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(_payLoad10));
+      _spectators10.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad11));
       });
     }
 
     if (result.method === "updateDealerCards") {
-      var _players10 = result.players;
-      var _spectators10 = result.spectators;
+      var _players11 = result.players;
+      var _spectators11 = result.spectators;
       var _player4 = result.player;
       var _dealer2 = result.dealer;
       var _dealersTurn2 = result.dealersTurn;
       var dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext;
-      var _payLoad11 = {
+      var _payLoad12 = {
         "method": "updateDealerCards",
         "player": _player4,
         "dealer": _dealer2,
-        "players": _players10,
+        "players": _players11,
         "dealersTurn": _dealersTurn2,
         "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
       };
 
       if (_dealersTurn2 === false) {
-        _spectators10.forEach(function (c) {
-          clients[c.clientId].connection.send(JSON.stringify(_payLoad11));
+        _spectators11.forEach(function (c) {
+          clients[c.clientId].connection.send(JSON.stringify(_payLoad12));
         });
       }
 
       if (_dealersTurn2 === true) {
-        _players10.pop(_players10.slice(-1)[0]);
+        _players11.pop(_players11.slice(-1)[0]);
 
-        _spectators10.forEach(function (c) {
-          clients[c.clientId].connection.send(JSON.stringify(_payLoad11));
+        _spectators11.forEach(function (c) {
+          clients[c.clientId].connection.send(JSON.stringify(_payLoad12));
         });
       }
     }
 
     if (result.method === "dealersTurn") {
-      var _players11 = result.players;
+      var _players12 = result.players;
       var _dealersTurn3 = result.dealersTurn;
-      var _spectators11 = result.spectators;
-      var _payLoad12 = {
+      var _spectators12 = result.spectators;
+      var _payLoad13 = {
         "method": "dealersTurn",
         "dealersTurn": _dealersTurn3
       };
 
-      _spectators11.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(_payLoad12));
+      _spectators12.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad13));
       });
     }
 
     if (result.method === "terminate") {
       console.log("terminate player");
-      var _gameId3 = result.gameId;
-      var _game2 = games[_gameId3];
-      var _spectators12 = result.spectators;
+      var _gameId4 = result.gameId;
+      var _game3 = games[_gameId4];
+      var _spectators13 = result.spectators;
       var _theClient5 = result.theClient; // const playerSlotHTML = result.playerSlotHTML;
       // let players = result.players;
 
       var reload = result.reload; // To prevent error when user disconnects outside a game
 
-      if (_game2 === undefined) {
-        _game2 = {
+      if (_game3 === undefined) {
+        _game3 = {
           "spectators": {},
           "players": {},
           "playerSlotHTML": {}
         };
       }
 
-      console.log(_game2);
-      console.log(_spectators12);
-      console.log(_game2.spectators); // Get what index the player is in so we can later delete him from the table on the client side
+      console.log(_game3);
+      console.log(_spectators13);
+      console.log(_game3.spectators); // Get what index the player is in so we can later delete him from the table on the client side
 
       var playerSlotIndex = null; // If player reloads page, remove him from spectators array
 
       if (reload === true) {
         // Terminate player from spectators  
-        for (var _i2 = 0; _i2 < _game2.spectators.length; _i2++) {
-          if (_theClient5.clientId === _game2.spectators[_i2].clientId) {
-            _game2.spectators.splice(_i2, 1);
+        for (var _i2 = 0; _i2 < _game3.spectators.length; _i2++) {
+          if (clientId === _game3.spectators[_i2].clientId) {
+            _game3.spectators.splice(_i2, 1);
           }
         }
       } // Terminate player from playerSlotHTML
 
 
-      for (var _i3 = 0; _i3 < _game2.playerSlotHTML.length; _i3++) {
-        if (_theClient5.clientId === _game2.playerSlotHTML[_i3]) {
+      for (var _i3 = 0; _i3 < _game3.playerSlotHTML.length; _i3++) {
+        if (clientId === _game3.playerSlotHTML[_i3]) {
           playerSlotIndex = _i3;
-          _game2.playerSlotHTML[_i3] = {};
+          _game3.playerSlotHTML[_i3] = {};
         }
       } // Terminate player from players array
 
 
-      for (var _i4 = 0; _i4 < _game2.players.length; _i4++) {
-        if (_theClient5.clientId === _game2.players[_i4].clientId) {
-          _game2.players.splice(_i4, 1);
+      for (var _i4 = 0; _i4 < _game3.players.length; _i4++) {
+        if (clientId === _game3.players[_i4].clientId) {
+          _game3.players.splice(_i4, 1);
         }
       }
 
       console.log(123456789);
-      var _payLoad13 = {
+      var _payLoad14 = {
         "method": "leave",
         // "spectators": game.spectators,
         "playerSlotIndex": playerSlotIndex,
         // "players": players,
-        "game": _game2
+        "game": _game3
       };
 
-      _spectators12.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(_payLoad13));
+      _spectators13.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad14));
       }); // // Send to THE client
       // const con = clients[clientId].connection
       // con.send(JSON.stringify(payLoad));
@@ -470,17 +487,17 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "playersLength") {
-      var _gameId4 = result.gameId;
-      var _game3 = games[_gameId4];
-      var _spectators13 = _game3.spectators;
-      var playersLength = _game3.spectators.length;
+      var _gameId5 = result.gameId;
+      var _game4 = games[_gameId5];
+      var _spectators14 = _game4.spectators;
+      var playersLength = _game4.spectators.length;
       console.log(playersLength);
       var payLoadLength = {
         "method": "playersLength",
         "playersLength": playersLength
       };
       console.log("tattare");
-      console.log(_game3); // const con = clients[clientId].connection
+      console.log(_game4); // const con = clients[clientId].connection
       // con.send(JSON.stringify(payLoadLength));
       // spectators.forEach(c => {
       //   clients[c.clientId].connection.send(JSON.stringify(payLoadLength))
@@ -490,22 +507,11 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "resetRound") {
-      var _spectators14 = result.spectators;
-      var _payLoad14 = {
-        "method": "resetRound"
-      };
-
-      _spectators14.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(_payLoad14));
-      });
-    }
-
-    if (result.method === "playerResult") {
       var _spectators15 = result.spectators;
-      var _players12 = result.players;
+      var _theClient6 = result.theClient;
       var _payLoad15 = {
-        "method": "playerResult",
-        "players": _players12
+        "method": "resetRound",
+        "theClient": _theClient6
       };
 
       _spectators15.forEach(function (c) {
@@ -513,14 +519,12 @@ wsServer.on("request", function (request) {
       });
     }
 
-    if (result.method === "playerResultNatural") {
+    if (result.method === "playerResult") {
       var _spectators16 = result.spectators;
       var _players13 = result.players;
-      var playerNaturalIndex = result.playerNaturalIndex;
       var _payLoad16 = {
-        "method": "playerResultNatural",
-        "players": _players13,
-        "playerNaturalIndex": playerNaturalIndex
+        "method": "playerResult",
+        "players": _players13
       };
 
       _spectators16.forEach(function (c) {
@@ -528,12 +532,14 @@ wsServer.on("request", function (request) {
       });
     }
 
-    if (result.method === "finalCompare") {
+    if (result.method === "playerResultNatural") {
       var _spectators17 = result.spectators;
       var _players14 = result.players;
+      var playerNaturalIndex = result.playerNaturalIndex;
       var _payLoad17 = {
-        "method": "finalCompare" // "players": players
-
+        "method": "playerResultNatural",
+        "players": _players14,
+        "playerNaturalIndex": playerNaturalIndex
       };
 
       _spectators17.forEach(function (c) {
@@ -541,20 +547,52 @@ wsServer.on("request", function (request) {
       });
     }
 
+    if (result.method === "finalCompare") {
+      var _spectators18 = result.spectators;
+      var _gameId6 = result.gameId;
+      var _game5 = games[_gameId6];
+      var _players15 = result.players;
+      _game5.players = _players15;
+      var _payLoad18 = {
+        "method": "finalCompare" // "players": players
+
+      };
+
+      _spectators18.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad18));
+      });
+    }
+
+    if (result.method === "resetGameState") {
+      var _spectators19 = result.spectators;
+      var _gameId7 = result.gameId;
+      var _game6 = games[_gameId7];
+      var _players16 = result.players;
+      _game6.players = _players16;
+      var _payLoad19 = {
+        "method": "resetGameState",
+        "game": _game6
+      };
+
+      _spectators19.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad19));
+      });
+    }
+
     if (result.method === "syncGame") {
-      var _gameId5 = result.gameId;
-      var _game4 = games[_gameId5];
+      var _gameId8 = result.gameId;
+      var _game7 = games[_gameId8];
       var _gameOn3 = result.gameOn;
       var _dealer3 = result.dealer;
-      var _players15 = result.players;
+      var _players17 = result.players;
       var _player5 = result.player;
-      var _spectators18 = result.spectators; // Sync players & spectators arrays
+      var _spectators20 = result.spectators; // Sync players & spectators arrays
 
-      _game4.gameOn = _gameOn3;
-      _game4.dealer = _dealer3;
-      _game4.players = _players15;
-      _game4.player = _player5;
-      _game4.spectators = _spectators18; // console.log(game)
+      _game7.gameOn = _gameOn3;
+      _game7.dealer = _dealer3;
+      _game7.players = _players17;
+      _game7.player = _player5;
+      _game7.spectators = _spectators20;
     }
   }); // The ClientId
 

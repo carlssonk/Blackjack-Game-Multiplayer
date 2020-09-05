@@ -117,7 +117,8 @@ wsServer.on("request", request => {
       // Assign theClient to game.spectators[i]
       for(let i = 0; i < game.spectators.length; i++) {
         if(game.spectators[i].clientId === clientId) {
-          theClient = game.spectators[i]
+          // theClient = game.spectators[i]
+          game.spectators[i] = theClient
         }
       }
  
@@ -151,7 +152,7 @@ wsServer.on("request", request => {
       // Send theClient to THE CLIENT
         clients[clientId].connection.send(JSON.stringify(payLoadClient))
 
-      // Important to send this payLoad last, because it needs to know the the theClient.clientId
+      // Important to send this payLoad last, because it needs to know the the clientId
       const payLoadClientArray = {
         "method": "updateClientArray",
         "players": players,
@@ -280,6 +281,8 @@ wsServer.on("request", request => {
 
     if (result.method === "thePlay") {
       const players = result.players
+      const gameId = result.gameId;
+      const game = games[gameId];
       const player = result.player
       const dealersTurn = result.dealersTurn
       const currentPlayer = result.currentPlayer
@@ -294,11 +297,25 @@ wsServer.on("request", request => {
 
       // players[currentPlayer].clientId.connection.send(JSON.stringify(payLoad))
       if (dealersTurn === false) {
-        spectators.forEach(c => {
+        game.players.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
         })        
       }
 
+    }
+
+    if (result.method === "showSum") {
+      const players = result.players
+      const spectators = result.spectators
+
+      const payLoad = {
+        "method": "showSum",
+        "players": players
+      }
+
+        spectators.forEach(c => {
+          clients[c.clientId].connection.send(JSON.stringify(payLoad))
+        })        
     }
 
     if (result.method === "joinTable") {
@@ -313,7 +330,7 @@ wsServer.on("request", request => {
 
       // Update all palyerSlots
       // for(let i = 0; i < playerSlot.length; i++) {
-      //   if(playerSlot[i].innerHTML === theClient.clientId) {
+      //   if(playerSlot[i].innerHTML === clientId) {
       //     playerSlotHMTL
       //   }
       // }
@@ -321,13 +338,14 @@ wsServer.on("request", request => {
       // Push client to players array
       game.players.push(theClient)
       // Push client Id to playerSlotHTML array
-      game.playerSlotHTML[theSlot] = (theClient.clientId)
+      game.playerSlotHTML[theSlot] = (clientId)
       console.log(playerSlotHTML)
 
       // Assign theClient to game.players[i]
       for(let i = 0; i < game.players.length; i++) {
         if(game.players[i].clientId === clientId) {
-          theClient = game.players[i]
+          // theClient = game.players[i]
+          game.players[i] = theClient
         }
       }
 
@@ -462,7 +480,7 @@ wsServer.on("request", request => {
       if(reload === true) {
       // Terminate player from spectators  
         for(let i = 0; i < game.spectators.length; i++) {
-          if(theClient.clientId === game.spectators[i].clientId) {
+          if(clientId === game.spectators[i].clientId) {
             game.spectators.splice(i, 1)
           }
         }        
@@ -470,14 +488,14 @@ wsServer.on("request", request => {
 
       // Terminate player from playerSlotHTML
       for(let i = 0; i < game.playerSlotHTML.length; i++) {
-        if(theClient.clientId === game.playerSlotHTML[i]) {
+        if(clientId === game.playerSlotHTML[i]) {
           playerSlotIndex = i;
           game.playerSlotHTML[i] = {}
         }
       }
       // Terminate player from players array
       for(let i = 0; i < game.players.length; i++) {
-        if(theClient.clientId === game.players[i].clientId) {
+        if(clientId === game.players[i].clientId) {
           game.players.splice(i, 1)
         }
       }
@@ -525,9 +543,11 @@ wsServer.on("request", request => {
 
     if(result.method === "resetRound") {
       const spectators = result.spectators
+      const theClient = result.theClient
 
       const payLoad = {
-        "method": "resetRound"
+        "method": "resetRound",
+        "theClient": theClient
       }
 
       spectators.forEach(c => {
@@ -567,7 +587,10 @@ wsServer.on("request", request => {
 
     if(result.method === "finalCompare") {
       const spectators = result.spectators
+      const gameId = result.gameId;
+      const game = games[gameId];
       const players = result.players
+      game.players = players
 
       const payLoad = {
         "method": "finalCompare",
@@ -579,6 +602,25 @@ wsServer.on("request", request => {
       })
     }
 
+    if(result.method === "resetGameState") {
+      const spectators = result.spectators
+      const gameId = result.gameId;
+      const game = games[gameId];
+      const players = result.players
+      game.players = players
+
+      const payLoad = {
+        "method": "resetGameState",
+        "game": game
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
+
+
+
     if(result.method === "syncGame") {
       const gameId = result.gameId;
       const game = games[gameId];
@@ -588,12 +630,13 @@ wsServer.on("request", request => {
       const player = result.player;
       const spectators = result.spectators;
       // Sync players & spectators arrays
+
       game.gameOn = gameOn;
       game.dealer = dealer;
       game.players = players;
       game.player = player;
       game.spectators = spectators;
-      // console.log(game)
+      
     }
 
   });

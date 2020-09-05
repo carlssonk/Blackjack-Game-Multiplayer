@@ -250,7 +250,7 @@ function playerBets() {
           alert("Need more balance")
         }
         console.log("sendPlayerBets")
-        // sendPlayerBets()
+        sendPlayerBets()
       });
     }
 }
@@ -282,12 +282,6 @@ $(".max-clear").click(function() {
   // Loop through all players to check if they'r ready
 // function placeBet() {
   $(document).on("click", ".ready", function() {
-    console.log("halloooooo")
-    console.log("halloooooo")
-    console.log("halloooooo")
-    console.log("halloooooo")
-    console.log("halloooooo")
-    console.log("halloooooo")
     $(".ready").addClass("hide-element")
     player = players[currentPlayer];
     updateCurrentPlayer()
@@ -349,6 +343,7 @@ function dealDealerCards() {
       setTimeout(function() {
         naturals();
         sendPlayerThePlay();
+        sendShowSum();
       }, 500)
     } else {
       // If deal has NOT 1 card, push to default card array
@@ -452,7 +447,7 @@ function thePlay() {
         playerHit() 
         // updatePlayers();
 
-      } else if(this === userAction[2] && player.balance >= player.bet && clicked === false) {
+      } else if(this === userAction[2] && theClient.balance >= theClient.bet && clicked === false) {
         clicked = true;
         doubleDown = true;
 
@@ -555,7 +550,7 @@ function dealerPlay() {
 // ***********************FINAL COMPARE*************************
 
 function finalCompareGo() { // This should fire up for all players
-  playerResult();
+
   // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
   if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
     dealer.sum.shift()
@@ -565,7 +560,8 @@ function finalCompareGo() { // This should fire up for all players
     dealer.sum = dealer.sum[0]
   }
 
-  $("#player-result-big").removeClass("hide-element")
+  if(players.some(e => e.clientId === clientId)) $("#player-result-big").removeClass("hide-element")
+
   if(theClient.sum > 21) {
     $("#player-result-big-answer").text("YOU BUSTED")
     $("#player-result-big-sum").text(theClient.bet)
@@ -596,12 +592,89 @@ function finalCompareGo() { // This should fire up for all players
               $("#player-result-big-plus-minus").text("-")
               $("#player-result-sum-box").addClass("color-red")
           }
-
+  // Function for display win/lose/draw/bj coins as well as payout
+  winLoseComponents()
   // Function for RESET GAME
   setTimeout(function() {
-    resetRound();
+    resetGame();
   }, 4000);
 }
+
+function winLoseComponents() {
+  // if dealer sum.length === 2. Fix dealer sum before proceeding
+  // if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
+  //   dealer.sum.shift()
+  //   dealer.sum = dealer.sum[0]
+  // } else if(dealer.sum.length === 2 && dealer.sum[1] > 21) {
+  //   dealer.sum.pop()
+  //   dealer.sum = dealer.sum[0]
+  // }
+
+  dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
+  // // remove dealer from player
+
+  // players.splice(-1)[0]
+
+  // sendPlayerBets() // <--- this only updates players array
+  // For all players That have NOT busted, compare sum to dealer
+  for(let i = 0; i < players.length; i++) {
+    // exclude all players that already have blackjack
+    if(players[i].blackjack === false) {
+    if(players[i].cards.length > 0) {
+      // Also check if dealer has bust
+      if(dealer.sum > 21) {
+        playerWin(i)
+        console.log("DEALER BUST")
+        for(let x = 0; x < playerSlotHTML.length; x++) {
+          if(players[i].clientId === playerSlotHTML[x]) {
+            $(".player-result:eq("+x+")").removeClass("hide-element")
+            $(".player-result:eq("+x+")").addClass("result-win")
+            $(".player-result:eq("+x+")").text("WIN")
+          }
+        }
+      } else if(dealer.sum < players[i].sum) {
+        playerWin(i)
+        console.log("player win")
+        for(let x = 0; x < playerSlotHTML.length; x++) {
+          if(players[i].clientId === playerSlotHTML[x]) {
+            $(".player-result:eq("+x+")").removeClass("hide-element")
+            $(".player-result:eq("+x+")").addClass("result-win")
+            $(".player-result:eq("+x+")").text("WIN")
+          }
+        }
+      } else if(dealer.sum === players[i].sum) {
+        playerDraw(i)
+        console.log("Draw!")
+        for(let x = 0; x < playerSlotHTML.length; x++) {
+          if(players[i].clientId === playerSlotHTML[x]) {
+            $(".player-result:eq("+x+")").removeClass("hide-element")
+            $(".player-result:eq("+x+")").addClass("result-draw")
+            $(".player-result:eq("+x+")").text("DRAW")
+          }
+        }
+      } else {
+        dealerWin(i)
+        for(let x = 0; x < playerSlotHTML.length; x++) {
+          if(players[i].clientId === playerSlotHTML[x]) {
+            $(".player-result:eq("+x+")").removeClass("hide-element")
+            $(".player-result:eq("+x+")").addClass("result-lose")
+            $(".player-result:eq("+x+")").text("LOSE")
+          }
+        }
+      }
+
+      // If player busted, make him Bust!
+    } else {
+      dealerWin(i)
+    }
+    // If player has blackjack, make him win!
+  } else {
+    playerWin(i)
+  }
+  }
+}
+
+
 
 function playerWin(i) {
   // The blackjack payout has already been dealt. (in naturalBlackjack(i))
@@ -619,7 +692,7 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  // Reset Players
+  // Reset Players 
   for(let i = 0; i < players.length; i++) {
     players[i].cards = [];
     players[i].hasAce = false;
@@ -656,7 +729,14 @@ function resetGame() {
 
   $(".players .player-bet").css("background", "")
   $(".players .player-bet").css("opacity", "")
-  $("#bets-container").removeClass("noclick");
+
+  for(let i = 0; i < players.length; i++) {
+    if(players[i].clientId === clientId) {
+      $("#bets-container").removeClass("noclick");
+    }
+  }
+  if(!players.some(e => e.clientId === clientId)) $(".empty-slot").removeClass("noclick");
+
 
   $(".player-result").addClass("hide-element")
   $(".player-result").removeClass("result-lose result-draw result-win result-blackjack")
@@ -664,7 +744,6 @@ function resetGame() {
   $("#dealerSum").css({"opacity": "", "transform": ""});
 
   // Send to all players
-  // updatePlayerCards();
   if(resetCards === true) {
     for(let s = 0; s < playerSlot.length; s++) {
       playerSlot[s].lastElementChild.innerHTML = ""
@@ -672,14 +751,10 @@ function resetGame() {
     dealerSlot.lastElementChild.lastElementChild.innerHTML = "";
     resetCards = false;
   }
-  console.log(players)
-  console.log(players)
-  console.log(players)
-  updateCurrentPlayer();  
-  updatePlayers();
 
-  
-
+  console.log("SYNCTHEGAME1")
+  // updateCurrentPlayer();
+  // updatePlayers();
 }
 
 // *************************************************************
@@ -754,9 +829,6 @@ function playerAceDeckAce() {
   
 // If no Ace is included
 function compareSum() {
-  console.log(player)
-  console.log(player)
-  console.log(player)
 
   if(!player.hasAce && !deck[0].value.hasAce) {
     player.sum = player.sum + deck[0].value.value // add sum
@@ -766,14 +838,8 @@ function compareSum() {
 
 
     if(dealersTurn === true) {
-      console.log(player)
-      console.log(player)
-      console.log(player)
       setTimeout(outputCardSumDealer, 1000) // compare & output sum for dealer
     } else {
-      console.log(player)
-      console.log(player)
-      console.log(player)
       setTimeout(outputCardSum, 500) // compare & output sum
     }
     
@@ -787,14 +853,8 @@ function compareSumAce() {
   // playerAceDeckNoAce() // <--- Check if Player has ACE && next card has NO ACE
   
   if(dealersTurn === true) {
-    console.log(player)
-    console.log(player)
-    console.log(player)
     setTimeout(outputCardSumAceDealer, 1000) // compare & output sum for dealer
   } else {
-    console.log(player)
-    console.log(player)
-    console.log(player)
     setTimeout(outputCardSumAce, 500) // compare & output sum
   }
   
@@ -806,7 +866,6 @@ function compareSumAce() {
 
 // compare && output sum for no aces
 function outputCardSum() {
-  console.log(player.sum)
   player.hasAce = false;
   if(dealersTurn === false) {
     if(player.sum === 21) {
@@ -823,7 +882,6 @@ function outputCardSum() {
 
 // compare && output sum for no aces
 function outputCardSumAce() {
-  console.log(player.sum)
   // Check if the higher value is over 21
   if(player.sum[1] > 21) {
     // Remove the high value from the sum & remove array from sum
@@ -867,15 +925,17 @@ function outputCardSumAceDealer() {
     player.sum = player.sum[0];
     player.hasAce = false;
 
-    console.log("---------")
-    console.log(dealer.sum)
-    console.log(player.sum)
-
     if(dealersTurn === true) {
       if(player.sum < 17) {
         playerHit()
       } else {
         console.log("FINAL COMPARE")
+        // Remove dealer from players array, then compare
+        setTimeout(function() {
+          resetGameState()
+          console.log("SYNCTHEGAME2")
+        }, 4050)
+        players.splice(-1)[0]
         finalCompare();
       }
     }
@@ -887,6 +947,12 @@ function outputCardSumAceDealer() {
         playerHit()
       } else {
         console.log("FINAL COMPARE")
+        // Remove dealer from players array, then compare
+        setTimeout(function() {
+          resetGameState()
+          console.log("SYNCTHEGAME2")
+        }, 4050)
+        players.splice(-1)[0]
         finalCompare();
       }
     }
@@ -900,6 +966,12 @@ function outputCardSumDealer() {
       playerHit()
     } else {
       console.log("FINAL COMPARE")
+      // Remove dealer from players array, then compare
+      setTimeout(function() {
+        resetGameState()
+        console.log("SYNCTHEGAME2")
+      }, 4050)
+      players.splice(-1)[0]
       finalCompare();
   }
 }
@@ -1006,7 +1078,7 @@ $(".update-balance-bet").click(function() {
   $("#balance").text(theClient.balance)
   if(theClient.bet > 0) {
     for(let i = 0; i < playerSlotHTML.length; i++) {
-      if(playerSlotHTML[i] === theClient.clientId) {
+      if(playerSlotHTML[i] === clientId) {
         $(".ready:eq("+i+")").removeClass("hide-element")
       }
     }
