@@ -249,7 +249,8 @@ function playerBets() {
         } else {
           alert("Need more balance")
         }
-        sendPlayerBets()
+        console.log("sendPlayerBets")
+        // sendPlayerBets()
       });
     }
 }

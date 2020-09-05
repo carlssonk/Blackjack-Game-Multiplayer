@@ -715,7 +715,7 @@
       // join
       if (response.method === "join") {
         game = response.game;
-        player = response.player
+        player = game.player
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
         roomId = response.roomId;
@@ -762,6 +762,7 @@
         players = response.players
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
+        player = game.player
         console.log(player)
         console.log(player)
         console.log(player)
@@ -1034,10 +1035,8 @@
         dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
         // // remove dealer from player
         players.splice(-1)[0]
+        console.log("sendplayerBets")
         sendPlayerBets() // <--- this only updates players array
-        console.log(players)
-        console.log(players)
-        console.log(players)
         console.log("show dealer cards")
         // For all players That have NOT busted, compare sum to dealer
         for(let i = 0; i < players.length; i++) {

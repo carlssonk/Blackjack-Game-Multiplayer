@@ -733,24 +733,39 @@ i {
 .ready {
   position: absolute;
   cursor: pointer;
-  width: 100px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   left: 50%;
-  margin-left: -50px;
+  margin-left: -50%;
   top: 50%;
-  margin-top: -25px;
-  border-radius: 25px;
+  margin-top: -50%;
+  border-radius: 100%;
+  font-weight: 1000;
   outline: none;
   border: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: gold;
+  background-color: rgb(255, 217, 0, 0.8);
   box-shadow: 0 0 10px gold;
+  animation-name: placeBetsColor;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  transition: 100ms;
+}
+
+
+@keyframes placeBetsColor{
+	0% {
+		background-color: rgb(255, 217, 0, 0.8);
+	}
+	50% {
+		background-color: rgba(255, 217, 0, 0.5);
+  }
 }
 
 .ready:hover {
-  background-color: rgb(223, 189, 0);
+  opacity: 0.5;
 }
 .ready:active {
   transform: scale(0.95)
