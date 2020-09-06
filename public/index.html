@@ -721,7 +721,12 @@
           </div>
           `
         }
-        if(players.some(e => e.clientId === clientId)) $(".empty-slot:eq("+playerSlotIndex+")").addClass("noclick");
+
+        // Add noclick class to the class that the player just left, IF the player currently sits on a slot
+        if(players.some(e => e.clientId === clientId)) {
+          if(!$(".empty-slot").is("noclick")) $(".empty-slot").addClass("noclick");
+        }
+
         // placeBet();
       }
 
@@ -753,6 +758,9 @@
 
         theClient = response.theClient
         game = response.game
+        players = response.players
+        spectators = response.spectators
+        playerSlotHTML = response.playerSlotHTML
 
         // If client joins mid game
         if(game.gameOn === true) {
@@ -793,9 +801,46 @@
       if (response.method === "joinMidGame") {
         theClient = response.theClient
         game = response.game
-        console.log(player)
-        console.log(player)
-        console.log(player)
+
+        // spectators = game.spectators
+        players = game.players
+        playerSlotHTML = game.playerSlotHTML
+        player = game.player
+        dealer = game.dealer
+        gameOn = game.gameOn
+        if(dealer.hiddenCard.length > 0) {
+          dealerSlot.lastElementChild.innerHTML += 
+          `
+          <div class="hiddenCard">
+            <img src="/imgs/Card_back.svg" alt="">
+          </div>
+          `;
+
+          dealerHiddenCard = document.querySelector(".hiddenCard")
+          dealerHiddenCardRemoveNext = true;
+          }
+
+          console.log(playerSlot[3].firstElementChild.nextElementSibling)
+          console.log(playerSlot[3].firstElementChild.nextElementSibling)
+          console.log(playerSlot[3].firstElementChild.nextElementSibling)
+
+
+          for(let x = 0; x < players.length; x++) {
+            for(let i = 0; i < playerSlotHTML.length; i++) {
+              if(players[x].clientId === playerSlotHTML[i]) {
+                console.log(2)
+                z = playerSlotHTML.indexOf(playerSlotHTML[i])
+                if(playerSlot[z].firstElementChild.nextElementSibling.classList.contains("empty-slot")) playerSlot[z].firstElementChild.nextElementSibling.remove();
+              }
+            }
+          }
+
+          console.log(playerSlot[3].firstElementChild.nextElementSibling)
+          console.log(playerSlot[3].firstElementChild.nextElementSibling)
+          console.log(playerSlot[3].firstElementChild.nextElementSibling)
+
+          
+
 
           // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
           for(let i = 0; i < players.length; i++) {
@@ -845,8 +890,45 @@
           dealerSlot.firstElementChild.nextElementSibling.style.opacity = "1"
           dealerSlot.firstElementChild.nextElementSibling.style.transform = "scale(1)"          
         }
+
+        // Update chips
+        setPlayersBet()
+        // for(let s = 0; s < playerSlotHTML.length; s++) {
+
+        //   for(let i = 0; i < players.length; i++) {
+        //     if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
+        //       console.log("player " + s + " is ready")
+        //       // players[i].isReady = false;
+        //       if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
+        //       if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
+        //       if(players[i].bet >= 100 && players[i].bet < 500) {chipIndex = "Blue"} else 
+        //       if(players[i].bet >= 500 && players[i].bet < 1000) {chipIndex = "Green"} else 
+        //       if(players[i].bet >= 1000 && players[i].bet < 5000) {chipIndex = "Gray"} else 
+        //       if(players[i].bet >= 5000 && players[i].bet < 10000) {chipIndex = "Orange"} else 
+        //       if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
+        //       if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
+        //       if(players[i].bet >= 100000) {chipIndex = "Black"};
+
+        //       $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
+        //       $(".players:eq("+s+") .player-bet").text(players[i].bet)
+        //       setTimeout(function() {
+        //         $(".players:eq("+s+") .player-bet").css("opacity", "1")
+        //       }, 100)
+              
+        //     }
+        //   }
+        // }
         
 
+      }
+
+      if (response.method === "joinMidGameUpdate") {
+        spectators = response.spectators
+        console.log("A PLAYER JOINED")
+        console.log("A PLAYER JOINED")
+        console.log("A PLAYER JOINED")
+        console.log("A PLAYER JOINED")
+        console.log("A PLAYER JOINED")
       }
 
       // bet
@@ -862,32 +944,32 @@
 
       if (response.method === "isReady") {
         players = response.players;
+        setPlayersBet()
+        // for(let s = 0; s < playerSlotHTML.length; s++) {
 
-        for(let s = 0; s < playerSlotHTML.length; s++) {
+        //   for(let i = 0; i < players.length; i++) {
+        //     if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
+        //       console.log("player " + s + " is ready")
+        //       // players[i].isReady = false;
+        //       if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
+        //       if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
+        //       if(players[i].bet >= 100 && players[i].bet < 500) {chipIndex = "Blue"} else 
+        //       if(players[i].bet >= 500 && players[i].bet < 1000) {chipIndex = "Green"} else 
+        //       if(players[i].bet >= 1000 && players[i].bet < 5000) {chipIndex = "Gray"} else 
+        //       if(players[i].bet >= 5000 && players[i].bet < 10000) {chipIndex = "Orange"} else 
+        //       if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
+        //       if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
+        //       if(players[i].bet >= 100000) {chipIndex = "Black"};
 
-          for(let i = 0; i < players.length; i++) {
-            if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
-              console.log("player " + s + " is ready")
-              // players[i].isReady = false;
-              if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
-              if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
-              if(players[i].bet >= 100 && players[i].bet < 500) {chipIndex = "Blue"} else 
-              if(players[i].bet >= 500 && players[i].bet < 1000) {chipIndex = "Green"} else 
-              if(players[i].bet >= 1000 && players[i].bet < 5000) {chipIndex = "Gray"} else 
-              if(players[i].bet >= 5000 && players[i].bet < 10000) {chipIndex = "Orange"} else 
-              if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
-              if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
-              if(players[i].bet >= 100000) {chipIndex = "Black"};
-
-              $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
-              $(".players:eq("+s+") .player-bet").text(players[i].bet)
-              setTimeout(function() {
-                $(".players:eq("+s+") .player-bet").css("opacity", "1")
-              }, 100)
+        //       $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
+        //       $(".players:eq("+s+") .player-bet").text(players[i].bet)
+        //       setTimeout(function() {
+        //         $(".players:eq("+s+") .player-bet").css("opacity", "1")
+        //       }, 100)
               
-            }
-          }
-        }
+        //     }
+        //   }
+        // }
 
       }
 
@@ -1269,6 +1351,39 @@
         })
       })(s)
     }
+
+    function setPlayersBet() {
+
+      for(let s = 0; s < playerSlotHTML.length; s++) {
+        for(let i = 0; i < players.length; i++) {
+          if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
+            console.log("player " + s + " is ready")
+            // players[i].isReady = false;
+            if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
+            if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
+            if(players[i].bet >= 100 && players[i].bet < 500) {chipIndex = "Blue"} else 
+            if(players[i].bet >= 500 && players[i].bet < 1000) {chipIndex = "Green"} else 
+            if(players[i].bet >= 1000 && players[i].bet < 5000) {chipIndex = "Gray"} else 
+            if(players[i].bet >= 5000 && players[i].bet < 10000) {chipIndex = "Orange"} else 
+            if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
+            if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
+            if(players[i].bet >= 100000) {chipIndex = "Black"};
+
+            $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
+            $(".players:eq("+s+") .player-bet").text(players[i].bet)
+            setTimeout(function() {
+              $(".players:eq("+s+") .player-bet").css("opacity", "1")
+            }, 100)
+            
+          }
+        }
+      }
+
+    }
+
+
+
+
 
     setTimeout(joinByUrl, 200)
     function joinByUrl() {

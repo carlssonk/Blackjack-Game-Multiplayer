@@ -129,9 +129,12 @@ wsServer.on("request", function (request) {
       }; // loop through all clients and tell them that people has joined
       // if(game.players.length === 0) {
 
-      game.spectators.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(_payLoad2));
-      }); // }
+      if (!game.gameOn === true) {
+        game.spectators.forEach(function (c) {
+          clients[c.clientId].connection.send(JSON.stringify(_payLoad2));
+        });
+      } // }
+
 
       var payLoadClient = {
         "method": "joinClient",
@@ -143,7 +146,9 @@ wsServer.on("request", function (request) {
 
       }; // Send theClient to THE CLIENT
 
-      clients[_clientId2].connection.send(JSON.stringify(payLoadClient)); // Important to send this payLoad last, because it needs to know the the clientId
+      if (!game.gameOn === true) {
+        clients[_clientId2].connection.send(JSON.stringify(payLoadClient));
+      } // Important to send this payLoad last, because it needs to know the the clientId
 
 
       var payLoadClientArray = {
@@ -152,12 +157,18 @@ wsServer.on("request", function (request) {
         "spectators": _spectators,
         "playerSlot": _playerSlot,
         "playerSlotHTML": _playerSlotHTML2
-      }; // if(game.players.length === 0) {
+      };
+      console.log(game.gameOn);
+      console.log(game.gameOn);
+      console.log(game.gameOn); // if(game.players.length === 0) {
 
-      game.spectators.forEach(function (c) {
-        clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray));
-      }); // }
+      if (!game.gameOn === true) {
+        game.spectators.forEach(function (c) {
+          clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray));
+        });
+      } // }
       // If a player joins mid-game
+
 
       var payLoadMidGame = {
         "method": "joinMidGame",
@@ -165,7 +176,25 @@ wsServer.on("request", function (request) {
         "game": game
       };
 
-      clients[_clientId2].connection.send(JSON.stringify(payLoadMidGame));
+      if (game.gameOn === true) {
+        clients[_clientId2].connection.send(JSON.stringify(payLoadMidGame));
+      } // Send this to ALL clients, to let them know that a new spectator joined
+
+
+      var payLoadMidGameUpdate = {
+        "method": "joinMidGameUpdate",
+        "spectators": _spectators
+      };
+
+      if (game.gameOn === true) {
+        game.spectators.forEach(function (c) {
+          clients[c.clientId].connection.send(JSON.stringify(payLoadMidGameUpdate));
+        });
+      }
+
+      console.log(game.gameOn);
+      console.log(game.gameOn);
+      console.log(game.gameOn);
     } // bets
 
 

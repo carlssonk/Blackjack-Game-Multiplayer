@@ -134,9 +134,12 @@ wsServer.on("request", request => {
 
       // loop through all clients and tell them that people has joined
       // if(game.players.length === 0) {
+      if(!game.gameOn === true) {
         game.spectators.forEach(c => {
           clients[c.clientId].connection.send(JSON.stringify(payLoad))
         });
+      }
+
       // }
 
       
@@ -150,8 +153,9 @@ wsServer.on("request", request => {
         // "gameOn": gameOn
       }
       // Send theClient to THE CLIENT
+      if(!game.gameOn === true) {
         clients[clientId].connection.send(JSON.stringify(payLoadClient))
-
+      }
       // Important to send this payLoad last, because it needs to know the the clientId
       const payLoadClientArray = {
         "method": "updateClientArray",
@@ -161,13 +165,18 @@ wsServer.on("request", request => {
         "playerSlotHTML": playerSlotHTML
       }
 
+      console.log(game.gameOn)
+      console.log(game.gameOn)
+      console.log(game.gameOn)
       // if(game.players.length === 0) {
-        game.spectators.forEach(c => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray))
-        });
+        if(!game.gameOn === true) { 
+          game.spectators.forEach(c => {
+            clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray))
+          });
+        }
       // }
 
-
+    
 
 
       // If a player joins mid-game
@@ -177,7 +186,24 @@ wsServer.on("request", request => {
         "game": game
       }
 
-      clients[clientId].connection.send(JSON.stringify(payLoadMidGame))
+      if(game.gameOn === true) {
+        clients[clientId].connection.send(JSON.stringify(payLoadMidGame))
+      }
+
+      // Send this to ALL clients, to let them know that a new spectator joined
+      const payLoadMidGameUpdate = {
+        "method": "joinMidGameUpdate",
+        "spectators": spectators
+      }
+      if(game.gameOn === true) {
+        game.spectators.forEach(c => {
+          clients[c.clientId].connection.send(JSON.stringify(payLoadMidGameUpdate))
+        });
+      }
+
+      console.log(game.gameOn)
+      console.log(game.gameOn)
+      console.log(game.gameOn)
 
     }
 
