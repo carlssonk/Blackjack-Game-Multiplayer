@@ -92,16 +92,23 @@ var dealer = {
 var players = [];
 var spectators = []; // NOTE: player means current player
 
-var player = players[currentPlayer]; // let lastPlayer = players.slice(-1)[0];
-// Player cards (DELETE THIS OBJECT LATER)
-// const player = {
-//   "cards": [],
-//   "bet": 0,
-//   "balance": 1000,
-//   "sum": null,
-//   "hasAce": false
-// }
-// INIT
+var player = players[currentPlayer]; // SORTING FUNCTION FOR SORTING PLAYER TABLE SLOT (SO DEALER DEALS CARD FROM RIGHT TO LEFT)
+
+function mapOrder(array, order, key) {
+  array.sort(function (a, b) {
+    var A = a[key],
+        B = b[key];
+
+    if (order.indexOf(A) > order.indexOf(B)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+  return array.reverse();
+}
+
+; // INIT
 
 Init();
 
@@ -162,7 +169,6 @@ function playerBets() {
       }
 
       console.log("sendPlayerBets");
-      sendPlayerBets();
     });
   };
 
@@ -184,6 +190,7 @@ function playerBets() {
 
 
 $(document).on("click", ".ready", function () {
+  sendPlayerBets();
   $(".ready").addClass("hide-element");
   player = players[currentPlayer];
   updateCurrentPlayer(); // let playersReady = 0;
@@ -194,6 +201,16 @@ $(document).on("click", ".ready", function () {
   if (players.every(function (player) {
     return player.isReady;
   })) {
+    // First sort all the players by what order they are sitting in, (we want to give cards from right to left)
+    // players = mapOrder(players, playerSlotHTML, 'clientId');
+    // console.log(players)
+    // console.log(players)
+    // console.log(players)
+    // setTimeout(function() {
+    //   console.log(players)
+    //   console.log(players)
+    //   console.log(players)
+    // },500)
     gameOn = true;
     getDeck();
     sendPlayerDeck();

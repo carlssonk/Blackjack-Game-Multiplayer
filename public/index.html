@@ -702,6 +702,9 @@
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
 
+        console.log(playerSlotIndex)
+        console.log(playerSlotIndex)
+        console.log(playerSlotIndex)
         if(playerSlotIndex === undefined || playerSlot === undefined) {
           return;
         } else {
@@ -724,7 +727,6 @@
           if(!$(".empty-slot").is("noclick")) $(".empty-slot").addClass("noclick");
         }
 
-        // placeBet();
       }
 
       // create
@@ -935,6 +937,10 @@
       }
       // deck
       if (response.method === "deck") {
+        players = mapOrder(players, playerSlotHTML, 'clientId');
+        // console.log(players)
+        // console.log('Ordered:', JSON.stringify(players));
+        // console.log(JSON.stringify(players));
         deck = response.deck;
         gameOn = response.gameOn
       }
