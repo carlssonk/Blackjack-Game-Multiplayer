@@ -290,6 +290,7 @@ wsServer.on("request", function (request) {
       var _deck = result.deck;
       var _spectators6 = result.spectators;
       var _gameOn2 = result.gameOn;
+      var _dealersTurn = result.dealersTurn;
       var _payLoad7 = {
         "method": "update",
         "players": _players6,
@@ -308,7 +309,7 @@ wsServer.on("request", function (request) {
       var _gameId3 = result.gameId;
       var _game = games[_gameId3];
       var _player2 = result.player;
-      var _dealersTurn = result.dealersTurn;
+      var _dealersTurn2 = result.dealersTurn;
       var currentPlayer = result.currentPlayer;
       var _spectators7 = result.spectators;
       var _payLoad8 = {
@@ -317,7 +318,7 @@ wsServer.on("request", function (request) {
         "currentPlayer": currentPlayer
       }; // players[currentPlayer].clientId.connection.send(JSON.stringify(payLoad))
 
-      if (_dealersTurn === false) {
+      if (_dealersTurn2 === false) {
         _game.players.forEach(function (c) {
           clients[c.clientId].connection.send(JSON.stringify(_payLoad8));
         });
@@ -424,24 +425,24 @@ wsServer.on("request", function (request) {
       var _spectators11 = result.spectators;
       var _player4 = result.player;
       var _dealer2 = result.dealer;
-      var _dealersTurn2 = result.dealersTurn;
+      var _dealersTurn3 = result.dealersTurn;
       var dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext;
       var _payLoad12 = {
         "method": "updateDealerCards",
         "player": _player4,
         "dealer": _dealer2,
         "players": _players11,
-        "dealersTurn": _dealersTurn2,
+        "dealersTurn": _dealersTurn3,
         "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
       };
 
-      if (_dealersTurn2 === false) {
+      if (_dealersTurn3 === false) {
         _spectators11.forEach(function (c) {
           clients[c.clientId].connection.send(JSON.stringify(_payLoad12));
         });
       }
 
-      if (_dealersTurn2 === true) {
+      if (_dealersTurn3 === true) {
         _players11.pop(_players11.slice(-1)[0]);
 
         _spectators11.forEach(function (c) {
@@ -452,11 +453,11 @@ wsServer.on("request", function (request) {
 
     if (result.method === "dealersTurn") {
       var _players12 = result.players;
-      var _dealersTurn3 = result.dealersTurn;
+      var _dealersTurn4 = result.dealersTurn;
       var _spectators12 = result.spectators;
       var _payLoad13 = {
         "method": "dealersTurn",
-        "dealersTurn": _dealersTurn3
+        "dealersTurn": _dealersTurn4
       };
 
       _spectators12.forEach(function (c) {

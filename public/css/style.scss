@@ -350,25 +350,27 @@ body {
 
 .player-name {
   position: absolute;
-  bottom: -35px;
-  right: 40px;
+  bottom: -50px;
   text-shadow: 1px 1px 10px black;
+  font-size: 17px;
   color: white;
   pointer-events:none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 220px;
+  left: -50px;
 }
 .highlight {
   color: rgb(224, 224, 0);
 }
 .player-name span {
-  position: absolute;
-  right: -60px;
-  top: -16px;
-  margin-left: 4px;
+  position: relative;
+  margin-left: 6px;
   width: 46px;
   height: 46px;
   border: 2px solid black;
   background-color: rgba(0, 0, 0, 0.5);
-  // padding: 4px;
   border-radius: 10px;
   overflow: hidden;
   pointer-events:none;
@@ -835,6 +837,7 @@ i {
   animation-duration: 2s;
   animation-iteration-count: infinite;
   transition: 100ms;
+  z-index: 10;
 }
 
 

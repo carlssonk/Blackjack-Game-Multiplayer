@@ -255,20 +255,6 @@ function playerBets() {
     }
 }
 
-// CLEAR AND MAX
-$(".max-clear").click(function() {
-  console.log(this.innerText)
-  if(this.innerText === "CLEAR") {
-    theClient.balance = theClient.balance + theClient.bet;
-    theClient.bet = 0;
-    $(".player-bet").text(theClient.bet)
-  } else if(this.innerText === "MAX") {
-    theClient.bet = theClient.balance;
-    theClient.balance = 0;
-    $(".player-bet").text(theClient.bet)
-  }
-});
-
 // function sendPlayerBets() {
 //   const payLoad = {
 //     "method": "bet",
@@ -286,19 +272,34 @@ $(".max-clear").click(function() {
     player = players[currentPlayer];
     updateCurrentPlayer()
     // let playersReady = 0;
+    theClient.isReady = true;
     clientIsReady()
 
-    // Loop through all players and check if they'r READY
-    for(let i = 0; i < players.length; i++) {
-      if (players[i].isReady === true) playersReady++;
-    }
-
-    if(playersReady === players.length) {
+    // Check if all players is ready
+    if(players.every(player => player.isReady)) {
       gameOn = true;
       getDeck();
       sendPlayerDeck();
       setTimeout(dealCards, 1000);
     }
+      // console.log()
+      // console.log(players[i])
+      // if(!players[i].isReady === false) {
+      //   gameOn = true;
+      //   getDeck();
+      //   sendPlayerDeck();
+      //   setTimeout(dealCards, 1000);
+      // }
+
+      // if (players[i].isReady === true) playersReady++;
+
+
+    // if(playersReady === players.length) {
+    //   gameOn = true;
+    //   getDeck();
+    //   sendPlayerDeck();
+    //   setTimeout(dealCards, 1000);
+    // }
   });
 // }
 
@@ -500,6 +501,10 @@ function sendPlayerNext() {
   if(dealersTurn === false) nextPlayer();
   
   if(currentPlayer+1 > players.length) {
+    // PUSH DEALER TO PLAYER ARRAY
+    // players.push(dealer);
+    dealersTurn = true;
+    sendDealersTurn()
     setTimeout(dealerPlay, 500)
   } else {
     console.log("SEND THE PLAY")
@@ -521,9 +526,10 @@ function playerDoubleDown() {
 
 function dealerPlay() {
   console.log("DealerPlay")
-  dealersTurn = true;
+  console.log("DealerPlay")
+  console.log("DealerPlay")
   // sendDealersTurn();
-  // PUSH DEALER TO PLAYER ARRAY
+  // // PUSH DEALER TO PLAYER ARRAY
   players.push(dealer);
   //PUSH DEALERS HIDDEN CARD TO DECK[0]
   deck.unshift(dealer.hiddenCard[0])
@@ -704,6 +710,7 @@ function dealerWin(i) {
 
 function resetGame() {
   // Reset Players 
+  $(".player-bet").text("")
   for(let i = 0; i < players.length; i++) {
     players[i].cards = [];
     players[i].hasAce = false;
@@ -719,6 +726,7 @@ function resetGame() {
   // Reset Deck
   deck = [];
   // getDeck()
+  $("#dealerSum").removeClass("current-player-highlight")
 
   // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
   if(players.some(e => e.hiddenCard)) players.splice(players.findIndex(e => e.hiddenCard), 1);
@@ -748,7 +756,6 @@ function resetGame() {
     }
   }
   if(!players.some(e => e.clientId === clientId)) $(".empty-slot").removeClass("noclick");
-
 
   $(".player-result").addClass("hide-element")
   $(".player-result").removeClass("result-lose result-draw result-win result-blackjack")
@@ -1080,11 +1087,11 @@ $("#how-to-play").click(function() {
   }
 })
 
-// $("#total-bet")
-
+// UPDATE CSS BET AND BALANCE
 $(".update-balance-bet").click(function() {
   $("#total-bet").text(theClient.bet)
   $("#balance").text(theClient.balance)
+  
   if(theClient.bet > 0) {
     for(let i = 0; i < playerSlotHTML.length; i++) {
       if(playerSlotHTML[i] === clientId) {
@@ -1095,6 +1102,44 @@ $(".update-balance-bet").click(function() {
     $(".ready").addClass("hide-element")
   }
 })
+
+
+// CLEAR AND MAX BOTH ACTUAL UPDATE AND CSS UPDATE
+$(".max-clear").click(function() {
+  console.log(this.innerText)
+for(let i = 0; i < playerSlotHTML.length; i++) {
+if(playerSlotHTML[i] === clientId) {
+
+  if(this.innerText === "CLEAR") {
+      $(".ready").addClass("hide-element")    
+    if(parseInt($(".players:eq("+i+") .player-bet").text()) > 1) {
+      // 
+      theClient.balance = theClient.balance + theClient.bet - parseInt($(".players:eq("+i+") .player-bet").text())
+      theClient.bet = parseInt($(".players:eq("+i+") .player-bet").text())
+      $("#total-bet").text(theClient.bet)
+      $("#balance").text(theClient.balance)
+      // 
+    } else {
+      // 
+      theClient.balance = theClient.balance + theClient.bet;
+      theClient.bet = 0;
+      $("#total-bet").text(theClient.bet)
+      $("#balance").text(theClient.balance)
+      // 
+    }
+  } else if(this.innerText === "MAX") {
+    theClient.bet = theClient.bet + theClient.balance;
+    theClient.balance = 0;
+    $("#total-bet").text(theClient.bet)
+    $("#balance").text(theClient.balance)
+  }
+
+
+
+}
+}
+
+});
 
 
 

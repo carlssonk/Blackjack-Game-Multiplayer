@@ -307,13 +307,14 @@ wsServer.on("request", request => {
       const deck = result.deck
       const spectators = result.spectators
       const gameOn = result.gameOn
+      const dealersTurn = result.dealersTurn
 
       const payLoad = {
         "method": "update",
         "players": players,
         "dealer": dealer,
         "deck": deck,
-        "gameOn": gameOn
+        "gameOn": gameOn,
       }
 
       spectators.forEach(c => {
