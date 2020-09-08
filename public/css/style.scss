@@ -12,6 +12,8 @@ body {
   background: radial-gradient(#38833c, #1e421f);
   background-repeat: no-repeat;
   background-attachment: fixed;
+  padding: 0;
+  margin: 0;
 }
 
 // UTILITIES
@@ -25,6 +27,13 @@ body {
 .noclick {
   pointer-events: none;
   opacity: 0.3;
+}
+
+.current-player-highlight {
+  color: black !important;
+  background-color:#e0e000 !important;
+  transform: scale (1.1) !important;
+  transition: 400ms !important;
 }
 
 
@@ -180,7 +189,7 @@ body {
   padding: 12px 18px;
   border-radius: 30px 0px 0px 30px;
   cursor: pointer;
-  z-index: 50;
+  z-index: 100;
 }
 #how-to-play:hover {
   color: rgb(204, 204, 204);
@@ -275,7 +284,7 @@ body {
   width: 400px;
   height: 80px;
   top: 50%;
-  margin-top: -190px;
+  margin-top: -210px;
   left: 50%;
   margin-left: -200px;
   font-size: 18px;
@@ -288,7 +297,7 @@ body {
   background: rgb(0,0,0,.25);
   background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 20%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%);
   text-shadow: 0 0 10px black;
-  z-index: 30;
+  z-index: 50;
 }
 .color-green {
   color: rgb(0, 222, 0);
@@ -546,16 +555,16 @@ i {
 }
 // Card Seperation
 .card1 {z-index: 1;}
-.card2 {z-index: 2; margin-left: 20px; top: -182px;}
-.card3 {z-index: 3; margin-left: 40px; top: -212px;}
-.card4 {z-index: 4; margin-left: 60px; top: -242px;}
-.card5 {z-index: 5; margin-left: 80px; top: -272px;}
-.card6 {z-index: 6; margin-left: 100px; top: -302px;}
-.card7 {z-index: 7; margin-left: 120px; top: -332px;}
-.card8 {z-index: 8; margin-left: 140px; top: -362px;}
-.card9 {z-index: 9; margin-left: 160px; top: -392px;}
-.card10 {z-index: 10; margin-left: 180px; top: -422px;}
-.card11 {z-index: 11; margin-left: 200px; top: -452px;}
+.card2 {z-index: 2; margin-left: 20px; top: -177px;}
+.card3 {z-index: 3; margin-left: 40px; top: -202px;}
+.card4 {z-index: 4; margin-left: 60px; top: -227px;}
+.card5 {z-index: 5; margin-left: 80px; top: -252px;}
+.card6 {z-index: 6; margin-left: 100px; top: -277px;}
+.card7 {z-index: 7; margin-left: 120px; top: -302px;}
+.card8 {z-index: 8; margin-left: 140px; top: -327px;}
+.card9 {z-index: 9; margin-left: 160px; top: -352px;}
+.card10 {z-index: 10; margin-left: 180px; top: -377px;}
+.card11 {z-index: 11; margin-left: 200px; top: -402px;}
 // Card Seperation
 
 .dealerCardImg{
@@ -596,13 +605,14 @@ i {
     color: white;
     text-shadow: 0 0 10px black;
     margin: 0;
+    padding: 0;
   }
   #dealerSum {
     position: absolute;
     // font-size: 16px;
     width: 34px;
     height: 30px;
-    bottom: -120px;
+    top: 155px;
     left: 50%;
     margin-left: -17px;
     color: rgb(224, 224, 0);
@@ -621,7 +631,7 @@ i {
   }
 
   .dealer-cards {
-    margin-top: 80px;
+    margin-top: 60px;
     position: absolute;
     display: inline-flex;
     transition: 1s;
@@ -727,6 +737,79 @@ i {
   #chip100k {
     background: url("/imgs/chips/Casino_Chip_Black.svg") no-repeat;
   }
+}
+
+.user-action-container {
+  position: absolute;
+  width: 400px;
+  height: 200px;
+  top: 50%;
+  margin-top: -230px;
+  left: 50%;
+  margin-left: -200px;
+  font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  text-shadow: 0 0 10px black;
+  z-index: 29;
+  color: white;
+
+
+  #your-turn-label {
+    position: absolute;
+    font-size: 24px;
+    top: 0;
+    // text-shadow: 0 0 50px black
+  }
+
+  .user-action-box {
+    width: 150px;
+    text-align: center;
+  }
+
+  .user-action {
+    font-size: 58px;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 90px;
+    height: 90px;
+    outline: none;
+    border: none;
+    border-radius: 100%;
+    border: 2px solid black;
+    // box-shadow: 0 0 100px black;
+    cursor: pointer;
+  }
+  .user-action:hover {
+    transform: scale(1.025);
+    background-color: rgba(50, 50, 50, 0.5);
+  }
+  .user-action:active {
+    transform: scale(1);
+  }
+
+  #stand {
+    color: red;
+  }
+  #hit{
+    color: green;
+  }
+  #doubleDown {
+    position: relative;
+    color: goldenrod;
+    span {
+      position: absolute;
+      left: 28px;
+      top: 39px;
+      font-size: 27px;
+      color: rgb(78, 60, 13);
+    }
+  }
+
+  // .user-action-text {
+  
+  // }
 }
 
 

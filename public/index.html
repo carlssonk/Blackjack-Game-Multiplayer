@@ -129,14 +129,20 @@
     </div>
   </div>
   <button id="play">Play</button>
-  <div>
-    <button class="userAction" id="stand">Stand</button>
-    <button class="userAction" id="hit">Hit</button>
-    <button class="userAction" id="doubleDown">Double Down</button>
-  </div>
-  <div>
-    <button class="countAce">Count as 1</button>
-    <button class="countAce">Count as 11</button>
+  <div class="user-action-container hide-element">
+    <div id="your-turn-label">MAKE A DECISION</div>
+    <div class="user-action-box">
+      <button class="user-action" id="stand"><i class="fas fa-hand-paper"></i></button>
+      <div class="user-action-text">STAND</div>
+    </div>
+    <div class="user-action-box">
+      <button class="user-action" id="hit"><i class="fas fa-hand-pointer"></i></button>
+      <div class="user-action-text">HIT</div>
+    </div>
+    <div class="user-action-box">
+      <button class="user-action" id="doubleDown"><i class="fas fa-hand-peace"></i><span>2X</span></button>
+      <div class="user-action-text">DOUBLE DOWN</div>
+    </div>
   </div>
   <div id="players-container">
     <span class="players">
@@ -1060,14 +1066,21 @@
       if (response.method === "thePlay") {
         player = response.player
         currentPlayer = response.currentPlayer
+
+        // Highlight current player sum so we know who's turn it is
+        $(".player-sum").removeClass("current-player-highlight")
+        for(let i = 0; i < playerSlotHTML.length; i++) {
+          if(playerSlotHTML[i] === player.clientId) {
+            $(".player-sum:eq("+i+")").addClass("current-player-highlight")
+          }
+        }
+
         if(dealersTurn) {
           return;
         } else {
-          if(player.clientId === clientId && player.sum < 21 || theClient.sum.length > 1) {
+          if(player.clientId === clientId && player.sum < 21 || player.clientId === clientId && theClient.sum.length > 1) {
             clicked = false;
-            setTimeout(function() { // remove timeout later if needed
-              console.log("ITS YOUR TURN")
-            }, 50)
+            console.log("ITS YOUR TURN")
             thePlay()
           } else if(player.clientId === clientId && player.sum >= 21) {
             console.log("you blackjacked or busted")
@@ -1249,8 +1262,10 @@
       // }
 
       if(response.method === "resetGameState") {
+        resetGame(); // Important to send this first, so we can actually reset the game, THEN uptade game state
         game = response.game
-        console.log("resetGameState")
+        console.log("resetGameState2")
+        
       }
       
 
@@ -1401,6 +1416,14 @@
     window.addEventListener('beforeunload', function() {
       reload = true;
       terminatePlayer();
+      // TERMINATE ROOM
+      roomId = null;
+      const payLoad = {
+        "method": "terminateRoom",
+        "gameId": gameId
+      }
+      // if this is the last player that leaves
+      ws.send(JSON.stringify(payLoad));
     });
 
     // function noClick() {

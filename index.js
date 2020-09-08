@@ -207,6 +207,22 @@ wsServer.on("request", request => {
 
     }
 
+    if(result.method === "terminateRoom") {
+      let gameId = result.gameId
+      console.log(gameId)
+      console.log(gameId)
+      console.log(gameId)
+      console.log(gameId)
+      console.log(gameId)
+      console.log(gameId)
+      gameId = null;
+      
+      // app.delete("/", (req,res) => {
+      //   res.send("DELETE Request Called")
+      //   // res.sendFile(__dirname +'/public/index.html');
+      // });
+    }
+
     // bets
     if (result.method === "bet") {
       const players = result.players

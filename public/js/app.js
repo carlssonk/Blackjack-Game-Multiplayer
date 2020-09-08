@@ -10,7 +10,7 @@ let ready = document.querySelector(".ready");
 const standBtn = document.querySelector("#stand");
 const hitBtn = document.querySelector("#hit");
 const doubleDownBtn = document.querySelector("#doubleDown");
-const userAction = document.querySelectorAll(".userAction");
+const userAction = document.querySelectorAll(".user-action");
 const countAce = document.querySelectorAll(".countAce")
 
 playerSlot = document.querySelectorAll(".players");
@@ -342,6 +342,7 @@ function dealDealerCards() {
       // Check if natural and Enable the First player to take an action
       setTimeout(function() {
         naturals();
+        console.log("SEND THE PLAY")
         sendPlayerThePlay();
         sendShowSum();
       }, 500)
@@ -427,6 +428,7 @@ function naturalPlayerAceSum(i) {
 
 
 function thePlay() {
+  $(".user-action-container").removeClass("hide-element")
   // Alert current player
   // player.alert.....
   for(let i = 0; i < userAction.length; i++) {
@@ -436,6 +438,8 @@ function thePlay() {
         clicked = true;
         doubleDown = false;
 
+        $(".user-action-container").addClass("hide-element")
+        $(".user-action-box").last().addClass("noclick")
         sendPlayerNext();
         // updatePlayers()
 
@@ -443,7 +447,9 @@ function thePlay() {
       } else if(this === userAction[1] && clicked === false) {
         clicked = true;
         doubleDown = false;
-              
+
+        $(".user-action-container").addClass("hide-element")
+        $(".user-action-box").last().addClass("noclick")
         playerHit() 
         // updatePlayers();
 
@@ -451,6 +457,8 @@ function thePlay() {
         clicked = true;
         doubleDown = true;
 
+        
+        $(".user-action-container").addClass("hide-element")
         playerDoubleDown();
         // updatePlayers();
 
@@ -477,6 +485,7 @@ function playerHit() {
 }
 
 function sendPlayerNext() {
+  $(".user-action-box").removeClass("noclick")
 
   // if player sum.length === 2. Fix players sum before going to next player
   if(player.sum.length === 2 && player.sum[1] <= 21) {
@@ -493,6 +502,7 @@ function sendPlayerNext() {
   if(currentPlayer+1 > players.length) {
     setTimeout(dealerPlay, 500)
   } else {
+    console.log("SEND THE PLAY")
     sendPlayerThePlay();
   }
   updatePlayers()
@@ -500,7 +510,8 @@ function sendPlayerNext() {
 
 function playerDoubleDown() {
   player.balance = player.balance - player.bet;
-  player.bet = player.bet * 2;  
+  player.bet = player.bet * 2;
+  $("#total-bet").text(theClient.bet)
   playerHit()
 }
 
@@ -595,9 +606,9 @@ function finalCompareGo() { // This should fire up for all players
   // Function for display win/lose/draw/bj coins as well as payout
   winLoseComponents()
   // Function for RESET GAME
-  setTimeout(function() {
-    resetGame();
-  }, 4000);
+  // setTimeout(function() {
+  // resetGame();
+  // }, 4000);
 }
 
 function winLoseComponents() {
@@ -710,7 +721,7 @@ function resetGame() {
   // getDeck()
 
   // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
-
+  if(players.some(e => e.hiddenCard)) players.splice(players.findIndex(e => e.hiddenCard), 1);
 
   // Utilities
   currentPlayer = 0;
@@ -720,6 +731,7 @@ function resetGame() {
   startedGame = false;
   doubleDown = false;
   gameOn = false;
+  $(".user-action-box").removeClass("noclick")
   $("#total-bet").text("")
   $("#player-result-big").addClass("hide-element")
   $("#player-result-sum-box").removeClass("color-green color-red")
@@ -751,10 +763,9 @@ function resetGame() {
     dealerSlot.lastElementChild.lastElementChild.innerHTML = "";
     resetCards = false;
   }
-
-  console.log("SYNCTHEGAME1")
   // updateCurrentPlayer();
   // updatePlayers();
+  console.log("resetGameState1")
 }
 
 // *************************************************************
@@ -762,11 +773,6 @@ function resetGame() {
 
 // ******************PLAYER ACTION ANSWERS**********************
 
-// function blackjack() {
-//   nextPlayer()
-
-
-// }
 
 function bust() {
   player.cards = [];
@@ -871,6 +877,7 @@ function outputCardSum() {
     if(player.sum === 21) {
       sendPlayerNext() 
     } else if(player.sum < 21 && doubleDown === false) {
+      console.log("SEND THE PLAY")
       sendPlayerThePlay();
     } else if(player.sum < 21 && doubleDown === true) {
       sendPlayerNext();
@@ -893,6 +900,7 @@ function outputCardSumAce() {
       if(player.sum === 21) {
         sendPlayerNext() 
       } else if(player.sum < 21 && doubleDown === false) {
+        console.log("SEND THE PLAY")
         sendPlayerThePlay();
       } else {
         sendPlayerNext();
@@ -909,6 +917,7 @@ function outputCardSumAce() {
         sendPlayerNext();
       } 
       if(player.sum[1] < 21 && doubleDown === false) {
+        console.log("SEND THE PLAY")
         sendPlayerThePlay();
       } else {
         sendPlayerNext();
