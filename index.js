@@ -15,11 +15,13 @@ const clients = {};
 const games = {};
 const players = {};
 const spectators = {};
+// const lobbySpectators = {};
 const playerSlotHTML = {};
 
 let dealer = null;
 let gameOn = null;
 let player = null;
+
 
 const wsServer = new websocketServer({
   "httpServer": httpServer
@@ -57,6 +59,7 @@ wsServer.on("request", request => {
         "gameOn": gameOn,
         "player": player,
         "spectators": [],
+        // "lobbySpectators": [],
         "playerSlot": playerSlot,
         "playerSlotHTML": [
           // 7 objectes because the playerSlot has a length of 7
@@ -83,7 +86,7 @@ wsServer.on("request", request => {
     // a client want to join
     if (result.method === "join") {
       const nickname = result.nickname
-      const gameId = result.gameId;      
+      const gameId = result.gameId;
       const roomId = result.roomId;
       let theClient = result.theClient;
       const clientId = result.clientId;
@@ -213,25 +216,63 @@ wsServer.on("request", request => {
 
     }
 
-    if(result.method === "terminateRoom") {
-      let roomId = result.roomId
 
-      // console.log(app._router.stack[3].route.path)
-      for(let i = 3; i < app._router.stack.length; i++) {
-        // console.log(app._router.stack[i])
-        console.log(app._router.stack[i].route.path)
-        console.log("/" + roomId)
-        if(app._router.stack[i].route.path === "/" + roomId) {
-          console.log(app._router.stack[i].route.path)
-          app._router.stack.splice(i,1);
-        }
-      }
-      console.log("---------------")
-      
-      // app.delete("/", (req,res) => {
-      //   res.send("DELETE Request Called")
-      //   // res.sendFile(__dirname +'/public/index.html');
-      // });
+    if(result.method === "joinLobby") {
+    //   const gameId = result.gameId;
+    //   const roomId = result.roomId;
+    //   const game = games[gameId];
+    //   const spectators = game.spectators;
+    //   const lobbySpectators = game.lobbySpectators
+    //   let theClient = result.theClient;
+    //   const clientId = result.clientId;
+
+
+    //   theClient.clientId = clientId
+    //   game.lobbySpectators.push(theClient)
+
+    //   for(let i = 0; i < game.lobbySpectators.length; i++) {
+    //     if(game.lobbySpectators[i].clientId === clientId) {
+    //       // theClient = game.spectators[i]
+    //       game.lobbySpectators[i] = theClient
+    //     }
+    //   }
+
+    //   console.log(game.lobbySpectators)
+    //   console.log(game.lobbySpectators)
+    //   console.log(game.lobbySpectators)
+
+
+    //   const payLoad = {
+    //     "method": "joinLobby",
+    //     "game": game,
+    //     "spectators": spectators,
+    //     "lobbySpectators": lobbySpectators,
+    //     "roomId": roomId
+    //   }
+
+    //   // Send to All clients that are in room
+    //   game.spectators.forEach(c => {
+    //     clients[c.clientId].connection.send(JSON.stringify(payLoad))
+    //   });
+    //   // Send to the lobby client
+    //   connection.send(JSON.stringify(payLoad))
+
+
+    }
+
+    if(result.method === "terminateRoom") {
+      // let roomId = result.roomId
+
+      // // console.log(app._router.stack[3].route.path)
+      // for(let i = 3; i < app._router.stack.length; i++) {
+      //   // console.log(app._router.stack[i])
+      //   console.log(app._router.stack[i].route.path)
+      //   console.log("/" + roomId)
+      //   if(app._router.stack[i].route.path === "/" + roomId) {
+      //     console.log(app._router.stack[i].route.path)
+      //     app._router.stack.splice(i,1);
+      //   }
+      // }
     }
 
     // bets
@@ -509,23 +550,20 @@ wsServer.on("request", request => {
       let gameId = result.gameId;
       let game = games[gameId];
       let spectators = result.spectators;
+      // let lobbySpectators = result.lobbySpectators;
       const theClient = result.theClient;
-      // const playerSlotHTML = result.playerSlotHTML;
-      // let players = result.players;
       const reload = result.reload;
 
       // To prevent error when user disconnects outside a game
       if(game === undefined) {
         game = {
           "spectators": {},
+          // "lobbySpectators": {},
           "players": {},
           "playerSlotHTML": {}
         }
-      } 
+      }
       
-      console.log(game)
-      console.log(spectators)
-      console.log(game.spectators)
 
       // Get what index the player is in so we can later delete him from the table on the client side
       let playerSlotIndex = null;
@@ -537,8 +575,14 @@ wsServer.on("request", request => {
           if(clientId === game.spectators[i].clientId) {
             game.spectators.splice(i, 1)
           }
-        }        
+        }
       }
+      // Terminate player from lobbySpectators
+      // for(let i = 0; i < game.lobbySpectators.length; i++) {
+      //   if(clientId === game.lobbySpectators[i].clientId) {
+      //     game.lobbySpectators.splice(i, 1)
+      //   }
+      // }
 
       // Terminate player from playerSlotHTML
       for(let i = 0; i < game.playerSlotHTML.length; i++) {
@@ -554,7 +598,6 @@ wsServer.on("request", request => {
         }
       }
 
-      console.log(123456789)
       
       const payLoad = {
         "method": "leave",
@@ -568,6 +611,12 @@ wsServer.on("request", request => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad))
       })
 
+
+
+      // lobbySpectators.forEach(c => {
+      //   clients[c.clientId].connection.send(JSON.stringify(payLoad))        
+      // });
+     
       // // Send to THE client
       // const con = clients[clientId].connection
       // con.send(JSON.stringify(payLoad));
@@ -585,13 +634,7 @@ wsServer.on("request", request => {
         "method": "playersLength",
         "playersLength": playersLength
       }
-      console.log("tattare")
-      console.log(game)
-      // const con = clients[clientId].connection
-      // con.send(JSON.stringify(payLoadLength));
-      // spectators.forEach(c => {
-      //   clients[c.clientId].connection.send(JSON.stringify(payLoadLength))
-      // })
+
       connection.send(JSON.stringify(payLoadLength))
     }
 
@@ -674,17 +717,42 @@ wsServer.on("request", request => {
     }
 
 
+    if(result.method === "getRoute") {
+      const getRoute = result.getRoute
+      let isRouteDefined = null;
+
+      console.log(app._router.stack.length)
+      for(let i = 3; i < app._router.stack.length; i++) {
+        if(app._router.stack[i].route.path === "/" + getRoute) {
+          isRouteDefined = true;
+        } else {
+          isRouteDefined = false;
+        }
+      }
+      console.log("-----KUK---")
+      console.log(getRoute)
+      // if route is not available, redirect to home page
+        const payLoadRoute = {
+          "method": "redirect",
+          "isRouteDefined": isRouteDefined
+        }
+        connection.send(JSON.stringify(payLoadRoute))
+    }
+
 
     if(result.method === "syncGame") {
       const gameId = result.gameId;
-      const game = games[gameId];
+      let game = games[gameId];
       const gameOn = result.gameOn
       const dealer = result.dealer
       const players = result.players;
       const player = result.player;
       const spectators = result.spectators;
-      // Sync players & spectators arrays
 
+      if(game === undefined) {
+        game = {}
+      }
+      // Sync players & spectators arrays
       game.gameOn = gameOn;
       game.dealer = dealer;
       game.players = players;
@@ -693,17 +761,6 @@ wsServer.on("request", request => {
       
     }
 
-    // if(result.method === "getRoute") {
-    //   let getRoute = result.getRoute
-
-    //   app.get('/' + getRoute, (req,res) => {
-    //     res.sendFile(__dirname +'/public/index.html');
-    //   });
-      
-    //   app.get('*', function(req, res) {
-    //     res.redirect('/');
-    //   });
-    // }
 
     
 
@@ -781,3 +838,13 @@ function partyId() {
 
 console.log(partyId());
 
+
+
+
+app.get('/:partyId', (req,res) => {
+  res.sendFile(__dirname +'/public/index.html');
+});
+
+app.get('*', function(req, res) {
+  res.redirect('/');
+});

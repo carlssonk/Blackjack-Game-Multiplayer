@@ -85,13 +85,13 @@
         <input id="nickname" type="text" placeholder="Nickname" maxlength="12">
       </div>
       <div>
-        <button id="btnOffline" class="play-btns "><span><i class="fas fa-user"></i></span>Play Offline</button>
+        <button id="btnOffline" class="play-btns noclick"><span><i class="fas fa-user"></i></span>Play Offline</button>
       </div>
       <div>
-        <button id="btnCreate" class="play-btns "><span><i class="fas fa-users"></i></span>Create Room</button>
+        <button id="btnCreate" class="play-btns noclick"><span><i class="fas fa-users"></i></span>Create Room</button>
       </div>
       <div>
-        <button id="btnJoin" class="play-btns hide-element"><span><i class="fas fa-users"></i></span>Join Room</button>
+        <button id="btnJoin" class="play-btns noclick hide-element"><span><i class="fas fa-users"></i></span>Join Room</button>
       </div>
     </div>
     <div id="about-box">
@@ -366,6 +366,12 @@
   <script type="text/javascript" src="/js/app.js"></script>
 
   <script>
+    if(window.location.href.length === 22) {
+      $("#btnJoin").removeClass("noclick")
+      $("#btnCreate").removeClass("noclick")
+      $("#btnOffline").removeClass("noclick")
+    }
+
     // HTML elements
     let clientId = null;
     let gameId = null;
@@ -373,6 +379,7 @@
     let theClient = null;
     players = [];
     spectators = [];
+    // lobbySpectators = [];
     playerSlotHTML = [];
 
     let clicked = null;
@@ -623,6 +630,7 @@
       const payLoad = {
         "method": "terminate",
         "spectators": spectators,
+        // "lobbySpectators": lobbySpectators,
         "theClient": theClient,
         "gameId": gameId,
         "playerSlotHTML": playerSlotHTML,
@@ -680,6 +688,18 @@
       ws.send(JSON.stringify(payLoad));
     }
 
+    window.addEventListener('load', (event) => {
+      if(window.location.href.length > 22) {
+        const str2 = window.location.href
+        getRoute = str2.substring(str2.length - 6)
+        const payLoadRoute = {
+          "method": "getRoute",
+          "getRoute": getRoute,
+        }
+        ws.send(JSON.stringify(payLoadRoute)); 
+      }
+    });
+
 
     ws.onmessage = message => {
       // message.data
@@ -698,16 +718,17 @@
         game = response.game
         players = game.players
         spectators = game.spectators
+        // lobbySpectators = game.lobbySpectators
         playerSlotHTML = game.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
 
-        console.log(playerSlotIndex)
-        console.log(playerSlotIndex)
-        console.log(playerSlotIndex)
-        if(playerSlotIndex === undefined || playerSlot === undefined) {
+        if(playerSlotIndex === undefined || playerSlotIndex === null) {
           return;
         } else {
+          console.log(playerSlotIndex)
+          console.log(playerSlotIndex)
+          console.log(playerSlotIndex)
           playerSlot[playerSlotIndex].innerHTML = 
           `
           <div><button class="ready hide-element">PLACE BET</button></div>
@@ -738,6 +759,18 @@
         console.log("Game successfully created with id " + response.game.id);
       }
 
+      // if(response.method === "joinLobby") {
+      //   game = response.game;
+      //   roomId = response.roomId;
+      //   spectators = response.spectators;
+      //   lobbySpectators = response.lobbySpectators;
+      //   console.log("joinLobby")
+      //   console.log("joinLobby")
+      //   console.log("joinLobby")
+      //   console.log("joinLobby")
+
+      // }
+
       // join
       if (response.method === "join") {
         game = response.game;
@@ -748,7 +781,6 @@
 
         roomId = gameId.substring(gameId.length - 6)
         window.history.pushState('game', 'Title', '/' + roomId);
-
 
       }
 
@@ -1277,12 +1309,23 @@
         console.log("resetGameState2")
         
       }
+
+      if(response.method === "redirect") {
+        isRouteDefined = response.isRouteDefined
+
+        if(isRouteDefined === false) {
+          window.location.href = "http://localhost:8081/";
+        }
+        $("#btnJoin").removeClass("noclick")
+        $("#btnCreate").removeClass("noclick")
+        $("#btnOffline").removeClass("noclick")
+      }
       
 
 
 
       // This updates theClient and players array accordingly
-      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural") {
+      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural" || response.method === "getRoute") {
         return;
       } else {
         updateAllPlayers()
@@ -1419,6 +1462,20 @@
         const str = window.location.href
         roomId = str.substring(str.length - 6)
         gameId = "http://localhost:8081/" + roomId;
+
+        // To prevent bug at 714
+        playerSlotIndex = [];
+
+        // Assign client to roomId AND spectators array
+
+        // const payLoadLobby = {
+        //   "method": "joinLobby",
+        //   "gameId": gameId,
+        //   "roomId": roomId,
+        //   "theClient": theClient,
+        //   "clientId": clientId
+        // }
+        // ws.send(JSON.stringify(payLoadLobby)); 
       }
     }
 
@@ -1426,27 +1483,28 @@
     window.addEventListener('beforeunload', function() {
       reload = true;
       terminatePlayer();
+
       // TERMINATE ROOM
       const payLoad = {
         "method": "terminateRoom",
         "roomId": roomId
       }
-      // if this is the last player that leaves
-      if(spectators.length === 1) {
-        ws.send(JSON.stringify(payLoad));        
+
+      if(spectators.length === 1 && lobbySpectators.length === 0 || spectators.length === 0 && lobbySpectators.length === 1) {
+          // ws.send(JSON.stringify(payLoad));
+          // terminating a room is not nececarry, for now.
       }
+
+
+
     });
 
-  // window.onload = (event) => {
-  //   const str2 = window.location.href
-  //   const getRoute = str2.substring(str.length - 6)
-  //   const payLoadRoute = {
-  //     "method": "getRoute",
-  //     "getRoute": getRoute,
-  //   }
-  //   // if this is the last player that leaves
-  //   ws.send(JSON.stringify(payLoadRoute));
-  // };    
+
+
+
+
+    
+
 
 
   </script>
