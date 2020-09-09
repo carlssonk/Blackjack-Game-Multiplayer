@@ -88,17 +88,12 @@ wsServer.on("request", function (request) {
       var _clientId2 = result.clientId; // const gameId = result.gameId;
 
       var game = games[_gameId];
-      console.log("#####");
-      console.log(game);
-      console.log("------");
       var _players = game.players; // console.log(players)
 
       var _spectators = game.spectators;
       var _playerSlot = game.playerSlot;
       var _playerSlotHTML2 = game.playerSlotHTML; // const partyId = result.partyId;
 
-      console.log("DIN TATTARE");
-      console.log(game.players);
       _theClient2.nickname = nickname;
 
       if (game.spectators.length >= 7) {
@@ -118,6 +113,16 @@ wsServer.on("request", function (request) {
           game.spectators[i] = _theClient2;
         }
       }
+
+      console.log("--------------------");
+      console.log(game.spectators.length);
+      console.log(game.spectators.length);
+      console.log(game.spectators.length);
+      console.log("--------------------"); // if(game.spectators.length === 1) {
+      //   app.get('/' + gameId.substring(gameId.length - 6), (req,res) => {
+      //     res.sendFile(__dirname +'/public/index.html');
+      //   });
+      // }
 
       var _payLoad2 = {
         "method": "join",
@@ -198,14 +203,21 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "terminateRoom") {
-      var _gameId2 = result.gameId;
-      console.log(_gameId2);
-      console.log(_gameId2);
-      console.log(_gameId2);
-      console.log(_gameId2);
-      console.log(_gameId2);
-      console.log(_gameId2);
-      _gameId2 = null; // app.delete("/", (req,res) => {
+      var _roomId2 = result.roomId; // console.log(app._router.stack[3].route.path)
+
+      for (var _i = 3; _i < app._router.stack.length; _i++) {
+        // console.log(app._router.stack[i])
+        console.log(app._router.stack[_i].route.path);
+        console.log("/" + _roomId2);
+
+        if (app._router.stack[_i].route.path === "/" + _roomId2) {
+          console.log(app._router.stack[_i].route.path);
+
+          app._router.stack.splice(_i, 1);
+        }
+      }
+
+      console.log("---------------"); // app.delete("/", (req,res) => {
       //   res.send("DELETE Request Called")
       //   // res.sendFile(__dirname +'/public/index.html');
       // });
@@ -306,8 +318,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "thePlay") {
       var _players7 = result.players;
-      var _gameId3 = result.gameId;
-      var _game = games[_gameId3];
+      var _gameId2 = result.gameId;
+      var _game = games[_gameId2];
       var _player2 = result.player;
       var _dealersTurn2 = result.dealersTurn;
       var currentPlayer = result.currentPlayer;
@@ -342,8 +354,8 @@ wsServer.on("request", function (request) {
       var _theClient4 = result.theClient;
       var user = result.theClient;
       var theSlot = result.theSlot;
-      var _gameId4 = result.gameId;
-      var _game2 = games[_gameId4];
+      var _gameId3 = result.gameId;
+      var _game2 = games[_gameId3];
       var _spectators9 = _game2.spectators;
       var _players9 = _game2.players;
       var _playerSlotHTML3 = _game2.playerSlotHTML; // Update all palyerSlots
@@ -360,10 +372,10 @@ wsServer.on("request", function (request) {
       _game2.playerSlotHTML[theSlot] = clientId;
       console.log(_playerSlotHTML3); // Assign theClient to game.players[i]
 
-      for (var _i = 0; _i < _game2.players.length; _i++) {
-        if (_game2.players[_i].clientId === clientId) {
+      for (var _i2 = 0; _i2 < _game2.players.length; _i2++) {
+        if (_game2.players[_i2].clientId === clientId) {
           // theClient = game.players[i]
-          _game2.players[_i] = _theClient4;
+          _game2.players[_i2] = _theClient4;
         }
       }
 
@@ -467,8 +479,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "terminate") {
       console.log("terminate player");
-      var _gameId5 = result.gameId;
-      var _game3 = games[_gameId5];
+      var _gameId4 = result.gameId;
+      var _game3 = games[_gameId4];
       var _spectators13 = result.spectators;
       var _theClient5 = result.theClient; // const playerSlotHTML = result.playerSlotHTML;
       // let players = result.players;
@@ -491,25 +503,25 @@ wsServer.on("request", function (request) {
 
       if (reload === true) {
         // Terminate player from spectators  
-        for (var _i2 = 0; _i2 < _game3.spectators.length; _i2++) {
-          if (clientId === _game3.spectators[_i2].clientId) {
-            _game3.spectators.splice(_i2, 1);
+        for (var _i3 = 0; _i3 < _game3.spectators.length; _i3++) {
+          if (clientId === _game3.spectators[_i3].clientId) {
+            _game3.spectators.splice(_i3, 1);
           }
         }
       } // Terminate player from playerSlotHTML
 
 
-      for (var _i3 = 0; _i3 < _game3.playerSlotHTML.length; _i3++) {
-        if (clientId === _game3.playerSlotHTML[_i3]) {
-          playerSlotIndex = _i3;
-          _game3.playerSlotHTML[_i3] = {};
+      for (var _i4 = 0; _i4 < _game3.playerSlotHTML.length; _i4++) {
+        if (clientId === _game3.playerSlotHTML[_i4]) {
+          playerSlotIndex = _i4;
+          _game3.playerSlotHTML[_i4] = {};
         }
       } // Terminate player from players array
 
 
-      for (var _i4 = 0; _i4 < _game3.players.length; _i4++) {
-        if (clientId === _game3.players[_i4].clientId) {
-          _game3.players.splice(_i4, 1);
+      for (var _i5 = 0; _i5 < _game3.players.length; _i5++) {
+        if (clientId === _game3.players[_i5].clientId) {
+          _game3.players.splice(_i5, 1);
         }
       }
 
@@ -531,8 +543,8 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "playersLength") {
-      var _gameId6 = result.gameId;
-      var _game4 = games[_gameId6];
+      var _gameId5 = result.gameId;
+      var _game4 = games[_gameId5];
       var _spectators14 = _game4.spectators;
       var playersLength = _game4.spectators.length;
       console.log(playersLength);
@@ -593,8 +605,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "finalCompare") {
       var _spectators18 = result.spectators;
-      var _gameId7 = result.gameId;
-      var _game5 = games[_gameId7];
+      var _gameId6 = result.gameId;
+      var _game5 = games[_gameId6];
       var _players15 = result.players;
       _game5.players = _players15;
       var _payLoad18 = {
@@ -609,8 +621,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "resetGameState") {
       var _spectators19 = result.spectators;
-      var _gameId8 = result.gameId;
-      var _game6 = games[_gameId8];
+      var _gameId7 = result.gameId;
+      var _game6 = games[_gameId7];
       var _players16 = result.players;
       _game6.players = _players16;
       var _payLoad19 = {
@@ -624,8 +636,8 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "syncGame") {
-      var _gameId9 = result.gameId;
-      var _game7 = games[_gameId9];
+      var _gameId8 = result.gameId;
+      var _game7 = games[_gameId8];
       var _gameOn3 = result.gameOn;
       var _dealer3 = result.dealer;
       var _players17 = result.players;
@@ -637,7 +649,16 @@ wsServer.on("request", function (request) {
       _game7.players = _players17;
       _game7.player = _player5;
       _game7.spectators = _spectators20;
-    }
+    } // if(result.method === "getRoute") {
+    //   let getRoute = result.getRoute
+    //   app.get('/' + getRoute, (req,res) => {
+    //     res.sendFile(__dirname +'/public/index.html');
+    //   });
+    //   app.get('*', function(req, res) {
+    //     res.redirect('/');
+    //   });
+    // }
+
   }); // The ClientId
 
   var clientId = guid(); // The Client

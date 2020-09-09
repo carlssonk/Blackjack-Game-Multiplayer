@@ -89,17 +89,12 @@ wsServer.on("request", request => {
       const clientId = result.clientId;
       // const gameId = result.gameId;
       const game = games[gameId];
-      console.log("#####")
-      console.log(game)
-      console.log("------")
       let players = game.players;
       // console.log(players)
       const spectators = game.spectators;
       const playerSlot = game.playerSlot;
       const playerSlotHTML = game.playerSlotHTML
       // const partyId = result.partyId;
-      console.log("DIN TATTARE")
-      console.log(game.players)
 
       theClient.nickname = nickname
 
@@ -121,6 +116,17 @@ wsServer.on("request", request => {
           game.spectators[i] = theClient
         }
       }
+
+      console.log("--------------------")
+      console.log(game.spectators.length)
+      console.log(game.spectators.length)
+      console.log(game.spectators.length)
+      console.log("--------------------")
+      // if(game.spectators.length === 1) {
+      //   app.get('/' + gameId.substring(gameId.length - 6), (req,res) => {
+      //     res.sendFile(__dirname +'/public/index.html');
+      //   });
+      // }
  
       const payLoad = {
         "method": "join",
@@ -208,14 +214,19 @@ wsServer.on("request", request => {
     }
 
     if(result.method === "terminateRoom") {
-      let gameId = result.gameId
-      console.log(gameId)
-      console.log(gameId)
-      console.log(gameId)
-      console.log(gameId)
-      console.log(gameId)
-      console.log(gameId)
-      gameId = null;
+      let roomId = result.roomId
+
+      // console.log(app._router.stack[3].route.path)
+      for(let i = 3; i < app._router.stack.length; i++) {
+        // console.log(app._router.stack[i])
+        console.log(app._router.stack[i].route.path)
+        console.log("/" + roomId)
+        if(app._router.stack[i].route.path === "/" + roomId) {
+          console.log(app._router.stack[i].route.path)
+          app._router.stack.splice(i,1);
+        }
+      }
+      console.log("---------------")
       
       // app.delete("/", (req,res) => {
       //   res.send("DELETE Request Called")
@@ -682,6 +693,21 @@ wsServer.on("request", request => {
       
     }
 
+    // if(result.method === "getRoute") {
+    //   let getRoute = result.getRoute
+
+    //   app.get('/' + getRoute, (req,res) => {
+    //     res.sendFile(__dirname +'/public/index.html');
+    //   });
+      
+    //   app.get('*', function(req, res) {
+    //     res.redirect('/');
+    //   });
+    // }
+
+    
+
+
   });
       // The ClientId
       const clientId = guid();
@@ -754,6 +780,4 @@ function partyId() {
 }
 
 console.log(partyId());
-
-
 

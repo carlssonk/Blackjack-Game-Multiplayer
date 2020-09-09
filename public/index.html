@@ -433,9 +433,9 @@
     function playerJoin() {
       nickname = nickname.value
       theClient.nickname = nickname.value
-      if (gameId === null) {
-        gameId = txtGameId.value;
-      }
+      // if (gameId === null) {
+      //   gameId = txtGameId.value;
+      // }
       const payLoad = {
         "method": "join",
         "clientId": clientId,
@@ -1427,23 +1427,26 @@
       reload = true;
       terminatePlayer();
       // TERMINATE ROOM
-      roomId = null;
       const payLoad = {
         "method": "terminateRoom",
-        "gameId": gameId
+        "roomId": roomId
       }
       // if this is the last player that leaves
-      ws.send(JSON.stringify(payLoad));
+      if(spectators.length === 1) {
+        ws.send(JSON.stringify(payLoad));        
+      }
     });
 
-    // function noClick() {
-    //   while(gameOn) {
-    //     if(!$("#bets-container").hasClass("noclick")) {
-    //       $("#bets-container").addClass("noclick")
-    //     }
-        
-    //   }
-    // }
+  // window.onload = (event) => {
+  //   const str2 = window.location.href
+  //   const getRoute = str2.substring(str.length - 6)
+  //   const payLoadRoute = {
+  //     "method": "getRoute",
+  //     "getRoute": getRoute,
+  //   }
+  //   // if this is the last player that leaves
+  //   ws.send(JSON.stringify(payLoadRoute));
+  // };    
 
 
   </script>
