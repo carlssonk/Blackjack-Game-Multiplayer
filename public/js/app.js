@@ -262,64 +262,24 @@ function playerBets() {
     }
 }
 
-// function sendPlayerBets() {
-//   const payLoad = {
-//     "method": "bet",
-//     "gameId": gameId,
-//     "theClient": theClient,
-//     "players": game.players
-//   }
-//   ws.send(JSON.stringify(payLoad));
-// }
-// When all bets placed, fire up Deal the cards
-  // Loop through all players to check if they'r ready
-// function placeBet() {
   $(document).on("click", ".ready", function() {
+    
     sendPlayerBets()
     $(".ready").addClass("hide-element")
     player = players[currentPlayer];
     updateCurrentPlayer()
-    // let playersReady = 0;
     theClient.isReady = true;
     clientIsReady()
 
     // Check if all players is ready
     if(players.every(player => player.isReady)) {
-      // First sort all the players by what order they are sitting in, (we want to give cards from right to left)
-      // players = mapOrder(players, playerSlotHTML, 'clientId');
-      // console.log(players)
-      // console.log(players)
-      // console.log(players)
-      // setTimeout(function() {
-      //   console.log(players)
-      //   console.log(players)
-      //   console.log(players)
-      // },500)
       gameOn = true;
       getDeck();
       sendPlayerDeck();
       setTimeout(dealCards, 1000);
     }
-      // console.log()
-      // console.log(players[i])
-      // if(!players[i].isReady === false) {
-      //   gameOn = true;
-      //   getDeck();
-      //   sendPlayerDeck();
-      //   setTimeout(dealCards, 1000);
-      // }
 
-      // if (players[i].isReady === true) playersReady++;
-
-
-    // if(playersReady === players.length) {
-    //   gameOn = true;
-    //   getDeck();
-    //   sendPlayerDeck();
-    //   setTimeout(dealCards, 1000);
-    // }
   });
-// }
 
 
 
@@ -504,6 +464,7 @@ function playerHit() {
 }
 
 function sendPlayerNext() {
+  console.log("player next")
   $(".user-action-box").removeClass("noclick")
 
   // if player sum.length === 2. Fix players sum before going to next player
@@ -729,6 +690,7 @@ function dealerWin(i) {
 function resetGame() {
   // Reset Players 
   $(".player-bet").text("")
+  // $(".player-coin").text("")
   for(let i = 0; i < players.length; i++) {
     players[i].cards = [];
     players[i].hasAce = false;
@@ -745,6 +707,8 @@ function resetGame() {
   deck = [];
   // getDeck()
   $("#dealerSum").removeClass("current-player-highlight")
+  $(".dealer-cards").html(`<div class="visibleCards"></div>`)
+
 
   // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
   if(players.some(e => e.hiddenCard)) players.splice(players.findIndex(e => e.hiddenCard), 1);
@@ -765,8 +729,8 @@ function resetGame() {
   $("#player-result-big-sum").text("")
   $("#player-result-big-plus-minus").text("")
 
-  $(".players .player-bet").css("background", "")
-  $(".players .player-bet").css("opacity", "")
+  $(".players .player-coin").css("background", "")
+  $(".players .player-coin").css("opacity", "")
 
   for(let i = 0; i < players.length; i++) {
     if(players[i].clientId === clientId) {
@@ -1150,6 +1114,11 @@ if(playerSlotHTML[i] === clientId) {
     theClient.balance = 0;
     $("#total-bet").text(theClient.bet)
     $("#balance").text(theClient.balance)
+    for(let i = 0; i < playerSlotHTML.length; i++) {
+      if(playerSlotHTML[i] === clientId) {
+        $(".ready:eq("+i+")").removeClass("hide-element")
+      }
+    }
   }
 
 }

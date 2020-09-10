@@ -11,6 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="loading-screen" class="hide-element">
+    <img id="loading-icon" src="/imgs/Loadingicon.png" alt="Loading...">    
+  </div>
+
   <div id="info-rules">
     <div id="how-to-play">
       HOW TO PLAY
@@ -73,7 +77,7 @@
   </div>
   </div>
 
-  <div id="main-menu">
+  <div id="main-menu" class="">
     <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
     <div id="main-box">
       <div id="avatar-box">
@@ -85,13 +89,13 @@
         <input id="nickname" type="text" placeholder="Nickname" maxlength="12">
       </div>
       <div>
-        <button id="btnOffline" class="play-btns noclick"><span><i class="fas fa-user"></i></span>Play Offline</button>
+        <button id="btnOffline" class="play-btns noclick-nohide"><span><i class="fas fa-user"></i></span>Play Offline</button>
       </div>
       <div>
-        <button id="btnCreate" class="play-btns noclick"><span><i class="fas fa-users"></i></span>Create Room</button>
+        <button id="btnCreate" class="play-btns noclick-nohide"><span><i class="fas fa-users"></i></span>Create Room</button>
       </div>
       <div>
-        <button id="btnJoin" class="play-btns noclick hide-element"><span><i class="fas fa-users"></i></span>Join Room</button>
+        <button id="btnJoin" class="play-btns noclick-nohide hide-element"><span><i class="fas fa-users"></i></span>Join Room</button>
       </div>
     </div>
     <div id="about-box">
@@ -121,9 +125,7 @@
     <h1>Dealer</h1>
     <div id="dealerSum">sum here</div>
     <div class="dealer-cards">
-      <div class="visibleCards">
-
-      </div>
+      <div class="visibleCards"></div>
     </div>
   </div>
   <button id="play">Play</button>
@@ -148,84 +150,83 @@
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
+
     <span class="players">
       <div><button class="ready hide-element">PLACE BET</button></div>
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
+
     <span class="players">
       <div><button class="ready hide-element">PLACE BET</button></div>
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
+
     <span class="players">
       <div><button class="ready hide-element">PLACE BET</button></div>
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
+
     <span class="players">
       <div><button class="ready hide-element">PLACE BET</button></div>
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
+
     <span class="players">
       <div><button class="ready hide-element">PLACE BET</button></div>
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
       <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
+
     <span class="players">
       <div><button class="ready hide-element">PLACE BET</button></div>
       <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-      <div class="player-name hide-element">Hej på dig<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+      <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
       <div class="player-sum">sum here</div>
-      <div class="player-bet hide-element">bet here</div>
+      <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
       <div class="player-result hide-element">Win/Lose/Draw</div>
       <div class="player-cards">
 
       </div>
-      <!-- <div class="win-lose-draw">WinLoseOrDraw</div> -->
     </span>
   </div>
   <div id="bets-container" class="noclick">
@@ -367,9 +368,9 @@
 
   <script>
     if(window.location.href.length === 22) {
-      $("#btnJoin").removeClass("noclick")
-      $("#btnCreate").removeClass("noclick")
-      $("#btnOffline").removeClass("noclick")
+      $("#btnJoin").removeClass("noclick-nohide")
+      $("#btnCreate").removeClass("noclick-nohide")
+      $("#btnOffline").removeClass("noclick-nohide")
     }
 
     // HTML elements
@@ -416,27 +417,79 @@
     // CSS
 
     // wiring events
+    window.addEventListener('load', function () {
+    setTimeout(function(){ //wait 500ms before you can click a button, to prevent error
+      $("#btnJoin").removeClass("noclick-nohide")
+      $("#btnCreate").removeClass("noclick-nohide")
+      $("#btnOffline").removeClass("noclick-nohide")
+    // ***
     btnJoin.addEventListener("click", (e) => {
+      $("#loading-screen").removeClass("hide-element")
       const payLoadLength = {
         "method": "playersLength",
         "gameId": gameId
       }
-      ws.send(JSON.stringify(payLoadLength));
-
+        ws.send(JSON.stringify(payLoadLength));      
       // Set 50ms delay so above method response before below function starts
       setTimeout(function() {
+
         if(playersLength >= 7) {
+        $("#loading-screen").addClass("hide-element")
         alert("Game Is full!")
         return;
       } else {
         playerJoin()
         setTimeout(function() {
+          $("#loading-screen").addClass("hide-element")
           $("#main-menu").addClass("hide-element")
           $("#game-room").removeClass("hide-element")
-          }, 500)
+          }, 250)
         }
       }, 50)
     });
+
+    btnCreate.addEventListener("click", (e) => {
+      $("#loading-screen").removeClass("hide-element")
+      const payLoad = {
+        "method": "create",
+        "clientId": clientId,
+        "theClient": theClient,
+        "playerSlot": playerSlot,
+        "playerSlotHTML": playerSlotHTML,
+        "roomId": roomId
+      }
+      ws.send(JSON.stringify(payLoad));
+
+      // setTimeout(playerJoin, 500)
+      setTimeout(function() {
+      playerJoin()
+      $("#loading-screen").addClass("hide-element")
+      $("#main-menu").addClass("hide-element")
+      $("#game-room").removeClass("hide-element")
+      }, 300)
+    });
+    // ***
+    }, 200)
+    })
+
+
+    leaveTable.addEventListener("click", (e) => {
+      joined = false;
+      theClient.balance = theClient.balance + theClient.bet;
+      theClient.bet = 0;
+      $("#total-bet").text(theClient.bet)
+      $("#balance").text(theClient.balance)
+      $("#bets-container").addClass("noclick");
+      if(gameOn === false) {
+          $(".empty-slot").removeClass("noclick")
+        }
+      terminatePlayer();
+    });
+
+
+
+
+
     function playerJoin() {
       nickname = nickname.value
       theClient.nickname = nickname.value
@@ -458,35 +511,7 @@
       ws.send(JSON.stringify(payLoad));
     }
 
-    btnCreate.addEventListener("click", (e) => {
-      const payLoad = {
-        "method": "create",
-        "clientId": clientId,
-        "theClient": theClient,
-        "playerSlot": playerSlot,
-        "playerSlotHTML": playerSlotHTML,
-        "roomId": roomId
-      }
-      ws.send(JSON.stringify(payLoad));
 
-      // setTimeout(playerJoin, 500)
-      setTimeout(function() {
-      playerJoin()
-      $("#main-menu").addClass("hide-element")
-      $("#game-room").removeClass("hide-element")
-      }, 500)
-    });
-
-    leaveTable.addEventListener("click", (e) => {
-      joined = false;
-      theClient.balance = theClient.balance + theClient.bet;
-      theClient.bet = 0;
-      $("#total-bet").text(theClient.bet)
-      $("#balance").text(theClient.balance)
-      $("#bets-container").addClass("noclick");
-      $(".empty-slot").removeClass("noclick");
-      terminatePlayer();
-    });
 
 
     function sendPlayerBets() {
@@ -638,6 +663,12 @@
         "reload": reload
       }
       ws.send(JSON.stringify(payLoad));
+
+      // if(players[0].clientId === player.clientId) {
+      //     return;
+      //   } else {
+      //     sendPlayerNext();
+      //   }
     }
 
     function resetRound() {
@@ -717,25 +748,27 @@
         console.log("leave")
         game = response.game
         players = game.players
+        player = game.player
         spectators = game.spectators
         // lobbySpectators = game.lobbySpectators
         playerSlotHTML = game.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
 
+        console.log(playerSlotIndex)
+        console.log(playerSlotIndex)
+        console.log(playerSlotIndex)
+
         if(playerSlotIndex === undefined || playerSlotIndex === null) {
           return;
         } else {
-          console.log(playerSlotIndex)
-          console.log(playerSlotIndex)
-          console.log(playerSlotIndex)
           playerSlot[playerSlotIndex].innerHTML = 
           `
           <div><button class="ready hide-element">PLACE BET</button></div>
           <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-          <div class="player-name hide-element">A PLAYER</div>
+          <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
           <div class="player-sum">sum here</div>
-          <div class="player-bet hide-element">bet here</div>
+          <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
           <div class="player-result hide-element">Win/Lose/Draw</div>
           <div class="player-cards">
 
@@ -746,6 +779,29 @@
         // Add noclick class to the class that the player just left, IF the player currently sits on a slot
         if(players.some(e => e.clientId === clientId)) {
           if(!$(".empty-slot").is("noclick")) $(".empty-slot").addClass("noclick");
+        }
+
+        if(gameOn === true) {
+          $(".empty-slot").addClass("noclick")
+        }
+
+        if(players.length === 0 && $("#dealerSum").text().length > 0) {
+          dealersTurn = true;
+          sendDealersTurn();
+          dealerPlay();
+        }
+
+
+        // God morgon Oliver testa denna nu förfan
+        if(theClient === player.clientId) {
+          sendPlayerNext();
+        } else if(players[0] === player.clientId) {
+          sendPlayerNext();
+        } else {
+          player = players[0]
+          if(players[0] === player.clientId) {
+            sendPlayerNext();
+          }
         }
 
       }
@@ -866,10 +922,6 @@
             }
           }
 
-          console.log(playerSlot[3].firstElementChild.nextElementSibling)
-          console.log(playerSlot[3].firstElementChild.nextElementSibling)
-          console.log(playerSlot[3].firstElementChild.nextElementSibling)
-
           
 
 
@@ -949,7 +1001,18 @@
         //     }
         //   }
         // }
+
+        console.log(game.players.length)
+        console.log(game.players.length)
+        console.log(game.players.length)
+
+        console.log(game.spectators.length)
+        console.log(game.spectators.length)
+        console.log(game.spectators.length)
         
+        if(game.players.length === 0) {
+          resetGame()
+        }
 
       }
 
@@ -1088,19 +1151,12 @@
         players = response.players;
         dealer = response.dealer;
         deck = response.deck;
-        gameOn = response.gameOn;
-
-        console.log(players)
-        console.log(players)
-        // if(players.some(e => e.hiddenCard)) {
-        //   $(".player-sum").removeClass("current-player-highlight");
-        //   $("#dealerSum").addClass("current-player-highlight");
-        // }
-        
+        gameOn = response.gameOn;  
       }
 
       // the playe
       if (response.method === "thePlay") {
+        console.log("the Play")
         player = response.player
         currentPlayer = response.currentPlayer
 
@@ -1127,24 +1183,6 @@
             console.log("WAIT FOR YOUR TURN")    
           }          
         }
-
-        // // Show sum for each player
-        // for(let i = 0; i < playerSlotHTML.length; i++) {
-        //     // Actually unhide hide element
-        //       // playerSlot[i].firstElementChild.nextElementSibling.classList.remove("hide-element")
-        //       // // Set opacity to 1 (for fade in animation purpose)
-        //       // setTimeout(function () { // add 1ms timeout so fade in effect works
-        //         playerSlot[i].firstElementChild.nextElementSibling.nextElementSibling.style.opacity = "1"
-        //         playerSlot[i].firstElementChild.nextElementSibling.nextElementSibling.style.transform = "scale(1)"
-        //       // }, 100)
-
-        // }
-        // // $("#dealerSum").removeClass("hide-element")
-        // // setTimeout(function () {
-        //   dealerSlot.firstElementChild.nextElementSibling.style.opacity = "1"
-        //   dealerSlot.firstElementChild.nextElementSibling.style.transform = "scale(1)"
-        // // }, 100)
-
       }
 
       if(response.method === "showSum") {
@@ -1316,9 +1354,6 @@
         if(isRouteDefined === false) {
           window.location.href = "http://localhost:8081/";
         }
-        $("#btnJoin").removeClass("noclick")
-        $("#btnCreate").removeClass("noclick")
-        $("#btnOffline").removeClass("noclick")
       }
       
 
@@ -1436,11 +1471,17 @@
             if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
             if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
             if(players[i].bet >= 100000) {chipIndex = "Black"};
-
-            $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
+            $(".players:eq("+s+") .player-bet").text(players[i].bet)
+            $(".players:eq("+s+") .player-coin").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
+            console.log(players[i].bet)
+            if(players[i].bet > 999) {
+              $(".players:eq("+s+") .player-coin").html($(".players:eq("+s+") .player-bet").text().slice(0, -3) + "K" + `<div class="player-bet hide-element"></div>`);
+            } else {
+              $(".players:eq("+s+") .player-coin").html($(".players:eq("+s+") .player-bet").text() + `<div class="player-bet hide-element"></div>`);
+            }
             $(".players:eq("+s+") .player-bet").text(players[i].bet)
             setTimeout(function() {
-              $(".players:eq("+s+") .player-bet").css("opacity", "1")
+              $(".players:eq("+s+") .player-coin").css("opacity", "1")
             }, 100)
             
           }
@@ -1448,8 +1489,6 @@
       }
 
     }
-
-
 
 
 

@@ -119,17 +119,6 @@ wsServer.on("request", request => {
           game.spectators[i] = theClient
         }
       }
-
-      console.log("--------------------")
-      console.log(game.spectators.length)
-      console.log(game.spectators.length)
-      console.log(game.spectators.length)
-      console.log("--------------------")
-      // if(game.spectators.length === 1) {
-      //   app.get('/' + gameId.substring(gameId.length - 6), (req,res) => {
-      //     res.sendFile(__dirname +'/public/index.html');
-      //   });
-      // }
  
       const payLoad = {
         "method": "join",
@@ -174,9 +163,6 @@ wsServer.on("request", request => {
         "playerSlotHTML": playerSlotHTML
       }
 
-      console.log(game.gameOn)
-      console.log(game.gameOn)
-      console.log(game.gameOn)
       // if(game.players.length === 0) {
         if(!game.gameOn === true) { 
           game.spectators.forEach(c => {
@@ -185,9 +171,16 @@ wsServer.on("request", request => {
         }
       // }
 
+      console.log("********")
+      console.log(game.gameOn)
+      console.log(game.gameOn)
+      console.log(game.gameOn)
+      console.log(gameOn)
+      console.log(gameOn)
+      console.log(gameOn)
+      console.log("********")
+
     
-
-
       // If a player joins mid-game
       const payLoadMidGame = {
         "method": "joinMidGame",
@@ -210,9 +203,6 @@ wsServer.on("request", request => {
         });
       }
 
-      console.log(game.gameOn)
-      console.log(game.gameOn)
-      console.log(game.gameOn)
 
     }
 
@@ -332,7 +322,6 @@ wsServer.on("request", request => {
       const player = result.player
       const dealersTurn = result.dealersTurn
       const spectators = result.spectators
-      console.log(player)
 
       const payLoad = {
         "method": "currentPlayer",
@@ -434,7 +423,6 @@ wsServer.on("request", request => {
       game.players.push(theClient)
       // Push client Id to playerSlotHTML array
       game.playerSlotHTML[theSlot] = (clientId)
-      console.log(playerSlotHTML)
 
       // Assign theClient to game.players[i]
       for(let i = 0; i < game.players.length; i++) {
@@ -628,7 +616,6 @@ wsServer.on("request", request => {
       const game = games[gameId]
       const spectators = game.spectators
       const playersLength = game.spectators.length
-      console.log(playersLength)
 
       const payLoadLength = {
         "method": "playersLength",
@@ -731,6 +718,7 @@ wsServer.on("request", request => {
       }
       console.log("-----KUK---")
       console.log(getRoute)
+      console.log(isRouteDefined)
       // if route is not available, redirect to home page
         const payLoadRoute = {
           "method": "redirect",
@@ -841,7 +829,7 @@ console.log(partyId());
 
 
 
-app.get('/:partyId', (req,res) => {
+app.get('/:id', (req,res) => {
   res.sendFile(__dirname +'/public/index.html');
 });
 

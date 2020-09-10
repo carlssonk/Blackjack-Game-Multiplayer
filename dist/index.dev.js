@@ -116,16 +116,6 @@ wsServer.on("request", function (request) {
         }
       }
 
-      console.log("--------------------");
-      console.log(game.spectators.length);
-      console.log(game.spectators.length);
-      console.log(game.spectators.length);
-      console.log("--------------------"); // if(game.spectators.length === 1) {
-      //   app.get('/' + gameId.substring(gameId.length - 6), (req,res) => {
-      //     res.sendFile(__dirname +'/public/index.html');
-      //   });
-      // }
-
       var _payLoad2 = {
         "method": "join",
         "game": game,
@@ -164,18 +154,23 @@ wsServer.on("request", function (request) {
         "spectators": _spectators,
         "playerSlot": _playerSlot,
         "playerSlotHTML": _playerSlotHTML2
-      };
-      console.log(game.gameOn);
-      console.log(game.gameOn);
-      console.log(game.gameOn); // if(game.players.length === 0) {
+      }; // if(game.players.length === 0) {
 
       if (!game.gameOn === true) {
         game.spectators.forEach(function (c) {
           clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray));
         });
       } // }
-      // If a player joins mid-game
 
+
+      console.log("********");
+      console.log(game.gameOn);
+      console.log(game.gameOn);
+      console.log(game.gameOn);
+      console.log(gameOn);
+      console.log(gameOn);
+      console.log(gameOn);
+      console.log("********"); // If a player joins mid-game
 
       var payLoadMidGame = {
         "method": "joinMidGame",
@@ -198,10 +193,6 @@ wsServer.on("request", function (request) {
           clients[c.clientId].connection.send(JSON.stringify(payLoadMidGameUpdate));
         });
       }
-
-      console.log(game.gameOn);
-      console.log(game.gameOn);
-      console.log(game.gameOn);
     }
 
     if (result.method === "joinLobby") {//   const gameId = result.gameId;
@@ -302,7 +293,6 @@ wsServer.on("request", function (request) {
       var _player = result.player;
       var dealersTurn = result.dealersTurn;
       var _spectators5 = result.spectators;
-      console.log(_player);
       var _payLoad6 = {
         "method": "currentPlayer",
         "player": _player
@@ -396,8 +386,7 @@ wsServer.on("request", function (request) {
       _game2.players.push(_theClient4); // Push client Id to playerSlotHTML array
 
 
-      _game2.playerSlotHTML[theSlot] = clientId;
-      console.log(_playerSlotHTML3); // Assign theClient to game.players[i]
+      _game2.playerSlotHTML[theSlot] = clientId; // Assign theClient to game.players[i]
 
       for (var _i = 0; _i < _game2.players.length; _i++) {
         if (_game2.players[_i].clientId === clientId) {
@@ -579,7 +568,6 @@ wsServer.on("request", function (request) {
       var _game4 = games[_gameId5];
       var _spectators14 = _game4.spectators;
       var playersLength = _game4.spectators.length;
-      console.log(playersLength);
       var payLoadLength = {
         "method": "playersLength",
         "playersLength": playersLength
@@ -674,7 +662,8 @@ wsServer.on("request", function (request) {
       }
 
       console.log("-----KUK---");
-      console.log(getRoute); // if route is not available, redirect to home page
+      console.log(getRoute);
+      console.log(isRouteDefined); // if route is not available, redirect to home page
 
       var payLoadRoute = {
         "method": "redirect",
@@ -765,7 +754,7 @@ function partyId() {
 }
 
 console.log(partyId());
-app.get('/:partyId', function (req, res) {
+app.get('/:id', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 app.get('*', function (req, res) {

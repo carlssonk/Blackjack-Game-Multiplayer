@@ -28,12 +28,47 @@ body {
   pointer-events: none;
   opacity: 0.3;
 }
+.noclick-nohide {
+  pointer-events: none;
+  cursor: not-allowed;
+}
 
 .current-player-highlight {
   color: black !important;
   background-color:#e0e000 !important;
   transform: scale (1.1) !important;
   transition: 300ms !important;
+}
+
+#loading-icon {
+  position: absolute;
+  width: 50px;
+  left: 50%;
+  top: 50%;
+  margin-left: -25px;
+  margin-top: -25px;
+  z-index: 200;
+  animation-name: loadingIcon;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+}
+
+@keyframes loadingIcon {
+  100% {
+    transform: rotateZ(1500deg);
+  }
+}
+
+#loading-screen {
+  position:fixed;
+  padding:0;
+  margin:0;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(#38833c, #1e421f);
+  z-index: 101;
 }
 
 
@@ -451,7 +486,8 @@ body {
   font-size: 17px;
 }
 
-.player-bet {
+
+.player-coin {
   position: absolute;
   width: 70px;
   height: 70px;
@@ -464,24 +500,14 @@ body {
   align-items: center;
   pointer-events:none;
   background: url("") no-repeat;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13.3333px;
   opacity: 0;
-  transition: 100ms;
+  font-weight: 1000;
+  -webkit-text-stroke: 1px black;
+  color: gold;
+  transition: 100ms; 
 }
-
-// .player-bet-chip {
-//   color: white;
-//   position: absolute;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 70px;
-//   height: 70px;
-//   background: url("/imgs/chips/Casino_Chip_Orange.svg") no-repeat;
-// }
-
-// .player-bet-chip {
-//   position: absolute;
-// }
 
 .empty-slot {
   position: absolute;
@@ -614,7 +640,7 @@ i {
     // font-size: 16px;
     width: 34px;
     height: 30px;
-    top: 155px;
+    top: 165px;
     left: 50%;
     margin-left: -17px;
     color: rgb(224, 224, 0);
@@ -772,6 +798,7 @@ i {
   }
 
   .user-action {
+    position: relative;
     font-size: 58px;
     background-color: rgba(0, 0, 0, 0.5);
     width: 90px;
@@ -784,7 +811,7 @@ i {
     cursor: pointer;
   }
   .user-action:hover {
-    transform: scale(1.025);
+    transform: scale(1.028);
     background-color: rgba(50, 50, 50, 0.5);
   }
   .user-action:active {
