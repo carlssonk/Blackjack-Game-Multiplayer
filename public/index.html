@@ -722,10 +722,10 @@
     window.addEventListener('load', (event) => {
       if(window.location.href.length > 22) {
         const str2 = window.location.href
-        getRoute = str2.substring(str2.length - 6)
+        getRouteId = str2.substring(str2.length - 6)
         const payLoadRoute = {
           "method": "getRoute",
-          "getRoute": getRoute,
+          "getRouteId": getRouteId,
         }
         ws.send(JSON.stringify(payLoadRoute)); 
       }
@@ -747,10 +747,17 @@
       if (response.method === "leave") {
         console.log("leave")
         game = response.game
+        console.log(players[0])
+        console.log(players[1])
+        console.log(players[2])
+        console.log("-------")
+        if(gameOn === false) {
         players = game.players
         player = game.player
+        }
+        console.log("-------")
         spectators = game.spectators
-        // lobbySpectators = game.lobbySpectators
+        // // lobbySpectators = game.lobbySpectators
         playerSlotHTML = game.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
@@ -793,16 +800,33 @@
 
 
         // God morgon Oliver testa denna nu förfan
-        if(theClient === player.clientId) {
-          sendPlayerNext();
-        } else if(players[0] === player.clientId) {
-          sendPlayerNext();
-        } else {
-          player = players[0]
-          if(players[0] === player.clientId) {
-            sendPlayerNext();
-          }
+        // if(clientId === player.clientId) {
+        //   console.log("1")
+        //   sendPlayerNext();
+        // } else if(players[0].clientId === player.clientId) {
+        //   sendPlayerNext();
+        //   console.log("1")
+        // } else {
+        //   player = players[0]
+        //   if(players[0].clientId === player.clientId) {
+        //     sendPlayerNext();
+        //     console.log("1")
+        //   }
+        // }
+        for(let i = 0; i < playerSlotHTML.length; i++) {
+          // for(let x = 0; x < players.length; x++) {
+
+            if(player.clientId === playerSlotHTML[i]) {
+              // The player with thePlay didnt leave
+              console.log("the player with thePlay didnt leave")
+              return;
+            } else {
+              console.log("send player next")
+            }
+
+          // }
         }
+
 
       }
 
@@ -877,9 +901,6 @@
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
         // player = game.player
-        console.log(player)
-        console.log(player)
-        console.log(player)
 
       }
 
@@ -1349,11 +1370,7 @@
       }
 
       if(response.method === "redirect") {
-        isRouteDefined = response.isRouteDefined
-
-        if(isRouteDefined === false) {
-          window.location.href = "http://localhost:8081/";
-        }
+        window.location.href = "/";
       }
       
 
@@ -1529,10 +1546,10 @@
         "roomId": roomId
       }
 
-      if(spectators.length === 1 && lobbySpectators.length === 0 || spectators.length === 0 && lobbySpectators.length === 1) {
-          // ws.send(JSON.stringify(payLoad));
-          // terminating a room is not nececarry, for now.
-      }
+      // if(spectators.length === 1 && lobbySpectators.length === 0 || spectators.length === 0 && lobbySpectators.length === 1) {
+      //     // ws.send(JSON.stringify(payLoad));
+      //     // terminating a room is not nececarry, for now.
+      // }
 
 
 

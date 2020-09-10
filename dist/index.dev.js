@@ -59,6 +59,12 @@ wsServer.on("request", function (request) {
       app.get('/' + roomId, function (req, res) {
         res.sendFile(__dirname + '/public/index.html');
       });
+      console.log(app._router.stack.slice(-1, 1));
+      console.log(app._router.stack.length);
+      setTimeout(function () {
+        console.log(app._router.stack.length);
+      }, 5000); // .route.path
+
       games[gameId] = {
         "id": gameId,
         "clients": [],
@@ -161,16 +167,8 @@ wsServer.on("request", function (request) {
           clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray));
         });
       } // }
+      // If a player joins mid-game
 
-
-      console.log("********");
-      console.log(game.gameOn);
-      console.log(game.gameOn);
-      console.log(game.gameOn);
-      console.log(gameOn);
-      console.log(gameOn);
-      console.log(gameOn);
-      console.log("********"); // If a player joins mid-game
 
       var payLoadMidGame = {
         "method": "joinMidGame",
@@ -417,8 +415,7 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "updateTable") {
-      var _playerSlot2 = result.playerSlot;
-      console.log(_playerSlot2); // const payLoad = {
+      var _playerSlot2 = result.playerSlot; // const payLoad = {
       //   "method": "joinTable",
       //   "theSlot": theSlot,
       //   "user": user,
@@ -649,12 +646,12 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "getRoute") {
-      var getRoute = result.getRoute;
+      var getRouteId = result.getRouteId;
       var isRouteDefined = null;
       console.log(app._router.stack.length);
 
       for (var _i5 = 3; _i5 < app._router.stack.length; _i5++) {
-        if (app._router.stack[_i5].route.path === "/" + getRoute) {
+        if (app._router.stack[_i5].route.path === "/" + getRouteId) {
           isRouteDefined = true;
         } else {
           isRouteDefined = false;
@@ -662,14 +659,18 @@ wsServer.on("request", function (request) {
       }
 
       console.log("-----KUK---");
-      console.log(getRoute);
-      console.log(isRouteDefined); // if route is not available, redirect to home page
+      console.log(getRouteId);
+      console.log(isRouteDefined);
+      console.log("-----KUK---"); // if route is not available, redirect to home page
 
       var payLoadRoute = {
         "method": "redirect",
         "isRouteDefined": isRouteDefined
       };
-      connection.send(JSON.stringify(payLoadRoute));
+
+      if (isRouteDefined === false) {
+        connection.send(JSON.stringify(payLoadRoute));
+      }
     }
 
     if (result.method === "syncGame") {

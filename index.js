@@ -51,6 +51,12 @@ wsServer.on("request", request => {
       app.get('/' + roomId, (req,res) => {
         res.sendFile(__dirname +'/public/index.html');
       });
+      console.log(app._router.stack.slice(-1, 1))
+      console.log(app._router.stack.length)
+      setTimeout(function() {
+      console.log(app._router.stack.length)
+      }, 5000)
+      // .route.path
       games[gameId] = {
         "id": gameId,
         "clients": [],
@@ -171,14 +177,6 @@ wsServer.on("request", request => {
         }
       // }
 
-      console.log("********")
-      console.log(game.gameOn)
-      console.log(game.gameOn)
-      console.log(game.gameOn)
-      console.log(gameOn)
-      console.log(gameOn)
-      console.log(gameOn)
-      console.log("********")
 
     
       // If a player joins mid-game
@@ -455,7 +453,6 @@ wsServer.on("request", request => {
 
     if (result.method === "updateTable") {
       const playerSlot = result.playerSlot
-      console.log(playerSlot)
 
       // const payLoad = {
       //   "method": "joinTable",
@@ -705,26 +702,31 @@ wsServer.on("request", request => {
 
 
     if(result.method === "getRoute") {
-      const getRoute = result.getRoute
+      const getRouteId = result.getRouteId
       let isRouteDefined = null;
 
       console.log(app._router.stack.length)
       for(let i = 3; i < app._router.stack.length; i++) {
-        if(app._router.stack[i].route.path === "/" + getRoute) {
+        if(app._router.stack[i].route.path === "/" + getRouteId) {
           isRouteDefined = true;
         } else {
           isRouteDefined = false;
         }
       }
       console.log("-----KUK---")
-      console.log(getRoute)
+      console.log(getRouteId)
       console.log(isRouteDefined)
+      console.log("-----KUK---")
       // if route is not available, redirect to home page
-        const payLoadRoute = {
-          "method": "redirect",
-          "isRouteDefined": isRouteDefined
-        }
+      const payLoadRoute = {
+        "method": "redirect",
+        "isRouteDefined": isRouteDefined
+      }
+      
+      if(isRouteDefined === false) {
         connection.send(JSON.stringify(payLoadRoute))
+      }
+
     }
 
 

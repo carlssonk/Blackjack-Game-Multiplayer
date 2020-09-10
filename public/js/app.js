@@ -419,6 +419,7 @@ function thePlay() {
 
         $(".user-action-container").addClass("hide-element")
         $(".user-action-box").last().addClass("noclick")
+        players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
         // updatePlayers()
 
@@ -768,6 +769,7 @@ function bust() {
   // player.bet = 0;
   // updatePlayerCards()
   // updatePlayers();
+  players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
   sendPlayerNext();
 }
 
@@ -828,6 +830,9 @@ function compareSum() {
   if(!player.hasAce && !deck[0].value.hasAce) {
     player.sum = player.sum + deck[0].value.value // add sum
     player.hasAce = false;
+    console.log(player.sum)
+    console.log(player.sum)
+    console.log(player.sum)
     givePlayerCard() // give player card
     // if(dealer.cards[1] === dealer.cards[2]) dealer.cards.splice(1, 1)
 
@@ -864,11 +869,13 @@ function outputCardSum() {
   player.hasAce = false;
   if(dealersTurn === false) {
     if(player.sum === 21) {
+      players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
       sendPlayerNext() 
     } else if(player.sum < 21 && doubleDown === false) {
       console.log("SEND THE PLAY")
       sendPlayerThePlay();
     } else if(player.sum < 21 && doubleDown === true) {
+      players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
       sendPlayerNext();
     } else if(player.sum > 21) {
       bust();
@@ -887,11 +894,13 @@ function outputCardSumAce() {
     // Take the current value and do the following...
     if(dealersTurn === false) {
       if(player.sum === 21) {
+        players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext() 
       } else if(player.sum < 21 && doubleDown === false) {
         console.log("SEND THE PLAY")
         sendPlayerThePlay();
       } else {
+        players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
       }
     }  
@@ -902,13 +911,14 @@ function outputCardSumAce() {
       if(player.sum[1] === 21) {
         player.sum.shift()
         player.sum = player.sum[0]
-
+        players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
       } 
       if(player.sum[1] < 21 && doubleDown === false) {
         console.log("SEND THE PLAY")
         sendPlayerThePlay();
       } else {
+        players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
       }
     }
