@@ -19,6 +19,10 @@ body {
   display: none !important;
 }
 
+.player-left {
+  opacity: 0.3;
+}
+
 .noclick {
   pointer-events: none;
   opacity: 0.3;

@@ -315,6 +315,26 @@ wsServer.on("request", request => {
 
     }
 
+    if (result.method === "hasLeft") {
+      const theClient = result.theClient
+      const players = result.players
+      const spectators = result.spectators
+     
+      console.log(theClient.hasLeft)
+      console.log(players)
+
+      const payLoad = {
+        "method": "hasLeft",
+        "players": players,
+        "theClient": theClient
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+
+    }
+
     if (result.method === "currentPlayer") {
       const players = result.players
       const player = result.player
@@ -369,12 +389,19 @@ wsServer.on("request", request => {
       const dealersTurn = result.dealersTurn
       const currentPlayer = result.currentPlayer
       const spectators = result.spectators
+      console.log("thePlay")
+      console.log(player)
+      console.log(player)
+      console.log(player)
+      console.log("thePlay")
 
 
       const payLoad = {
         "method": "thePlay",
         "player": player,
-        "currentPlayer": currentPlayer
+        "currentPlayer": currentPlayer,
+        "players": player,
+        // "theClient": theClient
       }
 
       // players[currentPlayer].clientId.connection.send(JSON.stringify(payLoad))
@@ -532,64 +559,69 @@ wsServer.on("request", request => {
 
     if(result.method === "terminate") {
       console.log("terminate player")
-      let gameId = result.gameId;
-      let game = games[gameId];
+      let game = result.game
       let spectators = result.spectators;
-      // let lobbySpectators = result.lobbySpectators;
+      let players = result.players;
       const theClient = result.theClient;
       const reload = result.reload;
+      const gameOn = result.gameOn;
 
       // To prevent error when user disconnects outside a game
       if(game === undefined) {
         game = {
           "spectators": {},
-          // "lobbySpectators": {},
           "players": {},
           "playerSlotHTML": {}
         }
       }
-      
 
       // Get what index the player is in so we can later delete him from the table on the client side
       let playerSlotIndex = null;
 
-      // If player reloads page, remove him from spectators array
-      if(reload === true) {
-      // Terminate player from spectators  
-        for(let i = 0; i < game.spectators.length; i++) {
-          if(clientId === game.spectators[i].clientId) {
-            game.spectators.splice(i, 1)
+
+      if(gameOn === false) {
+
+        // If player reloads page, remove him from spectators array
+        if(reload === true) {
+        // Terminate player from spectators  
+          for(let i = 0; i < game.spectators.length; i++) {
+            if(clientId === game.spectators[i].clientId) {
+              game.spectators.splice(i, 1)
+            }
           }
         }
+
+        // Terminate player from playerSlotHTML
+        for(let i = 0; i < game.playerSlotHTML.length; i++) {
+          if(clientId === game.playerSlotHTML[i]) {
+            playerSlotIndex = i;
+            game.playerSlotHTML[i] = {}
+          }
+        }
+        // Terminate player from players array
+        for(let i = 0; i < game.players.length; i++) {
+          if(clientId === game.players[i].clientId) {
+            game.players.splice(i, 1)
+            // players.splice(i, 1)
+          }
+        }
+
       }
-      // Terminate player from lobbySpectators
-      // for(let i = 0; i < game.lobbySpectators.length; i++) {
-      //   if(clientId === game.lobbySpectators[i].clientId) {
-      //     game.lobbySpectators.splice(i, 1)
-      //   }
-      // }
 
       // Terminate player from playerSlotHTML
       for(let i = 0; i < game.playerSlotHTML.length; i++) {
         if(clientId === game.playerSlotHTML[i]) {
           playerSlotIndex = i;
-          game.playerSlotHTML[i] = {}
         }
       }
-      // Terminate player from players array
-      for(let i = 0; i < game.players.length; i++) {
-        if(clientId === game.players[i].clientId) {
-          game.players.splice(i, 1)
-        }
-      }
-
       
       const payLoad = {
         "method": "leave",
         // "spectators": game.spectators,
         "playerSlotIndex": playerSlotIndex,
-        // "players": players,
-        "game": game
+        "players": players,
+        "game": game,
+        "gameOn": gameOn
       }
 
       spectators.forEach(c => {
@@ -772,7 +804,8 @@ wsServer.on("request", request => {
         "sum": null,
         "hasAce": false,
         "isReady": false,
-        "blackjack": false
+        "blackjack": false,
+        "hasLeft": false
       }
       let player = null;
       // The players Array

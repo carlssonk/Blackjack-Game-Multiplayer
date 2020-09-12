@@ -378,6 +378,8 @@
     let gameId = null;
     let roomId = null;
     let theClient = null;
+    let storedPlayers = [];
+    let fixCurrentPlayerLength = 0;
     players = [];
     spectators = [];
     // lobbySpectators = [];
@@ -569,6 +571,17 @@
       ws.send(JSON.stringify(payLoad));
     }
 
+    function clientHasLeft() {
+
+      const payLoad = {
+        "method": "hasLeft",
+        "players": players,
+        "spectators": spectators,
+        "theClient": theClient
+      }
+      ws.send(JSON.stringify(payLoad));
+    }
+
     function updatePlayers() {
       const payLoad = {
         "method": "update",
@@ -593,6 +606,7 @@
     }
 
     function sendPlayerThePlay() {
+      console.log(player)
       const payLoad = {
         "method": "thePlay",
         "players": players,
@@ -657,18 +671,14 @@
         "spectators": spectators,
         // "lobbySpectators": lobbySpectators,
         "theClient": theClient,
-        "gameId": gameId,
+        "game": game,
         "playerSlotHTML": playerSlotHTML,
-        // "players": players,
-        "reload": reload
+        "players": players,
+        "reload": reload,
+        "gameOn": gameOn
       }
       ws.send(JSON.stringify(payLoad));
 
-      // if(players[0].clientId === player.clientId) {
-      //     return;
-      //   } else {
-      //     sendPlayerNext();
-      //   }
     }
 
     function resetRound() {
@@ -745,43 +755,33 @@
       }
 
       if (response.method === "leave") {
-        console.log("leave")
         game = response.game
-        console.log(players[0])
-        console.log(players[1])
-        console.log(players[2])
-        console.log("-------")
-        if(gameOn === false) {
-        players = game.players
-        player = game.player
-        }
-        console.log("-------")
         spectators = game.spectators
-        // // lobbySpectators = game.lobbySpectators
         playerSlotHTML = game.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
+        gameOn = response.gameOn;
 
-        console.log(playerSlotIndex)
-        console.log(playerSlotIndex)
-        console.log(playerSlotIndex)
 
-        if(playerSlotIndex === undefined || playerSlotIndex === null) {
-          return;
-        } else {
-          playerSlot[playerSlotIndex].innerHTML = 
-          `
-          <div><button class="ready hide-element">PLACE BET</button></div>
-          <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-          <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-          <div class="player-sum">sum here</div>
-          <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
-          <div class="player-result hide-element">Win/Lose/Draw</div>
-          <div class="player-cards">
+        if(gameOn === false) {
+          if(playerSlotIndex === undefined || playerSlotIndex === null) {
+            return;
+          } else {
+            playerSlot[playerSlotIndex].innerHTML = 
+            `
+            <div><button class="ready hide-element">PLACE BET</button></div>
+            <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
+            <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+            <div class="player-sum">sum here</div>
+            <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
+            <div class="player-result hide-element">Win/Lose/Draw</div>
+            <div class="player-cards">
 
-          </div>
-          `
+            </div>
+            `
+          }          
         }
+
 
         // Add noclick class to the class that the player just left, IF the player currently sits on a slot
         if(players.some(e => e.clientId === clientId)) {
@@ -790,42 +790,19 @@
 
         if(gameOn === true) {
           $(".empty-slot").addClass("noclick")
+          playerSlot[playerSlotIndex].classList.add("player-left")
         }
 
-        if(players.length === 0 && $("#dealerSum").text().length > 0) {
+        if(game.players.length === 0 && $("#dealerSum").text().length > 0) {
           dealersTurn = true;
           sendDealersTurn();
           dealerPlay();
         }
 
 
-        // God morgon Oliver testa denna nu förfan
-        // if(clientId === player.clientId) {
-        //   console.log("1")
+        // if(players[players.findIndex(players => players.hasLeft === false)].clientId === clientId) {
         //   sendPlayerNext();
-        // } else if(players[0].clientId === player.clientId) {
-        //   sendPlayerNext();
-        //   console.log("1")
-        // } else {
-        //   player = players[0]
-        //   if(players[0].clientId === player.clientId) {
-        //     sendPlayerNext();
-        //     console.log("1")
-        //   }
         // }
-        for(let i = 0; i < playerSlotHTML.length; i++) {
-          // for(let x = 0; x < players.length; x++) {
-
-            if(player.clientId === playerSlotHTML[i]) {
-              // The player with thePlay didnt leave
-              console.log("the player with thePlay didnt leave")
-              return;
-            } else {
-              console.log("send player next")
-            }
-
-          // }
-        }
 
 
       }
@@ -839,17 +816,6 @@
         console.log("Game successfully created with id " + response.game.id);
       }
 
-      // if(response.method === "joinLobby") {
-      //   game = response.game;
-      //   roomId = response.roomId;
-      //   spectators = response.spectators;
-      //   lobbySpectators = response.lobbySpectators;
-      //   console.log("joinLobby")
-      //   console.log("joinLobby")
-      //   console.log("joinLobby")
-      //   console.log("joinLobby")
-
-      // }
 
       // join
       if (response.method === "join") {
@@ -997,39 +963,6 @@
 
         // Update chips
         setPlayersBet()
-        // for(let s = 0; s < playerSlotHTML.length; s++) {
-
-        //   for(let i = 0; i < players.length; i++) {
-        //     if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
-        //       console.log("player " + s + " is ready")
-        //       // players[i].isReady = false;
-        //       if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
-        //       if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
-        //       if(players[i].bet >= 100 && players[i].bet < 500) {chipIndex = "Blue"} else 
-        //       if(players[i].bet >= 500 && players[i].bet < 1000) {chipIndex = "Green"} else 
-        //       if(players[i].bet >= 1000 && players[i].bet < 5000) {chipIndex = "Gray"} else 
-        //       if(players[i].bet >= 5000 && players[i].bet < 10000) {chipIndex = "Orange"} else 
-        //       if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
-        //       if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
-        //       if(players[i].bet >= 100000) {chipIndex = "Black"};
-
-        //       $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
-        //       $(".players:eq("+s+") .player-bet").text(players[i].bet)
-        //       setTimeout(function() {
-        //         $(".players:eq("+s+") .player-bet").css("opacity", "1")
-        //       }, 100)
-              
-        //     }
-        //   }
-        // }
-
-        console.log(game.players.length)
-        console.log(game.players.length)
-        console.log(game.players.length)
-
-        console.log(game.spectators.length)
-        console.log(game.spectators.length)
-        console.log(game.spectators.length)
         
         if(game.players.length === 0) {
           resetGame()
@@ -1064,32 +997,10 @@
       if (response.method === "isReady") {
         players = response.players;
         setPlayersBet()
-        // for(let s = 0; s < playerSlotHTML.length; s++) {
+      }
 
-        //   for(let i = 0; i < players.length; i++) {
-        //     if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
-        //       console.log("player " + s + " is ready")
-        //       // players[i].isReady = false;
-        //       if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
-        //       if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
-        //       if(players[i].bet >= 100 && players[i].bet < 500) {chipIndex = "Blue"} else 
-        //       if(players[i].bet >= 500 && players[i].bet < 1000) {chipIndex = "Green"} else 
-        //       if(players[i].bet >= 1000 && players[i].bet < 5000) {chipIndex = "Gray"} else 
-        //       if(players[i].bet >= 5000 && players[i].bet < 10000) {chipIndex = "Orange"} else 
-        //       if(players[i].bet >= 10000 && players[i].bet < 50000) {chipIndex = "Purple"} else 
-        //       if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
-        //       if(players[i].bet >= 100000) {chipIndex = "Black"};
-
-        //       $(".players:eq("+s+") .player-bet").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
-        //       $(".players:eq("+s+") .player-bet").text(players[i].bet)
-        //       setTimeout(function() {
-        //         $(".players:eq("+s+") .player-bet").css("opacity", "1")
-        //       }, 100)
-              
-        //     }
-        //   }
-        // }
-
+      if (response.method === "hasLeft") {
+        players = response.players;
       }
 
       // currentPlayer
@@ -1178,32 +1089,37 @@
       // the playe
       if (response.method === "thePlay") {
         console.log("the Play")
-        player = response.player
-        currentPlayer = response.currentPlayer
+        player = response.player;
+        currentPlayer = response.currentPlayer;
 
-        // Highlight current player sum so we know who's turn it is
-        $(".player-sum").removeClass("current-player-highlight")
-        for(let i = 0; i < playerSlotHTML.length; i++) {
-          if(playerSlotHTML[i] === player.clientId) {
-            $(".player-sum:eq("+i+")").addClass("current-player-highlight")
+          // Highlight current player sum so we know who's turn it is
+          $(".player-sum").removeClass("current-player-highlight")
+          for(let i = 0; i < playerSlotHTML.length; i++) {
+            if(playerSlotHTML[i] === player.clientId) {
+              $(".player-sum:eq("+i+")").addClass("current-player-highlight")
+            }
           }
-        }
 
-        if(dealersTurn) {
-          return;
-        } else {
-          if(player.clientId === clientId && player.sum < 21 || player.clientId === clientId && theClient.sum.length > 1) {
-            clicked = false;
-            console.log("ITS YOUR TURN")
-            thePlay()
-          } else if(player.clientId === clientId && player.sum >= 21) {
-            console.log("you blackjacked or busted")
-            sendPlayerNext()
+          if(dealersTurn) {
+            return;
           } else {
-            clicked = true;          
-            console.log("WAIT FOR YOUR TURN")    
-          }          
-        }
+            if(player.clientId === clientId && player.sum < 21 || player.clientId === clientId && theClient.sum.length > 1) {
+              clicked = false;
+              console.log("ITS YOUR TURN")
+              thePlay()
+            } else if(player.clientId === clientId && player.sum >= 21) {
+              console.log("you blackjacked or busted")
+              sendPlayerNext()
+            } else {
+              clicked = true;          
+              console.log("WAIT FOR YOUR TURN")    
+            }          
+          }
+
+
+        
+
+
       }
 
       if(response.method === "showSum") {
@@ -1229,8 +1145,6 @@
         theClient = response.theClient
         playerSlotHTML = response.playerSlotHTML
 
-
-
       }
 
       if(response.method === "dealersTurn") {
@@ -1241,91 +1155,11 @@
           $("#dealerSum").addClass("current-player-highlight");
         }
       }
-
+      
+      // Checks if party room is full
       if(response.method === "playersLength") {
             playersLength = response.playersLength
           }
-
-
-
-      // if(response.method === "playerResult") {
-      //   players = response.players
-
-      //   // if dealer sum.length === 2. Fix dealer sum before proceeding
-      //   if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
-      //     dealer.sum.shift()
-      //     dealer.sum = dealer.sum[0]
-      //   } else if(dealer.sum.length === 2 && dealer.sum[1] > 21) {
-      //     dealer.sum.pop()
-      //     dealer.sum = dealer.sum[0]
-      //   }
-
-      //   dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
-      //   // // remove dealer from player
-
-      //   players.splice(-1)[0]
-
-      //   console.log("sendplayerBets")
-      //   // sendPlayerBets() // <--- this only updates players array
-      //   console.log("show dealer cards")
-      //   // For all players That have NOT busted, compare sum to dealer
-      //   for(let i = 0; i < players.length; i++) {
-      //     // exclude all players that already have blackjack
-      //     if(players[i].blackjack === false) {
-      //     if(players[i].cards.length > 0) {
-      //       // Also check if dealer has bust
-      //       if(dealer.sum > 21) {
-      //         playerWin(i)
-      //         console.log("DEALER BUST")
-      //         for(let x = 0; x < playerSlotHTML.length; x++) {
-      //           if(players[i].clientId === playerSlotHTML[x]) {
-      //             $(".player-result:eq("+x+")").removeClass("hide-element")
-      //             $(".player-result:eq("+x+")").addClass("result-win")
-      //             $(".player-result:eq("+x+")").text("WIN")
-      //           }
-      //         }
-      //       } else if(dealer.sum < players[i].sum) {
-      //         playerWin(i)
-      //         console.log("player win")
-      //         for(let x = 0; x < playerSlotHTML.length; x++) {
-      //           if(players[i].clientId === playerSlotHTML[x]) {
-      //             $(".player-result:eq("+x+")").removeClass("hide-element")
-      //             $(".player-result:eq("+x+")").addClass("result-win")
-      //             $(".player-result:eq("+x+")").text("WIN")
-      //           }
-      //         }
-      //       } else if(dealer.sum === players[i].sum) {
-      //         playerDraw(i)
-      //         console.log("Draw!")
-      //         for(let x = 0; x < playerSlotHTML.length; x++) {
-      //           if(players[i].clientId === playerSlotHTML[x]) {
-      //             $(".player-result:eq("+x+")").removeClass("hide-element")
-      //             $(".player-result:eq("+x+")").addClass("result-draw")
-      //             $(".player-result:eq("+x+")").text("DRAW")
-      //           }
-      //         }
-      //       } else {
-      //         dealerWin(i)
-      //         for(let x = 0; x < playerSlotHTML.length; x++) {
-      //           if(players[i].clientId === playerSlotHTML[x]) {
-      //             $(".player-result:eq("+x+")").removeClass("hide-element")
-      //             $(".player-result:eq("+x+")").addClass("result-lose")
-      //             $(".player-result:eq("+x+")").text("LOSE")
-      //           }
-      //         }
-      //       }
-
-      //       // If player busted, make him Bust!
-      //     } else {
-      //       dealerWin(i)
-      //     }
-      //     // If player has blackjack, make him win!
-      //   } else {
-      //     playerWin(i)
-      //   }
-      //   }
-
-      // }
 
       if(response.method === "playerResultNatural") {
         players = response.players;
@@ -1339,14 +1173,6 @@
         console.log("final compare go")
         finalCompareGo();
       }
-
-
-      // This resets styling only every round
-      // if(response.method === "resetRound") {
-      //   theClient = response.theClient
-      //   resetGame();
-      // }
-
 
       // Optimize this later so it doesnt fire like every second
       if(gameOn) {
@@ -1522,46 +1348,19 @@
         // To prevent bug at 714
         playerSlotIndex = [];
 
-        // Assign client to roomId AND spectators array
-
-        // const payLoadLobby = {
-        //   "method": "joinLobby",
-        //   "gameId": gameId,
-        //   "roomId": roomId,
-        //   "theClient": theClient,
-        //   "clientId": clientId
-        // }
-        // ws.send(JSON.stringify(payLoadLobby)); 
       }
     }
 
     // Before player exits/resets window, terminate him from the room
     window.addEventListener('beforeunload', function() {
       reload = true;
-      terminatePlayer();
-
-      // TERMINATE ROOM
-      const payLoad = {
-        "method": "terminateRoom",
-        "roomId": roomId
+      if(player.clientId === clientId) {
+        sendPlayerNext();
       }
-
-      // if(spectators.length === 1 && lobbySpectators.length === 0 || spectators.length === 0 && lobbySpectators.length === 1) {
-      //     // ws.send(JSON.stringify(payLoad));
-      //     // terminating a room is not nececarry, for now.
-      // }
-
-
-
+      theClient.hasLeft = true;
+      clientHasLeft()
+      terminatePlayer();
     });
-
-
-
-
-
-    
-
-
 
   </script>
 </body>
