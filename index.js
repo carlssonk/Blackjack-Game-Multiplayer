@@ -368,6 +368,10 @@ wsServer.on("request", request => {
       const gameOn = result.gameOn
       const dealersTurn = result.dealersTurn
 
+      console.log("¤¤¤¤¤¤¤¤¤¤¤")
+      console.log(players[3].hasLeft)
+      console.log("¤¤¤¤¤¤¤¤¤¤¤")
+
       const payLoad = {
         "method": "update",
         "players": players,

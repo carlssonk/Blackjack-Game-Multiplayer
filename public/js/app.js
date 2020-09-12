@@ -528,7 +528,7 @@ function dealerPlay() {
   console.log("DealerPlay")
   // sendDealersTurn();
   // // PUSH DEALER TO PLAYER ARRAY
-  players = game.players
+  // players = game.players
   players.push(dealer);
   //PUSH DEALERS HIDDEN CARD TO DECK[0]
   deck.unshift(dealer.hiddenCard[0])
@@ -536,30 +536,17 @@ function dealerPlay() {
   // dealer.cards.push(dealer.hiddenCard[0]); REMOVE
   dealer.hiddenCard = [];
   player = players[currentPlayer];
+
+
   updateCurrentPlayer()
+
   if(player.hasAce === true || deck[0].value.hasAce === true) {
     compareSumAce()
   } else {
     compareSum()
   }
-  // deck.shift()
-  
-  // if(dealer.sum > 16 || dealer.sum[1] > 16) {
-  //   finalCompareGo();
-  // } 
-  //   playerHit()
-  // } else {
-  //   finalCompareGo()
-  // }
+
 }
-// If dealer.sum is less than 17, he must keep hitting until he gets 17
-// function dealerSum() {
-  // if(dealer.sum < 17) {
-  //   playerHit()
-  // } else {
-  //   finalCompareGo()
-  // }
-// }
 
 // *************************************************************
 
@@ -726,7 +713,12 @@ function resetGame() {
   //     }
   //   }
   // }
-  players = game.players
+
+  for(let i = 0; i < players.length; i++) {
+    if(players[i].hasLeft === true) {
+      players.splice(i, 1);
+    }
+  }
 
   // Reset Players 
   $(".player-bet").text("")

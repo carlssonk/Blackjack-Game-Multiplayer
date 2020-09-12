@@ -415,8 +415,8 @@ function dealerPlay() {
   console.log("DealerPlay");
   console.log("DealerPlay"); // sendDealersTurn();
   // // PUSH DEALER TO PLAYER ARRAY
+  // players = game.players
 
-  players = game.players;
   players.push(dealer); //PUSH DEALERS HIDDEN CARD TO DECK[0]
 
   deck.unshift(dealer.hiddenCard[0]); // Push dealers hidden card to deck[0] REMOVE
@@ -430,24 +430,8 @@ function dealerPlay() {
     compareSumAce();
   } else {
     compareSum();
-  } // deck.shift()
-  // if(dealer.sum > 16 || dealer.sum[1] > 16) {
-  //   finalCompareGo();
-  // } 
-  //   playerHit()
-  // } else {
-  //   finalCompareGo()
-  // }
-
-} // If dealer.sum is less than 17, he must keep hitting until he gets 17
-// function dealerSum() {
-// if(dealer.sum < 17) {
-//   playerHit()
-// } else {
-//   finalCompareGo()
-// }
-// }
-// *************************************************************
+  }
+} // *************************************************************
 // ***********************FINAL COMPARE*************************
 
 
@@ -610,17 +594,22 @@ function resetGame() {
   //     }
   //   }
   // }
-  players = game.players; // Reset Players 
+  for (var i = 0; i < players.length; i++) {
+    if (players[i].hasLeft === true) {
+      players.splice(i, 1);
+    }
+  } // Reset Players 
+
 
   $(".player-bet").text(""); // $(".player-coin").text("")
 
-  for (var i = 0; i < players.length; i++) {
-    players[i].cards = [];
-    players[i].hasAce = false;
-    players[i].sum = null;
-    players[i].isReady = false;
-    players[i].blackjack = false;
-    players[i].bet = 0;
+  for (var _i = 0; _i < players.length; _i++) {
+    players[_i].cards = [];
+    players[_i].hasAce = false;
+    players[_i].sum = null;
+    players[_i].isReady = false;
+    players[_i].blackjack = false;
+    players[_i].bet = 0;
   } // Reset Dealer
 
 
@@ -660,8 +649,8 @@ function resetGame() {
   $(".players .player-coin").css("background", "");
   $(".players .player-coin").css("opacity", "");
 
-  for (var _i = 0; _i < players.length; _i++) {
-    if (players[_i].clientId === clientId) {
+  for (var _i2 = 0; _i2 < players.length; _i2++) {
+    if (players[_i2].clientId === clientId) {
       $("#bets-container").removeClass("noclick");
     }
   }
@@ -1049,9 +1038,9 @@ $(".max-clear").click(function () {
         $("#total-bet").text(theClient.bet);
         $("#balance").text(theClient.balance);
 
-        for (var _i2 = 0; _i2 < playerSlotHTML.length; _i2++) {
-          if (playerSlotHTML[_i2] === clientId) {
-            $(".ready:eq(" + _i2 + ")").removeClass("hide-element");
+        for (var _i3 = 0; _i3 < playerSlotHTML.length; _i3++) {
+          if (playerSlotHTML[_i3] === clientId) {
+            $(".ready:eq(" + _i3 + ")").removeClass("hide-element");
           }
         }
       }

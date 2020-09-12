@@ -335,6 +335,9 @@ wsServer.on("request", function (request) {
       var _spectators7 = result.spectators;
       var _gameOn2 = result.gameOn;
       var _dealersTurn = result.dealersTurn;
+      console.log("¤¤¤¤¤¤¤¤¤¤¤");
+      console.log(_players7[3].hasLeft);
+      console.log("¤¤¤¤¤¤¤¤¤¤¤");
       var _payLoad8 = {
         "method": "update",
         "players": _players7,

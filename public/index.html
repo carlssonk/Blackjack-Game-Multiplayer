@@ -537,6 +537,9 @@
     }
 
     function updateDealerCards() {
+      console.log(players)
+      console.log(players)
+      console.log(players[3].hasLeft)
       const payLoad = {
         "method": "updateDealerCards",
         "players": players,
@@ -595,6 +598,9 @@
     }
 
     function updateCurrentPlayer() {
+      console.log(players)
+      console.log(players)
+      console.log(players[3].hasLeft)
       const payLoad = {
         "method": "currentPlayer",
         "players": players,
@@ -1006,6 +1012,9 @@
       // currentPlayer
       if (response.method === "currentPlayer") {
         player = response.player;
+        console.log(players)
+        console.log(players)
+        console.log(players[3].hasLeft)
 
       }
 
@@ -1074,16 +1083,22 @@
           dealerHiddenCardRemoveNext = true;
         }
 
+        console.log(players)
+        console.log(players)
+        console.log(players[3].hasLeft)
+
       }
 
 
 
       // update
       if (response.method === "update") {
+        console.log(players[3].hasLeft)
         players = response.players;
         dealer = response.dealer;
         deck = response.deck;
-        gameOn = response.gameOn;  
+        gameOn = response.gameOn;
+        console.log(players[3].hasLeft)
       }
 
       // the playe
