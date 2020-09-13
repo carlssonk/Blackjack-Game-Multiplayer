@@ -537,9 +537,6 @@
     }
 
     function updateDealerCards() {
-      console.log(players)
-      console.log(players)
-      console.log(players[3].hasLeft)
       const payLoad = {
         "method": "updateDealerCards",
         "players": players,
@@ -598,9 +595,6 @@
     }
 
     function updateCurrentPlayer() {
-      console.log(players)
-      console.log(players)
-      console.log(players[3].hasLeft)
       const payLoad = {
         "method": "currentPlayer",
         "players": players,
@@ -762,11 +756,19 @@
 
       if (response.method === "leave") {
         game = response.game
-        spectators = game.spectators
-        playerSlotHTML = game.playerSlotHTML
+        players = response.players
+        spectators = response.spectators
+        playerSlotHTML = response.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
         gameOn = response.gameOn;
+
+        // // Terminate player from playerSlotHTML
+        // for(let i = 0; i < playerSlotHTML.length; i++) {
+        //   if(clientId === playerSlotHTML[i]) {
+        //     playerSlotIndex = i;
+        //   }
+        // }
 
 
         if(gameOn === false) {
@@ -793,6 +795,8 @@
         if(players.some(e => e.clientId === clientId)) {
           if(!$(".empty-slot").is("noclick")) $(".empty-slot").addClass("noclick");
         }
+
+        // if(players.some(players => players.clientId === clientId)) $(".empty-slot").addClass("noclick");
 
         if(gameOn === true) {
           $(".empty-slot").addClass("noclick")
@@ -900,9 +904,6 @@
           dealerHiddenCardRemoveNext = true;
           }
 
-          console.log(playerSlot[3].firstElementChild.nextElementSibling)
-          console.log(playerSlot[3].firstElementChild.nextElementSibling)
-          console.log(playerSlot[3].firstElementChild.nextElementSibling)
 
 
           for(let x = 0; x < players.length; x++) {
@@ -1007,14 +1008,12 @@
 
       if (response.method === "hasLeft") {
         players = response.players;
+        spectators = response.spectators;
       }
 
       // currentPlayer
       if (response.method === "currentPlayer") {
         player = response.player;
-        console.log(players)
-        console.log(players)
-        console.log(players[3].hasLeft)
 
       }
 
@@ -1083,9 +1082,6 @@
           dealerHiddenCardRemoveNext = true;
         }
 
-        console.log(players)
-        console.log(players)
-        console.log(players[3].hasLeft)
 
       }
 
@@ -1093,12 +1089,10 @@
 
       // update
       if (response.method === "update") {
-        console.log(players[3].hasLeft)
         players = response.players;
         dealer = response.dealer;
         deck = response.deck;
         gameOn = response.gameOn;
-        console.log(players[3].hasLeft)
       }
 
       // the playe
@@ -1106,6 +1100,7 @@
         console.log("the Play")
         player = response.player;
         currentPlayer = response.currentPlayer;
+        playersCanPlay = true;
 
           // Highlight current player sum so we know who's turn it is
           $(".player-sum").removeClass("current-player-highlight")
@@ -1289,8 +1284,9 @@
         "player": player,
         "players": players,
         "spectators": spectators,
+        "playerSlotHTML": playerSlotHTML,
         "dealer": dealer,
-        "gameOn": gameOn,
+        "gameOn": gameOn
         }
       ws.send(JSON.stringify(syncGame));          
     }
@@ -1369,12 +1365,18 @@
     // Before player exits/resets window, terminate him from the room
     window.addEventListener('beforeunload', function() {
       reload = true;
-      if(player.clientId === clientId) {
+      if(player.clientId === clientId && playersCanPlay === true) {
         sendPlayerNext();
       }
+
       theClient.hasLeft = true;
       clientHasLeft()
       terminatePlayer();
+
+      // HAVE THIS LAST
+      if(clientId === clientDeal && playersCanPlay === false) {
+        resetGameState();
+      }
     });
 
   </script>

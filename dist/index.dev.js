@@ -295,6 +295,7 @@ wsServer.on("request", function (request) {
       var _payLoad6 = {
         "method": "hasLeft",
         "players": _players5,
+        "spectators": _spectators5,
         "theClient": _theClient4
       };
 
@@ -335,9 +336,6 @@ wsServer.on("request", function (request) {
       var _spectators7 = result.spectators;
       var _gameOn2 = result.gameOn;
       var _dealersTurn = result.dealersTurn;
-      console.log("¤¤¤¤¤¤¤¤¤¤¤");
-      console.log(_players7[3].hasLeft);
-      console.log("¤¤¤¤¤¤¤¤¤¤¤");
       var _payLoad8 = {
         "method": "update",
         "players": _players7,
@@ -398,28 +396,36 @@ wsServer.on("request", function (request) {
       var theSlot = result.theSlot;
       var _gameId3 = result.gameId;
       var _game2 = games[_gameId3];
-      var _spectators10 = _game2.spectators;
-      var _players10 = _game2.players;
-      var _playerSlotHTML3 = _game2.playerSlotHTML; // Update all palyerSlots
+      var _spectators10 = result.spectators;
+      var _players10 = result.players;
+      var _playerSlotHTML3 = result.playerSlotHTML; // Update all palyerSlots
       // for(let i = 0; i < playerSlot.length; i++) {
       //   if(playerSlot[i].innerHTML === clientId) {
       //     playerSlotHMTL
       //   }
       // }
-      // Push client to players array
 
-      _game2.players.push(_theClient5); // Push client Id to playerSlotHTML array
+      console.log(_playerSlotHTML3);
+      console.log(_playerSlotHTML3);
+      console.log(_playerSlotHTML3); // Push client to players array
+
+      _players10.push(_theClient5); // Push client Id to playerSlotHTML array
 
 
-      _game2.playerSlotHTML[theSlot] = clientId; // Assign theClient to game.players[i]
+      _playerSlotHTML3[theSlot] = clientId; // Assign theClient to game.players[i]
 
-      for (var _i = 0; _i < _game2.players.length; _i++) {
-        if (_game2.players[_i].clientId === clientId) {
+      for (var _i = 0; _i < _players10.length; _i++) {
+        if (_players10[_i].clientId === clientId) {
           // theClient = game.players[i]
-          _game2.players[_i] = _theClient5;
+          _players10[_i] = _theClient5;
         }
       }
 
+      console.log(_playerSlotHTML3);
+      console.log(_playerSlotHTML3);
+      console.log(_playerSlotHTML3);
+      _game2.players = _players10;
+      _game2.playerSlotHTML = _playerSlotHTML3;
       var _payLoad11 = {
         "method": "joinTable",
         "theSlot": theSlot,
@@ -523,8 +529,10 @@ wsServer.on("request", function (request) {
       var _spectators14 = result.spectators;
       var _players14 = result.players;
       var _theClient6 = result.theClient;
+      var _playerSlotHTML4 = result.playerSlotHTML;
       var reload = result.reload;
-      var _gameOn3 = result.gameOn; // To prevent error when user disconnects outside a game
+      var _gameOn3 = result.gameOn;
+      console.log(_players14); // To prevent error when user disconnects outside a game
 
       if (_game3 === undefined) {
         _game3 = {
@@ -535,48 +543,51 @@ wsServer.on("request", function (request) {
       } // Get what index the player is in so we can later delete him from the table on the client side
 
 
-      var playerSlotIndex = null;
+      var playerSlotIndex = null; // Terminate player from playerSlotHTML
+
+      for (var _i2 = 0; _i2 < _playerSlotHTML4.length; _i2++) {
+        if (clientId === _playerSlotHTML4[_i2]) {
+          playerSlotIndex = _i2;
+        }
+      }
 
       if (_gameOn3 === false) {
         // If player reloads page, remove him from spectators array
         if (reload === true) {
           // Terminate player from spectators  
-          for (var _i2 = 0; _i2 < _game3.spectators.length; _i2++) {
-            if (clientId === _game3.spectators[_i2].clientId) {
-              _game3.spectators.splice(_i2, 1);
+          for (var _i3 = 0; _i3 < _spectators14.length; _i3++) {
+            if (clientId === _spectators14[_i3].clientId) {
+              _spectators14.splice(_i3, 1);
             }
           }
         } // Terminate player from playerSlotHTML
 
 
-        for (var _i3 = 0; _i3 < _game3.playerSlotHTML.length; _i3++) {
-          if (clientId === _game3.playerSlotHTML[_i3]) {
-            playerSlotIndex = _i3;
-            _game3.playerSlotHTML[_i3] = {};
+        for (var _i4 = 0; _i4 < _playerSlotHTML4.length; _i4++) {
+          if (clientId === _playerSlotHTML4[_i4]) {
+            // playerSlotIndex = i;
+            _playerSlotHTML4[_i4] = {};
           }
         } // Terminate player from players array
 
 
-        for (var _i4 = 0; _i4 < _game3.players.length; _i4++) {
-          if (clientId === _game3.players[_i4].clientId) {
-            _game3.players.splice(_i4, 1); // players.splice(i, 1)
+        for (var _i5 = 0; _i5 < _players14.length; _i5++) {
+          if (clientId === _players14[_i5].clientId) {
+            _players14.splice(_i5, 1); // players.splice(i, 1)
 
           }
         }
-      } // Terminate player from playerSlotHTML
-
-
-      for (var _i5 = 0; _i5 < _game3.playerSlotHTML.length; _i5++) {
-        if (clientId === _game3.playerSlotHTML[_i5]) {
-          playerSlotIndex = _i5;
-        }
       }
 
+      _game3.spectators = _spectators14;
+      _game3.players = _players14;
+      _game3.playerSlotHTML = _playerSlotHTML4;
       var _payLoad15 = {
         "method": "leave",
-        // "spectators": game.spectators,
         "playerSlotIndex": playerSlotIndex,
         "players": _players14,
+        "playerSlotHTML": _playerSlotHTML4,
+        "spectators": _spectators14,
         "game": _game3,
         "gameOn": _gameOn3
       };
@@ -677,6 +688,10 @@ wsServer.on("request", function (request) {
       });
     }
 
+    if (result.method === "wsDealCards") {
+      dealCards();
+    }
+
     if (result.method === "getRoute") {
       var getRouteId = result.getRouteId;
       var isRouteDefined = null;
@@ -713,6 +728,7 @@ wsServer.on("request", function (request) {
       var _players19 = result.players;
       var _player5 = result.player;
       var _spectators21 = result.spectators;
+      var _playerSlotHTML5 = result.playerSlotHTML;
 
       if (_game7 === undefined) {
         _game7 = {};
@@ -724,6 +740,7 @@ wsServer.on("request", function (request) {
       _game7.players = _players19;
       _game7.player = _player5;
       _game7.spectators = _spectators21;
+      _game7.playerSlotHTML = _playerSlotHTML5;
     }
   }); // The ClientId
 

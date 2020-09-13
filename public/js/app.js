@@ -30,6 +30,7 @@ let showSum = false;
 let chipIndex = null;
 let playersCanPlay = false;
 // resetCards = false;
+let clientDeal = null;
 
 // Cards (suit)
 const suit = ["Heart", "Diamond", "Spade", "Club"]
@@ -276,6 +277,7 @@ function playerBets() {
     // Check if all players is ready
     if(players.every(player => player.isReady)) {
       gameOn = true;
+      clientDeal = clientId;
       getDeck();
       sendPlayerDeck();
       setTimeout(dealCards, 1000);
@@ -697,28 +699,41 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  // because the game.players holds the actual value of the current players in the game
-  // for(let x = 0; x < players.length; x++) {
-  //   for(let i = 0; i < playerSlotHTML.length; i++) {
-  //     if(playerSlotHTML[i] === players[x].clientId) {
-  //       // dont remove players
-  //       console.log(i)
-  //       console.log(x)
-  //     } else {
-  //       // remove players
-  //       console.log(i)
-  //       console.log(x)
 
-  //       // players.splice(i, 1)
-  //     }
-  //   }
-  // }
-
-  for(let i = 0; i < players.length; i++) {
-    if(players[i].hasLeft === true) {
-      players.splice(i, 1);
+  for(let x = 0; x < playerSlotHTML.length; x++) {
+    for(let i = 0; i < players.length; i++) {    
+      if(players[i].hasLeft === true) {
+        if(players[i].clientId === playerSlotHTML[x]) {
+          playerSlot[x].innerHTML = 
+          `
+          <div><button class="ready hide-element">PLACE BET</button></div>
+          <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
+          <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+          <div class="player-sum">sum here</div>
+          <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
+          <div class="player-result hide-element">Win/Lose/Draw</div>
+          <div class="player-cards">
+    
+          </div>
+          `
+          playerSlot[x].classList.remove("player-left")
+          playerSlotIndex = x;
+          playerSlotHTML[x] = {}
+          players.splice(i, 1);
+        }        
+      }
     }
   }
+
+  for(let i = 0; i < spectators.length; i++) {
+    if(spectators[i].hasLeft === true) {
+      spectators.splice(i, 1)
+    }
+  }
+
+
+
+
 
   // Reset Players 
   $(".player-bet").text("")
@@ -756,6 +771,10 @@ function resetGame() {
   startedGame = false;
   doubleDown = false;
   gameOn = false;
+  console.log(gameOn)
+  console.log(gameOn)
+  console.log(gameOn)
+  console.log(gameOn)
   playersCanPlay = false;
   $(".user-action-box").removeClass("noclick")
   $("#total-bet").text("")

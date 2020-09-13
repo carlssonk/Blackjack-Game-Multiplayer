@@ -27,7 +27,8 @@ var bool;
 var showSum = false;
 var chipIndex = null;
 var playersCanPlay = false; // resetCards = false;
-// Cards (suit)
+
+var clientDeal = null; // Cards (suit)
 
 var suit = ["Heart", "Diamond", "Spade", "Club"]; // Cards (values)
 
@@ -191,6 +192,7 @@ $(document).on("click", ".ready", function () {
     return player.isReady;
   })) {
     gameOn = true;
+    clientDeal = clientId;
     getDeck();
     sendPlayerDeck();
     setTimeout(dealCards, 1000);
@@ -579,37 +581,36 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  // because the game.players holds the actual value of the current players in the game
-  // for(let x = 0; x < players.length; x++) {
-  //   for(let i = 0; i < playerSlotHTML.length; i++) {
-  //     if(playerSlotHTML[i] === players[x].clientId) {
-  //       // dont remove players
-  //       console.log(i)
-  //       console.log(x)
-  //     } else {
-  //       // remove players
-  //       console.log(i)
-  //       console.log(x)
-  //       // players.splice(i, 1)
-  //     }
-  //   }
-  // }
-  for (var i = 0; i < players.length; i++) {
-    if (players[i].hasLeft === true) {
-      players.splice(i, 1);
+  for (var x = 0; x < playerSlotHTML.length; x++) {
+    for (var i = 0; i < players.length; i++) {
+      if (players[i].hasLeft === true) {
+        if (players[i].clientId === playerSlotHTML[x]) {
+          playerSlot[x].innerHTML = "\n          <div><button class=\"ready hide-element\">PLACE BET</button></div>\n          <div class=\"empty-slot noclick\"><i class=\"fas fa-user-plus\"></i></div>\n          <div class=\"player-name hide-element\">name here<span class=\"hide-element\"><img class=\"player-avatar\" src=\"\" alt=\"avatar\"></span></div>\n          <div class=\"player-sum\">sum here</div>\n          <div class=\"player-coin hide-element\">bet here<div class=\"player-bet hide-element\"></div></div>\n          <div class=\"player-result hide-element\">Win/Lose/Draw</div>\n          <div class=\"player-cards\">\n    \n          </div>\n          ";
+          playerSlot[x].classList.remove("player-left");
+          playerSlotIndex = x;
+          playerSlotHTML[x] = {};
+          players.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  for (var _i = 0; _i < spectators.length; _i++) {
+    if (spectators[_i].hasLeft === true) {
+      spectators.splice(_i, 1);
     }
   } // Reset Players 
 
 
   $(".player-bet").text(""); // $(".player-coin").text("")
 
-  for (var _i = 0; _i < players.length; _i++) {
-    players[_i].cards = [];
-    players[_i].hasAce = false;
-    players[_i].sum = null;
-    players[_i].isReady = false;
-    players[_i].blackjack = false;
-    players[_i].bet = 0;
+  for (var _i2 = 0; _i2 < players.length; _i2++) {
+    players[_i2].cards = [];
+    players[_i2].hasAce = false;
+    players[_i2].sum = null;
+    players[_i2].isReady = false;
+    players[_i2].blackjack = false;
+    players[_i2].bet = 0;
   } // Reset Dealer
 
 
@@ -638,6 +639,10 @@ function resetGame() {
   startedGame = false;
   doubleDown = false;
   gameOn = false;
+  console.log(gameOn);
+  console.log(gameOn);
+  console.log(gameOn);
+  console.log(gameOn);
   playersCanPlay = false;
   $(".user-action-box").removeClass("noclick");
   $("#total-bet").text("");
@@ -649,8 +654,8 @@ function resetGame() {
   $(".players .player-coin").css("background", "");
   $(".players .player-coin").css("opacity", "");
 
-  for (var _i2 = 0; _i2 < players.length; _i2++) {
-    if (players[_i2].clientId === clientId) {
+  for (var _i3 = 0; _i3 < players.length; _i3++) {
+    if (players[_i3].clientId === clientId) {
       $("#bets-container").removeClass("noclick");
     }
   }
@@ -1038,9 +1043,9 @@ $(".max-clear").click(function () {
         $("#total-bet").text(theClient.bet);
         $("#balance").text(theClient.balance);
 
-        for (var _i3 = 0; _i3 < playerSlotHTML.length; _i3++) {
-          if (playerSlotHTML[_i3] === clientId) {
-            $(".ready:eq(" + _i3 + ")").removeClass("hide-element");
+        for (var _i4 = 0; _i4 < playerSlotHTML.length; _i4++) {
+          if (playerSlotHTML[_i4] === clientId) {
+            $(".ready:eq(" + _i4 + ")").removeClass("hide-element");
           }
         }
       }

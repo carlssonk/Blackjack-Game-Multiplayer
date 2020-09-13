@@ -326,6 +326,7 @@ wsServer.on("request", request => {
       const payLoad = {
         "method": "hasLeft",
         "players": players,
+        "spectators": spectators,
         "theClient": theClient
       }
 
@@ -368,9 +369,6 @@ wsServer.on("request", request => {
       const gameOn = result.gameOn
       const dealersTurn = result.dealersTurn
 
-      console.log("¤¤¤¤¤¤¤¤¤¤¤")
-      console.log(players[3].hasLeft)
-      console.log("¤¤¤¤¤¤¤¤¤¤¤")
 
       const payLoad = {
         "method": "update",
@@ -437,9 +435,9 @@ wsServer.on("request", request => {
       const theSlot = result.theSlot
       const gameId = result.gameId;
       const game = games[gameId];
-      const spectators = game.spectators
-      const players = game.players
-      const playerSlotHTML = game.playerSlotHTML
+      const spectators = result.spectators
+      const players = result.players
+      const playerSlotHTML = result.playerSlotHTML
 
       // Update all palyerSlots
       // for(let i = 0; i < playerSlot.length; i++) {
@@ -447,19 +445,28 @@ wsServer.on("request", request => {
       //     playerSlotHMTL
       //   }
       // }
+      console.log(playerSlotHTML)
+      console.log(playerSlotHTML)
+      console.log(playerSlotHTML)
 
       // Push client to players array
-      game.players.push(theClient)
+      players.push(theClient)
       // Push client Id to playerSlotHTML array
-      game.playerSlotHTML[theSlot] = (clientId)
+      playerSlotHTML[theSlot] = (clientId)
 
       // Assign theClient to game.players[i]
-      for(let i = 0; i < game.players.length; i++) {
-        if(game.players[i].clientId === clientId) {
+      for(let i = 0; i < players.length; i++) {
+        if(players[i].clientId === clientId) {
           // theClient = game.players[i]
-          game.players[i] = theClient
+          players[i] = theClient
         }
       }
+
+      console.log(playerSlotHTML)
+      console.log(playerSlotHTML)
+      console.log(playerSlotHTML)
+      game.players = players;
+      game.playerSlotHTML = playerSlotHTML;
 
       const payLoad = {
         "method": "joinTable",
@@ -567,8 +574,11 @@ wsServer.on("request", request => {
       let spectators = result.spectators;
       let players = result.players;
       const theClient = result.theClient;
+      let playerSlotHTML = result.playerSlotHTML;
       const reload = result.reload;
       const gameOn = result.gameOn;
+
+      console.log(players)
 
       // To prevent error when user disconnects outside a game
       if(game === undefined) {
@@ -582,48 +592,52 @@ wsServer.on("request", request => {
       // Get what index the player is in so we can later delete him from the table on the client side
       let playerSlotIndex = null;
 
+      // Terminate player from playerSlotHTML
+      for(let i = 0; i < playerSlotHTML.length; i++) {
+        if(clientId === playerSlotHTML[i]) {
+          playerSlotIndex = i;
+        }
+      }
 
       if(gameOn === false) {
 
         // If player reloads page, remove him from spectators array
         if(reload === true) {
         // Terminate player from spectators  
-          for(let i = 0; i < game.spectators.length; i++) {
-            if(clientId === game.spectators[i].clientId) {
-              game.spectators.splice(i, 1)
+          for(let i = 0; i < spectators.length; i++) {
+            if(clientId === spectators[i].clientId) {
+              spectators.splice(i, 1)
             }
           }
         }
 
         // Terminate player from playerSlotHTML
-        for(let i = 0; i < game.playerSlotHTML.length; i++) {
-          if(clientId === game.playerSlotHTML[i]) {
-            playerSlotIndex = i;
-            game.playerSlotHTML[i] = {}
+        for(let i = 0; i < playerSlotHTML.length; i++) {
+          if(clientId === playerSlotHTML[i]) {
+            // playerSlotIndex = i;
+            playerSlotHTML[i] = {}
           }
         }
         // Terminate player from players array
-        for(let i = 0; i < game.players.length; i++) {
-          if(clientId === game.players[i].clientId) {
-            game.players.splice(i, 1)
+        for(let i = 0; i < players.length; i++) {
+          if(clientId === players[i].clientId) {
+            players.splice(i, 1)
             // players.splice(i, 1)
           }
         }
 
       }
 
-      // Terminate player from playerSlotHTML
-      for(let i = 0; i < game.playerSlotHTML.length; i++) {
-        if(clientId === game.playerSlotHTML[i]) {
-          playerSlotIndex = i;
-        }
-      }
+      game.spectators = spectators;
+      game.players = players;
+      game.playerSlotHTML = playerSlotHTML;
       
       const payLoad = {
         "method": "leave",
-        // "spectators": game.spectators,
         "playerSlotIndex": playerSlotIndex,
         "players": players,
+        "playerSlotHTML": playerSlotHTML,
+        "spectators": spectators,
         "game": game,
         "gameOn": gameOn
       }
@@ -736,6 +750,10 @@ wsServer.on("request", request => {
       })
     }
 
+    if(result.method === "wsDealCards") {
+      dealCards();
+    }
+
 
     if(result.method === "getRoute") {
       const getRouteId = result.getRouteId
@@ -774,6 +792,7 @@ wsServer.on("request", request => {
       const players = result.players;
       const player = result.player;
       const spectators = result.spectators;
+      const playerSlotHTML = result.playerSlotHTML;
 
       if(game === undefined) {
         game = {}
@@ -784,6 +803,7 @@ wsServer.on("request", request => {
       game.players = players;
       game.player = player;
       game.spectators = spectators;
+      game.playerSlotHTML = playerSlotHTML;
       
     }
 
