@@ -1051,4 +1051,20 @@ $(".max-clear").click(function () {
       }
     }
   }
+}); // Copy invite link to clipboard
+
+$("#invite-link-box button").click(function () {
+  /* Select the text field */
+  var inviteLink = document.querySelector("#invite-link");
+  inviteLink.select();
+  inviteLink.setSelectionRange(0, 99999);
+  /*For mobile devices*/
+
+  document.execCommand("copy");
+});
+$("#invite-link").hover(function () {
+  $("#invite-label").css("z-index", "-1");
+}, function () {
+  // change to any color that was previously used.
+  $("#invite-label").css("z-index", "");
 }); // ########## DOM MANIPULATION ##########

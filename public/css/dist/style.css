@@ -166,7 +166,7 @@ body {
 #info-rules {
   position: absolute;
   right: -504px;
-  top: 32px;
+  top: 10px;
   height: 800px;
   width: 500px;
   color: white;
@@ -287,6 +287,50 @@ body {
   border-radius: 0 0 0 12px;
   right: -11px;
   transform: rotate(90deg);
+}
+
+#invite-link-box {
+  position: absolute;
+  width: 260px;
+  height: 30px;
+  background-color: #0f2014;
+  margin-left: 100px;
+  margin-top: 10px;
+  z-index: 1;
+}
+#invite-link-box #invite-link {
+  border: none;
+  outline: none;
+  padding: 0;
+  width: calc(100% - 65px);
+  height: 100%;
+  background-color: #0f2014;
+  color: white;
+}
+#invite-link-box #invite-label {
+  position: absolute;
+  background-color: white;
+  top: 50%;
+  transform: translate(0, -50%);
+  padding: 0px 14px;
+  background-color: #0f2014;
+  color: white;
+  pointer-events: none;
+}
+#invite-link-box #invite-label:hover {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0);
+  opacity: 0;
+}
+#invite-link-box button {
+  background-color: #15332a;
+  color: white;
+  height: 100%;
+  width: 60px;
+  border: none;
+}
+#invite-link-box button:hover {
+  background-color: #1a3f34;
 }
 
 #player-result-big {

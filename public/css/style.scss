@@ -184,7 +184,7 @@ body {
 #info-rules {
   position: absolute;
   right: -504px;
-  top: 32px;
+  top: 10px;
   height: 800px;
   width: 500px;
   color: white;
@@ -317,6 +317,52 @@ body {
 
 
 // #############GAME MENU#############
+
+#invite-link-box {
+  position: absolute;
+  width: 260px;
+  height: 30px;
+  background-color: #0f2014;
+  margin-left: 100px;
+  margin-top: 10px;
+  z-index: 1;
+  #invite-link {
+    border: none;
+    outline: none;
+    padding: 0;
+    width: calc(100% - 65px);
+    height: 100%;
+    background-color: #0f2014;
+    color: white;
+  }
+  #invite-label {
+    position: absolute;
+    background-color: white;
+    // height: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+    padding: 0px 14px;
+    background-color: #0f2014;
+    color: white;
+    pointer-events: none;
+  }
+  #invite-label:hover {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0;
+  }
+  button {
+    background-color: #15332a;
+    color: white;
+    height: 100%;
+    width: 60px;
+    border: none;
+  }
+  button:hover {
+    background-color: #1a3f34;
+  }
+}
+
 
 #player-result-big {
   position: absolute;

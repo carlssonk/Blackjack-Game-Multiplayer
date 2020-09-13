@@ -114,6 +114,18 @@
   </div>
 
   <div id="game-room" class="hide-element">
+
+  <div id="leave-box">
+    <i class="fas fa-sign-out-alt"></i>
+    <button>EXIT ROOM</button>
+  </div>
+
+  <div id="invite-link-box">
+    <div id="invite-label">Hover to see invite link</div>
+    <input id="invite-link" type="text" value="Gröt">
+    <button>COPY</button>
+  </div>
+
   <div id="player-result-big" class="hide-element">
     <div id="player-result-big-answer"></div>
     <div id="player-result-sum-box">
@@ -842,12 +854,13 @@
 
       // Assigns the "clientId" to "theClient" + some styling
       if(response.method === "joinClient") {
-
         theClient = response.theClient
         game = response.game
         players = response.players
         spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
+
+        $('#invite-link').val(gameId);
 
         // If client joins mid game
         if(game.gameOn === true) {
