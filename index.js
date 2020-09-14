@@ -42,6 +42,7 @@ wsServer.on("request", request => {
 
     // a user want to create a new game
     if (result.method === "create") {
+      console.log("create")
       const clientId = result.clientId;
       const theClient = result.theClient;
       const playerSlot = result.playerSlot
@@ -91,6 +92,8 @@ wsServer.on("request", request => {
 
     // a client want to join
     if (result.method === "join") {
+      console.log("join")
+      console.log("---------")
       const nickname = result.nickname
       const gameId = result.gameId;
       const roomId = result.roomId;
@@ -98,6 +101,7 @@ wsServer.on("request", request => {
       const clientId = result.clientId;
       // const gameId = result.gameId;
       const game = games[gameId];
+      console.log(game.spectators)
       let players = game.players;
       // console.log(players)
       const spectators = game.spectators;
@@ -111,6 +115,9 @@ wsServer.on("request", request => {
         // Max players reached
         return;
       }
+
+      console.log(game.spectators)
+      console.log(spectators)
 
       // Push unique Id to the client
       theClient.clientId = clientId
@@ -135,6 +142,8 @@ wsServer.on("request", request => {
         "roomId": roomId
       }
 
+      console.log(game.spectators)
+      console.log(spectators)
 
       // loop through all clients and tell them that people has joined
       // if(game.players.length === 0) {
@@ -146,7 +155,7 @@ wsServer.on("request", request => {
 
       // }
 
-      
+      console.log(spectators)
       const payLoadClient = {
         "method": "joinClient",
         "theClient": theClient,
@@ -177,7 +186,8 @@ wsServer.on("request", request => {
         }
       // }
 
-
+      console.log(spectators)
+      console.log("---------")
     
       // If a player joins mid-game
       const payLoadMidGame = {
@@ -391,11 +401,6 @@ wsServer.on("request", request => {
       const dealersTurn = result.dealersTurn
       const currentPlayer = result.currentPlayer
       const spectators = result.spectators
-      console.log("thePlay")
-      console.log(player)
-      console.log(player)
-      console.log(player)
-      console.log("thePlay")
 
 
       const payLoad = {
@@ -445,9 +450,6 @@ wsServer.on("request", request => {
       //     playerSlotHMTL
       //   }
       // }
-      console.log(playerSlotHTML)
-      console.log(playerSlotHTML)
-      console.log(playerSlotHTML)
 
       // Push client to players array
       players.push(theClient)
@@ -462,9 +464,6 @@ wsServer.on("request", request => {
         }
       }
 
-      console.log(playerSlotHTML)
-      console.log(playerSlotHTML)
-      console.log(playerSlotHTML)
       game.players = players;
       game.playerSlotHTML = playerSlotHTML;
 
@@ -530,14 +529,14 @@ wsServer.on("request", request => {
       const player = result.player
       const dealer = result.dealer
       const dealersTurn = result.dealersTurn
-      const dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext
+      // const dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext
       const payLoad = {
         "method": "updateDealerCards",
         "player": player,
         "dealer": dealer,
         "players": players,
         "dealersTurn": dealersTurn,
-        "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
+        // "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
 
       }
       if(dealersTurn === false) {
@@ -570,7 +569,9 @@ wsServer.on("request", request => {
 
     if(result.method === "terminate") {
       console.log("terminate player")
-      let game = result.game
+      let gameId = result.gameId;
+      let game = games[gameId];
+      // let game = result.game
       let spectators = result.spectators;
       let players = result.players;
       const theClient = result.theClient;
@@ -579,6 +580,7 @@ wsServer.on("request", request => {
       const gameOn = result.gameOn;
 
       console.log(players)
+      console.log(spectators)
 
       // To prevent error when user disconnects outside a game
       if(game === undefined) {
@@ -592,12 +594,26 @@ wsServer.on("request", request => {
       // Get what index the player is in so we can later delete him from the table on the client side
       let playerSlotIndex = null;
 
+      // Append hasLeft to the spectators array
+      for(let i = 0; i < players.length; i++) {
+        for(let s = 0; s < spectators.length; s++) {
+          if(players[i].hasLeft === true) {
+            if(spectators[s].clientId === players[i].clientId) {
+              spectators[s].hasLeft = true;
+            }
+          }          
+        }
+      }
+
       // Terminate player from playerSlotHTML
       for(let i = 0; i < playerSlotHTML.length; i++) {
         if(clientId === playerSlotHTML[i]) {
           playerSlotIndex = i;
         }
       }
+      console.log("ÅÄÖ")
+      console.log(game.spectators)
+      console.log(spectators)
 
       if(gameOn === false) {
 
@@ -607,6 +623,7 @@ wsServer.on("request", request => {
           for(let i = 0; i < spectators.length; i++) {
             if(clientId === spectators[i].clientId) {
               spectators.splice(i, 1)
+              // spectators.splice(i, 1)
             }
           }
         }
@@ -631,6 +648,9 @@ wsServer.on("request", request => {
       game.spectators = spectators;
       game.players = players;
       game.playerSlotHTML = playerSlotHTML;
+
+      console.log(game.spectators)
+      console.log("ÅÄÖ")
       
       const payLoad = {
         "method": "leave",
@@ -767,10 +787,6 @@ wsServer.on("request", request => {
           isRouteDefined = false;
         }
       }
-      console.log("-----KUK---")
-      console.log(getRouteId)
-      console.log(isRouteDefined)
-      console.log("-----KUK---")
       // if route is not available, redirect to home page
       const payLoadRoute = {
         "method": "redirect",

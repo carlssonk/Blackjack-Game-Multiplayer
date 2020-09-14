@@ -50,6 +50,7 @@ wsServer.on("request", function (request) {
     var result = JSON.parse(message.utf8Data); // a user want to create a new game
 
     if (result.method === "create") {
+      console.log("create");
       var _clientId = result.clientId;
       var _theClient = result.theClient;
       var playerSlot = result.playerSlot;
@@ -89,6 +90,8 @@ wsServer.on("request", function (request) {
 
 
     if (result.method === "join") {
+      console.log("join");
+      console.log("---------");
       var nickname = result.nickname;
       var _gameId = result.gameId;
       var _roomId = result.roomId;
@@ -96,6 +99,7 @@ wsServer.on("request", function (request) {
       var _clientId2 = result.clientId; // const gameId = result.gameId;
 
       var game = games[_gameId];
+      console.log(game.spectators);
       var _players = game.players; // console.log(players)
 
       var _spectators = game.spectators;
@@ -107,8 +111,10 @@ wsServer.on("request", function (request) {
       if (game.spectators.length >= 7) {
         // Max players reached
         return;
-      } // Push unique Id to the client
+      }
 
+      console.log(game.spectators);
+      console.log(_spectators); // Push unique Id to the client
 
       _theClient2.clientId = _clientId2; // Push client to players array
       // game.players.push(theClient)
@@ -129,7 +135,9 @@ wsServer.on("request", function (request) {
         "spectators": _spectators,
         "playerSlotHTML": _playerSlotHTML2,
         "roomId": _roomId
-      }; // loop through all clients and tell them that people has joined
+      };
+      console.log(game.spectators);
+      console.log(_spectators); // loop through all clients and tell them that people has joined
       // if(game.players.length === 0) {
 
       if (!game.gameOn === true) {
@@ -139,6 +147,7 @@ wsServer.on("request", function (request) {
       } // }
 
 
+      console.log(_spectators);
       var payLoadClient = {
         "method": "joinClient",
         "theClient": _theClient2,
@@ -167,8 +176,10 @@ wsServer.on("request", function (request) {
           clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray));
         });
       } // }
-      // If a player joins mid-game
 
+
+      console.log(_spectators);
+      console.log("---------"); // If a player joins mid-game
 
       var payLoadMidGame = {
         "method": "joinMidGame",
@@ -357,11 +368,6 @@ wsServer.on("request", function (request) {
       var _dealersTurn2 = result.dealersTurn;
       var currentPlayer = result.currentPlayer;
       var _spectators8 = result.spectators;
-      console.log("thePlay");
-      console.log(_player2);
-      console.log(_player2);
-      console.log(_player2);
-      console.log("thePlay");
       var _payLoad9 = {
         "method": "thePlay",
         "player": _player2,
@@ -404,10 +410,7 @@ wsServer.on("request", function (request) {
       //     playerSlotHMTL
       //   }
       // }
-
-      console.log(_playerSlotHTML3);
-      console.log(_playerSlotHTML3);
-      console.log(_playerSlotHTML3); // Push client to players array
+      // Push client to players array
 
       _players10.push(_theClient5); // Push client Id to playerSlotHTML array
 
@@ -421,9 +424,6 @@ wsServer.on("request", function (request) {
         }
       }
 
-      console.log(_playerSlotHTML3);
-      console.log(_playerSlotHTML3);
-      console.log(_playerSlotHTML3);
       _game2.players = _players10;
       _game2.playerSlotHTML = _playerSlotHTML3;
       var _payLoad11 = {
@@ -483,15 +483,15 @@ wsServer.on("request", function (request) {
       var _spectators12 = result.spectators;
       var _player4 = result.player;
       var _dealer2 = result.dealer;
-      var _dealersTurn3 = result.dealersTurn;
-      var dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext;
+      var _dealersTurn3 = result.dealersTurn; // const dealerHiddenCardRemoveNext = result.dealerHiddenCardRemoveNext
+
       var _payLoad13 = {
         "method": "updateDealerCards",
         "player": _player4,
         "dealer": _dealer2,
         "players": _players12,
-        "dealersTurn": _dealersTurn3,
-        "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
+        "dealersTurn": _dealersTurn3 // "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
+
       };
 
       if (_dealersTurn3 === false) {
@@ -525,14 +525,17 @@ wsServer.on("request", function (request) {
 
     if (result.method === "terminate") {
       console.log("terminate player");
-      var _game3 = result.game;
+      var _gameId4 = result.gameId;
+      var _game3 = games[_gameId4]; // let game = result.game
+
       var _spectators14 = result.spectators;
       var _players14 = result.players;
       var _theClient6 = result.theClient;
       var _playerSlotHTML4 = result.playerSlotHTML;
       var reload = result.reload;
       var _gameOn3 = result.gameOn;
-      console.log(_players14); // To prevent error when user disconnects outside a game
+      console.log(_players14);
+      console.log(_spectators14); // To prevent error when user disconnects outside a game
 
       if (_game3 === undefined) {
         _game3 = {
@@ -543,37 +546,53 @@ wsServer.on("request", function (request) {
       } // Get what index the player is in so we can later delete him from the table on the client side
 
 
-      var playerSlotIndex = null; // Terminate player from playerSlotHTML
+      var playerSlotIndex = null; // Append hasLeft to the spectators array
 
-      for (var _i2 = 0; _i2 < _playerSlotHTML4.length; _i2++) {
-        if (clientId === _playerSlotHTML4[_i2]) {
-          playerSlotIndex = _i2;
+      for (var _i2 = 0; _i2 < _players14.length; _i2++) {
+        for (var s = 0; s < _spectators14.length; s++) {
+          if (_players14[_i2].hasLeft === true) {
+            if (_spectators14[s].clientId === _players14[_i2].clientId) {
+              _spectators14[s].hasLeft = true;
+            }
+          }
+        }
+      } // Terminate player from playerSlotHTML
+
+
+      for (var _i3 = 0; _i3 < _playerSlotHTML4.length; _i3++) {
+        if (clientId === _playerSlotHTML4[_i3]) {
+          playerSlotIndex = _i3;
         }
       }
+
+      console.log("ÅÄÖ");
+      console.log(_game3.spectators);
+      console.log(_spectators14);
 
       if (_gameOn3 === false) {
         // If player reloads page, remove him from spectators array
         if (reload === true) {
           // Terminate player from spectators  
-          for (var _i3 = 0; _i3 < _spectators14.length; _i3++) {
-            if (clientId === _spectators14[_i3].clientId) {
-              _spectators14.splice(_i3, 1);
+          for (var _i4 = 0; _i4 < _spectators14.length; _i4++) {
+            if (clientId === _spectators14[_i4].clientId) {
+              _spectators14.splice(_i4, 1); // spectators.splice(i, 1)
+
             }
           }
         } // Terminate player from playerSlotHTML
 
 
-        for (var _i4 = 0; _i4 < _playerSlotHTML4.length; _i4++) {
-          if (clientId === _playerSlotHTML4[_i4]) {
+        for (var _i5 = 0; _i5 < _playerSlotHTML4.length; _i5++) {
+          if (clientId === _playerSlotHTML4[_i5]) {
             // playerSlotIndex = i;
-            _playerSlotHTML4[_i4] = {};
+            _playerSlotHTML4[_i5] = {};
           }
         } // Terminate player from players array
 
 
-        for (var _i5 = 0; _i5 < _players14.length; _i5++) {
-          if (clientId === _players14[_i5].clientId) {
-            _players14.splice(_i5, 1); // players.splice(i, 1)
+        for (var _i6 = 0; _i6 < _players14.length; _i6++) {
+          if (clientId === _players14[_i6].clientId) {
+            _players14.splice(_i6, 1); // players.splice(i, 1)
 
           }
         }
@@ -582,6 +601,8 @@ wsServer.on("request", function (request) {
       _game3.spectators = _spectators14;
       _game3.players = _players14;
       _game3.playerSlotHTML = _playerSlotHTML4;
+      console.log(_game3.spectators);
+      console.log("ÅÄÖ");
       var _payLoad15 = {
         "method": "leave",
         "playerSlotIndex": playerSlotIndex,
@@ -604,8 +625,8 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "playersLength") {
-      var _gameId4 = result.gameId;
-      var _game4 = games[_gameId4];
+      var _gameId5 = result.gameId;
+      var _game4 = games[_gameId5];
       var _spectators15 = _game4.spectators;
       var playersLength = _game4.spectators.length;
       var payLoadLength = {
@@ -658,8 +679,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "finalCompare") {
       var _spectators19 = result.spectators;
-      var _gameId5 = result.gameId;
-      var _game5 = games[_gameId5];
+      var _gameId6 = result.gameId;
+      var _game5 = games[_gameId6];
       var _players17 = result.players;
       _game5.players = _players17;
       var _payLoad19 = {
@@ -674,8 +695,8 @@ wsServer.on("request", function (request) {
 
     if (result.method === "resetGameState") {
       var _spectators20 = result.spectators;
-      var _gameId6 = result.gameId;
-      var _game6 = games[_gameId6];
+      var _gameId7 = result.gameId;
+      var _game6 = games[_gameId7];
       var _players18 = result.players;
       _game6.players = _players18;
       var _payLoad20 = {
@@ -697,18 +718,14 @@ wsServer.on("request", function (request) {
       var isRouteDefined = null;
       console.log(app._router.stack.length);
 
-      for (var _i6 = 3; _i6 < app._router.stack.length; _i6++) {
-        if (app._router.stack[_i6].route.path === "/" + getRouteId) {
+      for (var _i7 = 3; _i7 < app._router.stack.length; _i7++) {
+        if (app._router.stack[_i7].route.path === "/" + getRouteId) {
           isRouteDefined = true;
         } else {
           isRouteDefined = false;
         }
-      }
+      } // if route is not available, redirect to home page
 
-      console.log("-----KUK---");
-      console.log(getRouteId);
-      console.log(isRouteDefined);
-      console.log("-----KUK---"); // if route is not available, redirect to home page
 
       var payLoadRoute = {
         "method": "redirect",
@@ -721,8 +738,8 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "syncGame") {
-      var _gameId7 = result.gameId;
-      var _game7 = games[_gameId7];
+      var _gameId8 = result.gameId;
+      var _game7 = games[_gameId8];
       var _gameOn4 = result.gameOn;
       var _dealer3 = result.dealer;
       var _players19 = result.players;

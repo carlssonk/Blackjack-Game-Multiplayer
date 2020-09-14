@@ -252,6 +252,8 @@ function playerBets() {
 
       let betAmount = parseInt(betButtons[b].value)
       betButtons[b].addEventListener("click", () => {
+        // clickFiller.play();
+        defaultClick.play();
 
         if (betAmount <= theClient.balance) {
           // Add to bet & remove from balance
@@ -266,7 +268,7 @@ function playerBets() {
 }
 
   $(document).on("click", ".ready", function() {
-    
+    chipPlace.play();
     sendPlayerBets()
     $(".ready").addClass("hide-element")
     player = players[currentPlayer];
@@ -326,6 +328,7 @@ function dealDealerCards() {
       setTimeout(function() {
         naturals();
         console.log("SEND THE PLAY")
+        hasPlayers0Left() // check if players[0] has left during this phase
         sendPlayerThePlay();
         sendShowSum();
       }, 500)
@@ -416,7 +419,7 @@ function thePlay() {
   // player.alert.....
   for(let i = 0; i < userAction.length; i++) {
     userAction[i].addEventListener("click", function() {
-
+      actionClick.play();
       if(this === userAction[0] && clicked === false) {
         clicked = true;
         doubleDown = false;
@@ -568,21 +571,25 @@ function finalCompareGo() { // This should fire up for all players
   if(players.some(e => e.clientId === clientId)) $("#player-result-big").removeClass("hide-element")
 
   if(theClient.sum > 21) {
+    youLose.play();
     $("#player-result-big-answer").text("YOU BUSTED")
     $("#player-result-big-sum").text(theClient.bet)
     $("#player-result-big-plus-minus").text("-")
     $("#player-result-sum-box").addClass("color-red")
   } else if(theClient.blackjack === true) {
+      youWin.play();
       $("#player-result-big-answer").text("BLACKJACK")
       $("#player-result-big-sum").text(1.5 * theClient.bet + theClient.bet)
       $("#player-result-big-plus-minus").text("+")
       $("#player-result-sum-box").addClass("color-green")
     } else if(dealer.sum > 21) {
+        youWin.play();
         $("#player-result-big-answer").text("YOU WIN")
         $("#player-result-big-sum").text(theClient.bet*2)
         $("#player-result-big-plus-minus").text("+")
         $("#player-result-sum-box").addClass("color-green")
       } else if(dealer.sum < theClient.sum) {
+          youWin.play();
           $("#player-result-big-answer").text("YOU WIN")
           $("#player-result-big-sum").text(theClient.bet*2)
           $("#player-result-big-plus-minus").text("+")
@@ -592,6 +599,7 @@ function finalCompareGo() { // This should fire up for all players
             // $("#player-result-big-sum").text(theClient.bet)
             // $("#player-result-big-plus-minus").text("+")
           } else {
+              youLose.play();
               $("#player-result-big-answer").text("DEALER WINS")
               $("#player-result-big-sum").text(theClient.bet)
               $("#player-result-big-plus-minus").text("-")
@@ -720,14 +728,18 @@ function resetGame() {
           playerSlotIndex = x;
           playerSlotHTML[x] = {}
           players.splice(i, 1);
+          game.players.splice(i, 1);
+          console.log(game.players)
         }        
       }
     }
   }
 
+  // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
   for(let i = 0; i < spectators.length; i++) {
     if(spectators[i].hasLeft === true) {
       spectators.splice(i, 1)
+      game.spectators.splice(i, 1);
     }
   }
 
@@ -737,6 +749,7 @@ function resetGame() {
 
   // Reset Players 
   $(".player-bet").text("")
+  $(".player-coin").removeClass("player-coin-animation")
   // $(".player-coin").text("")
   for(let i = 0; i < players.length; i++) {
     players[i].cards = [];
@@ -756,6 +769,7 @@ function resetGame() {
   // getDeck()
   $("#dealerSum").removeClass("current-player-highlight")
   $(".dealer-cards").html(`<div class="visibleCards"></div>`)
+  $(".dealer-cards").css('margin-left', '0');  
 
 
   // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
@@ -1011,7 +1025,6 @@ function outputCardSumAceDealer() {
         // Remove dealer from players array, then compare
         setTimeout(function() {
           resetGameState()
-          console.log("SYNCTHEGAME2")
         }, 4050)
         players.splice(-1)[0]
         finalCompare();
@@ -1028,7 +1041,6 @@ function outputCardSumAceDealer() {
         // Remove dealer from players array, then compare
         setTimeout(function() {
           resetGameState()
-          console.log("SYNCTHEGAME2")
         }, 4050)
         players.splice(-1)[0]
         finalCompare();
@@ -1047,7 +1059,6 @@ function outputCardSumDealer() {
       // Remove dealer from players array, then compare
       setTimeout(function() {
         resetGameState()
-        console.log("SYNCTHEGAME2")
       }, 4050)
       players.splice(-1)[0]
       finalCompare();
@@ -1099,6 +1110,19 @@ function nextPlayer() {
     }
   // }
 
+}
+
+// If players[0] leaves during the initial cards deal
+function hasPlayers0Left() {
+  for(let i = 0; i < players.length; i++) {
+    if(players[currentPlayer] !== undefined && players[currentPlayer].hasLeft === true) {
+      currentPlayer = currentPlayer+1;
+      console.log(1)
+      player = players[currentPlayer];
+    } else {
+      break;
+    }
+  }
 }
 
 // currentPlayer = (currentPlayer+1)%(players.length); <--- cycle through players
@@ -1182,6 +1206,7 @@ $(".update-balance-bet").click(function() {
 
 // CLEAR AND MAX BOTH ACTUAL UPDATE AND CSS UPDATE
 $(".max-clear").click(function() {
+  defaultClick.play();
   console.log(this.innerText)
 for(let i = 0; i < playerSlotHTML.length; i++) {
 if(playerSlotHTML[i] === clientId) {
@@ -1239,7 +1264,9 @@ $("#invite-link").hover(function() {
 
 
 
-
+function exitRoom() {
+  location.reload();
+}
 
 
 

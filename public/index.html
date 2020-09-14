@@ -115,14 +115,17 @@
 
   <div id="game-room" class="hide-element">
 
-  <div id="leave-box">
-    <i class="fas fa-sign-out-alt"></i>
-    <button>EXIT ROOM</button>
-  </div>
+  <!-- <div id="leave-box"> -->
+    <!-- <i class="fas fa-sign-out-alt"></i> -->
+    <button id="leave-button" onclick="exitRoom()">
+      <i class="fas fa-sign-out-alt"></i>
+      EXIT ROOM
+    </button>
+  <!-- </div> -->
 
   <div id="invite-link-box">
     <div id="invite-label">Hover to see invite link</div>
-    <input id="invite-link" type="text" value="Gröt">
+    <input id="invite-link" type="text">
     <button>COPY</button>
   </div>
 
@@ -137,7 +140,26 @@
     <h1>Dealer</h1>
     <div id="dealerSum">sum here</div>
     <div class="dealer-cards">
-      <div class="visibleCards"></div>
+      <div class="visibleCards">
+        <!-- <img class="dealerCardImg" src="/imgs/Diamond7.svg">
+        <img class="dealerCardImg" src="/imgs/Diamond7.svg">
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img class="dealerCardImg card-front" src="/imgs/Card_back.svg">
+            </div>
+            <div class="flip-card-back">
+              <img class="dealerCardImg card-back" src="/imgs/Diamond7.svg">
+            </div>
+          </div>
+        </div> -->
+
+        <!-- <img class="dealerCardImg" src="/imgs/Diamond7.svg"> -->
+        <!-- <img class="dealerCardImg hiddenCard" src="/imgs/Diamond7.svg"> -->
+      </div>
+      <!-- <div class="hiddenCard">
+        <img src="/imgs/Card_back.svg" alt="">
+      </div> -->
     </div>
   </div>
   <button id="play">Play</button>
@@ -423,8 +445,8 @@
     let dealerCards = document.querySelectorAll(".dealer-cards")
     let dealerSlot = document.querySelector("#dealer")
     let playerName = document.querySelectorAll(".player-name")
-    let dealerHiddenCard = null;
-    let dealerHiddenCardRemoveNext = false;
+    // let dealerHiddenCard = null;
+    // let dealerHiddenCardRemoveNext = false;
     let resetCards = false;
 
     const leaveTable = document.querySelector("#leave-table")
@@ -556,7 +578,7 @@
         "player": player,
         "dealer": dealer,
         "dealersTurn": dealersTurn,
-        "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
+        // "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -683,7 +705,7 @@
         "spectators": spectators,
         // "lobbySpectators": lobbySpectators,
         "theClient": theClient,
-        "game": game,
+        "gameId": gameId,
         "playerSlotHTML": playerSlotHTML,
         "players": players,
         "reload": reload,
@@ -841,9 +863,12 @@
 
       // join
       if (response.method === "join") {
+        console.log("asd")
+        console.log(spectators)
         game = response.game;
+        console.log(game.spectators)
         player = game.player
-        spectators = response.spectators
+        spectators = game.spectators
         playerSlotHTML = response.playerSlotHTML
         roomId = response.roomId;
 
@@ -857,7 +882,8 @@
         theClient = response.theClient
         game = response.game
         players = response.players
-        spectators = response.spectators
+        spectators = game.spectators
+        console.log(spectators)
         playerSlotHTML = response.playerSlotHTML
 
         $('#invite-link').val(gameId);
@@ -875,8 +901,8 @@
           </div>
           `;
 
-          dealerHiddenCard = document.querySelector(".hiddenCard")
-          dealerHiddenCardRemoveNext = true;
+          // dealerHiddenCard = document.querySelector(".hiddenCard")
+          // dealerHiddenCardRemoveNext = true;
           }
 
           }
@@ -887,7 +913,7 @@
       // Updated players array (i.e. players[i] = theClient)
       if(response.method === "updateClientArray") {
         players = response.players
-        spectators = response.spectators
+        // spectators = response.spectators
         playerSlotHTML = response.playerSlotHTML
         // player = game.player
 
@@ -913,8 +939,8 @@
           </div>
           `;
 
-          dealerHiddenCard = document.querySelector(".hiddenCard")
-          dealerHiddenCardRemoveNext = true;
+          // dealerHiddenCard = document.querySelector(".hiddenCard")
+          // dealerHiddenCardRemoveNext = true;
           }
 
 
@@ -1031,6 +1057,7 @@
       }
 
       if(response.method === "updatePlayerCards") {
+        dealingSound.play();
         resetCards = response.resetCards
         players = response.players
         player = response.player
@@ -1039,18 +1066,35 @@
 
         for(let i = 0; i < playerSlotHTML.length; i++) {
 
-            if(player.clientId === playerSlotHTML[i]) {
-              z = playerSlotHTML.indexOf(playerSlotHTML[i])
+          if(player.clientId === playerSlotHTML[i]) {
+            z = playerSlotHTML.indexOf(playerSlotHTML[i])
 
             for(let c = 0; c < deckImg.length; c++) {
               if(player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card === deckImg[c]) {
                 playerSlot[z].lastElementChild.innerHTML += 
-                `<img class="cardImg ` + " card" + cardIndex + `" src="/imgs/` + deckImg[c] + `.svg">`
+                `<img class="cardImg` + " card" + cardIndex + ` cardAnimation" src="/imgs/` + deckImg[c] + `.svg" width="100" height="150">`;
+
               }
             }
 
-          }        
+            // Animation
+            setTimeout(function() {
+              $(".players:eq("+playerSlotHTML.indexOf(playerSlotHTML[i])+") .player-cards").children().removeClass("cardAnimation")
+            }, 50)
+
+          }
         }
+        // Animation
+        // // console.log(z)
+        // setTimeout(function() {
+        //   // console.log(z)
+        //   $(".players:eq("+z+") .player-cards").children().removeClass("cardAnimation")
+        // }, 50)
+        
+
+
+        // $(".player-cards:eq("+z+")").children().removeClass("cardAnimation")
+        // playerSlot[z].lastElementChild.children.classList.remove("cardAnimation")
         // if(resetCards === true) {
         //   for(let s = 0; s < playerSlot.length; s++) {
         //     playerSlot[s].lastElementChild.innerHTML = ""
@@ -1062,7 +1106,8 @@
       }
 
       if (response.method === "updateDealerCards") {
-        dealerHiddenCardRemoveNext = response.dealerHiddenCardRemoveNext
+        dealingSound.play();
+        // dealerHiddenCardRemoveNext = response.dealerHiddenCardRemoveNext
         dealersTurn = response.dealersTurn
         if(dealersTurn === false) {
           dealer = response.dealer
@@ -1071,28 +1116,72 @@
           dealer = player
         }
 
-        if(dealer.cards.length === 2 && dealerHiddenCardRemoveNext === true) {
-          dealerHiddenCard.remove()
-          dealerHiddenCardRemoveNext = false;
-        }
+        // if(dealer.cards.length === 2 && dealerHiddenCardRemoveNext === true) {
+        //   dealerHiddenCard.remove()
+        //   dealerHiddenCardRemoveNext = false;
+        // }
+        // $(".flip-card-inner").css('transform') == 'rotateY(-180deg)'
         if(dealer.hiddenCard.length === 0 || dealer.hiddenCard.length === undefined) {
-        
-          for(let c = 0; c < deckImg.length; c++) {
-          if(dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[c]) {
-            dealerSlot.lastElementChild.firstElementChild.innerHTML += 
-            `<img class="dealerCardImg" src="/imgs/` + deckImg[c] + `.svg">`
-          }
+          
+        if($(".flip-card-inner").css('transform') !== "none" || dealer.cards.length === 1) {
+            for(let c = 0; c < deckImg.length; c++) {
+            if(dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[c]) {
+              dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+              `<img class="dealerCardImg cardAnimationDealer" src="/imgs/` + deckImg[c] + `.svg" width="100" height="150">`
+            }
+          }      
         }
+        // Animation
+        setTimeout(function() {
+          $(".visibleCards").children().removeClass("cardAnimationDealer")
+        }, 50)
+
+        if(dealer.hiddenCard.length === 0 && dealer.cards.length === 2) {
+          $(".flip-card-inner").css('transform', 'rotateY(-180deg)');
         } else {
-          dealerSlot.lastElementChild.innerHTML += 
+          $(".dealer-cards").css('margin-left', '-=50px');  
+        }
+
+        } else {
+          // dealerSlot.lastElementChild.innerHTML += 
+          dealerSlot.lastElementChild.firstElementChild.innerHTML +=
           `
-          <div class="hiddenCard">
-            <img src="/imgs/Card_back.svg" alt="">
+          <div class="flip-card cardAnimationDealer">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+
+              </div>
+              <div class="flip-card-back">
+
+              </div>
+            </div>
           </div>
           `;
 
-          dealerHiddenCard = document.querySelector(".hiddenCard")
-          dealerHiddenCardRemoveNext = true;
+          // setTimeout(function() {
+            $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg" width="100" height="150">`)
+            $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card +`.svg" width="100" height="150">`)
+          // }, 1)
+          setTimeout(function() {
+            $(".flip-card").removeClass("cardAnimationDealer")
+          }, 50)
+
+          // dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+          //   `<img class="dealerCardImg" src="/imgs/` + deckImg[c] + `.svg">`
+          // `<img class="dealerCardImg" src="/imgs/Card_back.svg">`;
+          // `
+          // <div class="hiddenCard ">
+          //   <img src="/imgs/Card_back.svg" alt="">
+          // </div>
+          // `;
+          $(".dealer-cards").css('margin-left', '-=50px');
+        // Animation
+        setTimeout(function() {
+          $(".hiddenCard").removeClass("cardAnimationDealer")
+        }, 50)
+
+          // dealerHiddenCard = document.querySelector(".hiddenCard")
+          // dealerHiddenCardRemoveNext = true;
         }
 
 
@@ -1138,6 +1227,17 @@
               console.log("WAIT FOR YOUR TURN")    
             }          
           }
+
+
+        for(let i = 0; i < players.length; i++) {
+          if(players[currentPlayer] !== undefined && players[currentPlayer].hasLeft === true) {
+            currentPlayer = currentPlayer+1;
+            console.log(1)
+            player = players[currentPlayer];
+          } else {
+            break;
+          }
+        }
 
 
         
@@ -1212,10 +1312,8 @@
       // }
 
       if(response.method === "resetGameState") {
-        resetGame(); // Important to send this first, so we can actually reset the game, THEN uptade game state
         game = response.game
-        console.log("resetGameState2")
-        
+        resetGame();  
       }
 
       if(response.method === "redirect") {
@@ -1226,7 +1324,7 @@
 
 
       // This updates theClient and players array accordingly
-      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "leave" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural" || response.method === "getRoute") {
+      if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural" || response.method === "getRoute") {
         return;
       } else {
         updateAllPlayers()
@@ -1339,6 +1437,7 @@
             if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
             if(players[i].bet >= 100000) {chipIndex = "Black"};
             $(".players:eq("+s+") .player-bet").text(players[i].bet)
+            console.log("hahaha")
             $(".players:eq("+s+") .player-coin").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
             console.log(players[i].bet)
             if(players[i].bet > 999) {
@@ -1347,9 +1446,10 @@
               $(".players:eq("+s+") .player-coin").html($(".players:eq("+s+") .player-bet").text() + `<div class="player-bet hide-element"></div>`);
             }
             $(".players:eq("+s+") .player-bet").text(players[i].bet)
+
             setTimeout(function() {
-              $(".players:eq("+s+") .player-coin").css("opacity", "1")
-            }, 100)
+              $(".players:eq("+s+") .player-coin").addClass("player-coin-animation")
+            }, 50)
             
           }
         }
@@ -1378,19 +1478,51 @@
     // Before player exits/resets window, terminate him from the room
     window.addEventListener('beforeunload', function() {
       reload = true;
+      theClient.hasLeft = true;
+      // clientHasLeft();
+      terminatePlayer();
       if(player.clientId === clientId && playersCanPlay === true) {
         sendPlayerNext();
       }
-
-      theClient.hasLeft = true;
-      clientHasLeft()
-      terminatePlayer();
-
-      // HAVE THIS LAST
-      if(clientId === clientDeal && playersCanPlay === false) {
-        resetGameState();
-      }
     });
+
+  </script>
+
+  <!-- Sounds -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js"></script>
+  <script>
+    let dealingSound = new Howl({
+      src: ['sounds/dealing_card_fix3.mp3']
+    });
+    let chipHover = new Howl({
+      src: ['sounds/chip_hover_fix.mp3']
+    });
+    let chipPlace = new Howl({
+      src: ['sounds/chip_place.mp3']
+    });
+    let youWin = new Howl({
+      src: ['sounds/you_win.mp3']
+    });
+    let youLose = new Howl({
+      src: ['sounds/you_lose.mp3']
+    });
+    let actionClick = new Howl({
+      src: ['sounds/actionClick.mp3']
+    });
+    let defaultClick = new Howl({
+      src: ['sounds/click_default.mp3']
+    });
+    let clickFiller = new Howl({
+      src: ['sounds/click_filler.mp3']
+    });
+
+    $(".betButtons").hover(function() {
+      chipHover.play();
+      }, function () {
+        // play nothing when mouse leaves chip
+    });
+
+
 
   </script>
 </body>

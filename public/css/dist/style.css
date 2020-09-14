@@ -36,7 +36,7 @@ body {
 .current-player-highlight {
   color: black !important;
   background-color: #e0e000 !important;
-  transform: scale 1.1 !important;
+  transform: scale(1.1) translateX(-50%) !important;
   transition: 300ms !important;
 }
 
@@ -294,9 +294,12 @@ body {
   width: 260px;
   height: 30px;
   background-color: #0f2014;
-  margin-left: 100px;
+  margin-left: 150px;
   margin-top: 10px;
   z-index: 1;
+}
+#invite-link-box input {
+  text-align: center;
 }
 #invite-link-box #invite-link {
   border: none;
@@ -309,12 +312,11 @@ body {
 }
 #invite-link-box #invite-label {
   position: absolute;
-  background-color: white;
   top: 50%;
   transform: translate(0, -50%);
   padding: 0px 14px;
   background-color: #0f2014;
-  color: white;
+  color: #d84a17;
   pointer-events: none;
 }
 #invite-link-box #invite-label:hover {
@@ -328,9 +330,41 @@ body {
   height: 100%;
   width: 60px;
   border: none;
+  cursor: pointer;
 }
 #invite-link-box button:hover {
   background-color: #1a3f34;
+}
+
+#leave-button {
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 10px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  font-weight: 700;
+  width: fit-content;
+  cursor: pointer;
+  text-align: center;
+  z-index: 10;
+}
+#leave-button i {
+  transform: rotate(180deg);
+}
+
+#leave-button:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+#leave-button:active {
+  color: white;
+  border: 2px solid white;
 }
 
 #player-result-big {
@@ -445,22 +479,22 @@ body {
 
 .player-sum {
   position: absolute;
-  width: 34px;
-  height: 30px;
+  margin: 0 auto;
+  padding: 4px 8px;
   top: -45px;
-  left: 50%;
-  margin-left: -17px;
   color: #e0e000;
   background: rgba(0, 0, 0, 0.8);
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   pointer-events: none;
   z-index: 15;
   opacity: 0;
-  transform: scale(0.5);
+  transform: translateX(-50%) !important;
   transition: 100ms ease-in-out;
+  text-align: center;
+  left: 50%;
+  /* allow the width to be calculated dynamically */
+  width: auto;
 }
 
 .player-result {
@@ -517,7 +551,7 @@ body {
   left: 50%;
   margin-left: -35px;
   top: 50%;
-  margin-top: -35px;
+  margin-top: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -529,7 +563,15 @@ body {
   font-weight: 1000;
   -webkit-text-stroke: 1px black;
   color: gold;
-  transition: 100ms;
+  transform: rotate(-360deg);
+}
+
+.player-coin-animation {
+  position: absolute !important;
+  margin-top: -35px !important;
+  opacity: 1 !important;
+  transition: 200ms !important;
+  transform: rotate(0deg) !important;
 }
 
 .empty-slot {
@@ -602,9 +644,11 @@ i {
 
 .cardImg {
   position: absolute;
+  opacity: 1;
   top: -152px;
   left: 0;
   width: 100px;
+  transition: 500ms;
 }
 
 .card1 {
@@ -672,7 +716,20 @@ i {
 }
 
 .dealerCardImg {
-  width: 100px;
+  transition: 500ms;
+}
+
+.cardAnimation {
+  position: absolute !important;
+  top: -600px !important;
+  transform: rotateZ(90deg) !important;
+  opacity: 0 !important;
+}
+
+.cardAnimationDealer {
+  margin-left: 200px !important;
+  transform: rotateZ(90deg) !important;
+  opacity: 0 !important;
 }
 
 #balance-bet-box {
@@ -699,12 +756,14 @@ i {
 #dealer {
   position: relative;
   margin: 0 auto;
-  height: 150px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  width: 100%;
 }
 #dealer h1 {
   display: flex;
+  justify-content: center;
   align-items: flex-start;
   font-size: 48px;
   color: white;
@@ -714,11 +773,8 @@ i {
 }
 #dealer #dealerSum {
   position: absolute;
-  width: 34px;
-  height: 30px;
-  top: 165px;
-  left: 50%;
-  margin-left: -17px;
+  padding: 4px 8px;
+  top: 170px;
   color: #e0e000;
   background: rgba(0, 0, 0, 0.8);
   border-radius: 4px;
@@ -729,31 +785,27 @@ i {
   pointer-events: none;
   z-index: 4;
   opacity: 0;
-  transform: scale(0.5);
   transition: 100ms ease-in-out;
+  transform: translateX(-50%) !important;
+  left: 50%;
+  /* allow the width to be calculated dynamically */
+  width: auto;
 }
 #dealer .dealer-cards {
-  margin-top: 60px;
-  position: absolute;
-  display: inline-flex;
-  transition: 1s;
-}
-#dealer .visibleCard {
   display: flex;
+  flex-direction: row;
+  position: relative;
+  left: 50%;
+  width: 100%;
+  transition: 500ms;
 }
-#dealer .hiddenCard {
+#dealer .visibleCards {
+  margin: 0 auto;
   position: relative;
   display: flex;
-  height: 150px;
-  width: 100px;
-  text-align: center;
-  margin: 0 auto;
-}
-#dealer .hiddenCard img {
+  flex-direction: row;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
+  transition: 500ms;
 }
 
 #bets-container {
@@ -936,4 +988,33 @@ i {
 
 .ready:active {
   transform: scale(0.95);
+}
+
+.flip-card {
+  background-color: transparent;
+  width: 100px;
+  height: 150px;
+  perspective: 1000px;
+  transition: 500ms;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
 }
