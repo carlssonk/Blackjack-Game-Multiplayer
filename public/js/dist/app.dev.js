@@ -153,11 +153,11 @@ var card = deck.map(function (obj) {
 });
 var value = deck.map(function (obj) {
   return obj.value.value;
-}); // Play Game
-
-play.addEventListener("click", function () {
-  startedGame = true;
-}); // Place Bets
+}); // // Play Game
+// play.addEventListener("click", () => {
+//   startedGame = true;
+// });
+// Place Bets
 
 function playerBets() {
   var _loop = function _loop(b) {
@@ -598,8 +598,8 @@ function resetGame() {
     for (var i = 0; i < players.length; i++) {
       if (players[i].hasLeft === true) {
         if (players[i].clientId === playerSlotHTML[x]) {
-          playerSlot[x].innerHTML = "\n          <div><button class=\"ready hide-element\">PLACE BET</button></div>\n          <div class=\"empty-slot noclick\"><i class=\"fas fa-user-plus\"></i></div>\n          <div class=\"player-name hide-element\">name here<span class=\"hide-element\"><img class=\"player-avatar\" src=\"\" alt=\"avatar\"></span></div>\n          <div class=\"player-sum\">sum here</div>\n          <div class=\"player-coin hide-element\">bet here<div class=\"player-bet hide-element\"></div></div>\n          <div class=\"player-result hide-element\">Win/Lose/Draw</div>\n          <div class=\"player-cards\">\n    \n          </div>\n          ";
-          playerSlot[x].classList.remove("player-left");
+          playerSlot[x].innerHTML = "\n          <div><button class=\"ready hide-element\">PLACE BET</button></div>\n          <div class=\"empty-slot noclick\"><i class=\"fas fa-user-plus\"></i></div>\n          <div class=\"player-name hide-element\"><span class=\"hide-element\"><img class=\"player-avatar\" src=\"\" alt=\"avatar\"></span></div>\n          <div class=\"player-sum\"></div>\n          <div class=\"player-coin hide-element\"><div class=\"player-bet hide-element\"></div></div>\n          <div class=\"player-result hide-element\"></div>\n          <div class=\"player-cards\">\n    \n          </div>\n          ";
+          playerSlot[x].classList.remove("player-left", "plug");
           playerSlotIndex = x;
           playerSlotHTML[x] = {};
           players.splice(i, 1);
@@ -667,6 +667,7 @@ function resetGame() {
   $(".user-action-box").removeClass("noclick");
   $("#total-bet").text("");
   $("#player-result-big").addClass("hide-element");
+  $("#join-mid-game-label").addClass("hide-element");
   $("#player-result-sum-box").removeClass("color-green color-red");
   $("#player-result-big-answer").text("");
   $("#player-result-big-sum").text("");
@@ -678,11 +679,16 @@ function resetGame() {
     if (players[_i3].clientId === clientId) {
       $("#bets-container").removeClass("noclick");
     }
-  }
+  } // If player does not sit on slot
+
 
   if (!players.some(function (e) {
     return e.clientId === clientId;
-  })) $(".empty-slot").removeClass("noclick");
+  })) $(".empty-slot").removeClass("noclick"); // If player does sit on slot
+
+  if (players.some(function (e) {
+    return e.clientId === clientId;
+  })) $("#leave-table").removeClass("noclick");
   $(".player-result").addClass("hide-element");
   $(".player-result").removeClass("result-lose result-draw result-win result-blackjack");
   $(".player-sum").css({
@@ -1016,7 +1022,7 @@ $("#about").click(function () {
   bool = !bool;
 
   if (bool === true) {
-    $("#about-box").css("top", "504px");
+    $("#about-box").css("top", "506px");
   } else {
     $("#about-box").css("top", "");
   }
@@ -1103,3 +1109,39 @@ $("#invite-link").hover(function () {
 function exitRoom() {
   location.reload();
 } // ########## DOM MANIPULATION ##########
+// MAIN MENU SLIDESHOW
+
+
+var slideIndex = 1;
+showSlides(slideIndex); // Next/previous controls
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+} // Thumbnail image controls
+
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("slideAvatars"); // let dots = document.getElementsByClassName("dot");
+
+  if (n > slides.length) {
+    slideIndex = 1;
+  }
+
+  if (n < 1) {
+    slideIndex = slides.length;
+  }
+
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  } // for (i = 0; i < dots.length; i++) {
+  //     dots[i].className = dots[i].className.replace(" active", "");
+  // }
+
+
+  slides[slideIndex - 1].style.display = "block"; // dots[slideIndex-1].className += " active";
+}

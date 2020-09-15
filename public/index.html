@@ -81,9 +81,45 @@
     <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
     <div id="main-box">
       <div id="avatar-box">
-        <i class="fas fa-chevron-left"></i>
-        <img src="/imgs/avatars/zimmster.png" alt="avatar" width="80">
-        <i class="fas fa-chevron-right"></i>
+        <button class="prev" onclick="plusSlides(-1)">
+          <i class="fas fa-chevron-left"></i>          
+        </button>
+        <span class="slideAvatars" data-value="user">
+          <div class="numbertext">1 / 8</div>
+          <img src="/imgs/avatars/user.svg" alt="avatar">
+        </span>
+        <span class="slideAvatars" data-value="mafia">
+          <div class="numbertext">2 / 8</div>
+          <img src="/imgs/avatars/mafia.svg" alt="avatar">
+        </span>
+        <span class="slideAvatars" data-value="casino">
+          <div class="numbertext">3 / 8</div>
+          <img src="/imgs/avatars/casino.svg" alt="avatar">
+        </span> 
+        <span class="slideAvatars" data-value="baby">
+          <div class="numbertext">4 / 8</div>
+          <img src="/imgs/avatars/baby.svg" alt="avatar">
+        </span> 
+        <span class="slideAvatars" data-value="terrorist">
+          <div class="numbertext">5 / 8</div>
+          <img src="/imgs/avatars/terrorist.svg" alt="avatar">
+        </span> 
+        <span class="slideAvatars" data-value="detective">
+          <div class="numbertext">6 / 8</div>
+          <img src="/imgs/avatars/detective.svg" alt="avatar">
+        </span> 
+        <span class="slideAvatars" data-value="work-out">
+          <div class="numbertext">7 / 8</div>
+          <img src="/imgs/avatars/work-out.svg" alt="avatar">
+        </span> 
+        <span class="slideAvatars" data-value="manager">
+          <div class="numbertext">8 / 8</div>
+          <img src="/imgs/avatars/manager.svg" alt="avatar">
+        </span>
+        <button class="next" onclick="plusSlides(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
       </div>
       <div>
         <input id="nickname" type="text" placeholder="Nickname" maxlength="12">
@@ -122,6 +158,10 @@
       EXIT ROOM
     </button>
   <!-- </div> -->
+  <button id="leave-table" class="noclick">
+    <i class="far fa-arrow-alt-circle-left"></i>
+    LEAVE TABLE
+  </button>
 
   <div id="invite-link-box">
     <div id="invite-label">Hover to see invite link</div>
@@ -135,6 +175,10 @@
       <span id="player-result-big-plus-minus"></span>
       <span id="player-result-big-sum"></span>
     </div>
+  </div>
+
+  <div id="join-mid-game-label" class="hide-element">
+    Game currently running...
   </div>
   <div id="dealer">
     <h1>Dealer</h1>
@@ -162,7 +206,6 @@
       </div> -->
     </div>
   </div>
-  <button id="play">Play</button>
   <div class="user-action-container hide-element">
     <div id="your-turn-label">MAKE A DECISION</div>
     <div class="user-action-box">
@@ -301,7 +344,6 @@
 
 
   </div>
-  <button id="leave-table">Leave Table</button>
   <!-- <div id="dealer">
     <h2>Dealer</h2>
     <div id="dealerSum">sum here</div>
@@ -312,9 +354,6 @@
  
     </div>
   </div> -->
-  <div>
-      <button>Go To Table</button>
-  </div>
   <div id="balance-bet-box">
     <div class="balance-bet">
       Balance
@@ -436,6 +475,7 @@
 
     // CSS
     let nickname = document.querySelector("#nickname");
+    let avatar = document.querySelectorAll(".slideAvatars")
     let playersLength = null;
     let theSlot = null;
     let z = null; // last player table index
@@ -517,6 +557,7 @@
       $("#total-bet").text(theClient.bet)
       $("#balance").text(theClient.balance)
       $("#bets-container").addClass("noclick");
+      $("#leave-table").addClass("noclick");
       if(gameOn === false) {
           $(".empty-slot").removeClass("noclick")
         }
@@ -530,6 +571,9 @@
     function playerJoin() {
       nickname = nickname.value
       theClient.nickname = nickname.value
+
+      avatar = avatar[slideIndex-1].dataset.value
+      theClient.avatar = avatar
       // if (gameId === null) {
       //   gameId = txtGameId.value;
       // }
@@ -543,7 +587,8 @@
         "playerSlotHTML": playerSlotHTML, 
         "players": players,
         "spectators": spectators,
-        "nickname": nickname
+        "nickname": nickname,
+        "avatar": avatar
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -814,10 +859,10 @@
             `
             <div><button class="ready hide-element">PLACE BET</button></div>
             <div class="empty-slot"><i class="fas fa-user-plus"></i></div>
-            <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-            <div class="player-sum">sum here</div>
-            <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
-            <div class="player-result hide-element">Win/Lose/Draw</div>
+            <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+            <div class="player-sum"></div>
+            <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
+            <div class="player-result hide-element"></div>
             <div class="player-cards">
 
             </div>
@@ -831,12 +876,12 @@
           if(!$(".empty-slot").is("noclick")) $(".empty-slot").addClass("noclick");
         }
 
-        // if(players.some(players => players.clientId === clientId)) $(".empty-slot").addClass("noclick");
 
-        if(gameOn === true) {
-          $(".empty-slot").addClass("noclick")
-          playerSlot[playerSlotIndex].classList.add("player-left")
-        }
+        // If player not sits on a slot
+          if(gameOn === true) {
+            $(".empty-slot").addClass("noclick")
+            playerSlot[playerSlotIndex].classList.add("player-left", "plug");
+          }
 
         if(game.players.length === 0 && $("#dealerSum").text().length > 0) {
           dealersTurn = true;
@@ -942,6 +987,11 @@
         //   // dealerHiddenCard = document.querySelector(".hiddenCard")
         //   // dealerHiddenCardRemoveNext = true;
         //   }
+
+        // Add invite link to input
+        $('#invite-link').val(gameId);
+        // Add label that says game is currently running
+        $("#join-mid-game-label").removeClass("hide-element")
 
 
 
@@ -1052,7 +1102,10 @@
 
       if (response.method === "joinMidGameUpdate") {
         spectators = response.spectators;
+        console.log(players)
+        console.log(currentPlayer)
 
+        if(players.length > 0) {
         // Send dealersHiddenCard to the new player who joined
         const payLoad = {
           "method": "dealersHiddenCard",
@@ -1063,6 +1116,23 @@
           ws.send(JSON.stringify(payLoad));          
         }
         console.log("A PLAYER JOINED")
+        // Reset the game if players array is not in the spectators array
+        if(players.length === 1 && players[0].hasLeft === true) {
+          // dry block of code, it just adds hasLeft to spectators array so we can later delete it in resetGame();
+            for(let i = 0; i < players.length; i++) {
+              for(let s = 0; s < spectators.length; s++) {
+                if(players[i].hasLeft === true) {
+                  if(spectators[s].clientId === players[i].clientId) {
+                    spectators[s].hasLeft = true;
+                  }
+                }
+              }
+            }
+          resetGame();
+        }
+        } else {
+          resetGame();
+        }        
       }
 
     if (response.method === "dealersHiddenCard") {
@@ -1240,6 +1310,15 @@
         dealer = response.dealer;
         deck = response.deck;
         gameOn = response.gameOn;
+        
+        // If every player in players arras has left, reset game
+        setTimeout(function() {
+          if(players.every(player => player.hasLeft)) {
+            resetGame();
+          }
+        }, 50)
+
+
       }
 
       // the playe
@@ -1313,6 +1392,16 @@
         theClient = response.theClient
         playerSlotHTML = response.playerSlotHTML
 
+        // Set player Name & player Avatar
+        for(let i = 0; i < playerSlotHTML.length; i++) {
+          for(let x = 0; x < players.length; x++) {
+            if(players[x].clientId === playerSlotHTML[i]) {
+              if(players[x].nickname === "") players[x].nickname = "Player";
+              playerSlot[theSlot].firstElementChild.nextElementSibling.nextElementSibling.innerText = players[x].nickname
+              playerSlot[theSlot].firstElementChild.nextElementSibling.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
+            }
+          }
+        }
       }
 
       if(response.method === "dealersTurn") {
@@ -1350,6 +1439,7 @@
           }
         }
         if(!$(".empty-slot").hasClass("noclick")) $(".empty-slot").addClass("noclick");
+        if(!$("#leave-table").hasClass("noclick")) $("#leave-table").addClass("noclick");
       }
 
       // if(!gameOn) {
@@ -1415,10 +1505,11 @@
             playerSlot[z].firstElementChild.nextElementSibling.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
             // playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
-            if(players[x].nickname === "") players[x].nickname = "Player";
-            playerSlot[z].firstElementChild.nextElementSibling.innerText = players[x].nickname
-            playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="" alt="avatar"></span>`
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].sum
+            console.log("asd")
+            // console.log(playerSlot[z].firstElementChild.nextElementSibling.innerHTML)
+            // playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
+            // console.log(playerSlot[z].firstElementChild.nextElementSibling.innerHTML)
             // playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
             // Player busts
             if(players[x].sum > 21) {
@@ -1466,6 +1557,7 @@
             // Make player text yellow
             $(this).children("div:nth-child(3)").addClass("highlight")
             $("#bets-container").removeClass("noclick")
+            $("#leave-table").removeClass("noclick")
             $(".empty-slot").addClass("noclick");
           }
         })
@@ -1500,6 +1592,7 @@
             $(".players:eq("+s+") .player-bet").text(players[i].bet)
 
             setTimeout(function() {
+              console.log("PLAYER COIN ANIMATION")
               $(".players:eq("+s+") .player-coin").addClass("player-coin-animation")
             }, 50)
             
@@ -1531,11 +1624,15 @@
     window.addEventListener('beforeunload', function() {
       reload = true;
       theClient.hasLeft = true;
-      // clientHasLeft();
       terminatePlayer();
       if(player.clientId === clientId && playersCanPlay === true) {
         sendPlayerNext();
       }
+      if(clientDeal === clientId && playersCanPlay === false) {
+        resetGameState();
+      }
+      // Have terminate player as last
+      terminatePlayer();
     });
 
   </script>

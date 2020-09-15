@@ -241,10 +241,10 @@ let card = deck.map(obj => (obj.value.card))
 let value = deck.map(obj => (obj.value.value))
 
 
-// Play Game
-play.addEventListener("click", () => {
-  startedGame = true;
-});
+// // Play Game
+// play.addEventListener("click", () => {
+//   startedGame = true;
+// });
 
 // Place Bets
 function playerBets() {
@@ -716,15 +716,15 @@ function resetGame() {
           `
           <div><button class="ready hide-element">PLACE BET</button></div>
           <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
-          <div class="player-name hide-element">name here<span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-          <div class="player-sum">sum here</div>
-          <div class="player-coin hide-element">bet here<div class="player-bet hide-element"></div></div>
-          <div class="player-result hide-element">Win/Lose/Draw</div>
+          <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+          <div class="player-sum"></div>
+          <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
+          <div class="player-result hide-element"></div>
           <div class="player-cards">
     
           </div>
           `
-          playerSlot[x].classList.remove("player-left")
+          playerSlot[x].classList.remove("player-left", "plug")
           playerSlotIndex = x;
           playerSlotHTML[x] = {}
           players.splice(i, 1);
@@ -794,10 +794,12 @@ function resetGame() {
   $(".user-action-box").removeClass("noclick")
   $("#total-bet").text("")
   $("#player-result-big").addClass("hide-element")
+  $("#join-mid-game-label").addClass("hide-element")
   $("#player-result-sum-box").removeClass("color-green color-red")
   $("#player-result-big-answer").text("")
   $("#player-result-big-sum").text("")
   $("#player-result-big-plus-minus").text("")
+
 
   $(".players .player-coin").css("background", "")
   $(".players .player-coin").css("opacity", "")
@@ -807,7 +809,11 @@ function resetGame() {
       $("#bets-container").removeClass("noclick");
     }
   }
+
+  // If player does not sit on slot
   if(!players.some(e => e.clientId === clientId)) $(".empty-slot").removeClass("noclick");
+  // If player does sit on slot
+  if(players.some(e => e.clientId === clientId)) $("#leave-table").removeClass("noclick");
 
   $(".player-result").addClass("hide-element")
   $(".player-result").removeClass("result-lose result-draw result-win result-blackjack")
@@ -1173,7 +1179,7 @@ if(window.location.href.length > 22) {
 $("#about").click(function() {
   bool = !bool;
   if(bool === true) {
-    $("#about-box").css("top", "504px")
+    $("#about-box").css("top", "506px")
   } else {
     $("#about-box").css("top", "")
   }
@@ -1272,4 +1278,39 @@ function exitRoom() {
 
 
 // ########## DOM MANIPULATION ##########
+
+
+
+
+
+// MAIN MENU SLIDESHOW
+
+let slideIndex = 1;
+showSlides(slideIndex);
+
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("slideAvatars");
+  // let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  // for (i = 0; i < dots.length; i++) {
+  //     dots[i].className = dots[i].className.replace(" active", "");
+  // }
+  slides[slideIndex-1].style.display = "block";
+  // dots[slideIndex-1].className += " active";
+}
 

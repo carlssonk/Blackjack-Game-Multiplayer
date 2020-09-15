@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html {
   overflow: hidden;
   font-family: "Open Sans", sans-serif;
@@ -21,6 +22,20 @@ body {
 
 .player-left {
   opacity: 0.3;
+}
+
+.plug::before {
+  position: absolute;
+  transform: rotate(-30deg);
+  bottom: 0;
+  right: -15px;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "";
+  z-index: 30;
+  color: #bb0000;
+  font-size: 36px;
+  opacity: 1;
 }
 
 .noclick {
@@ -102,16 +117,54 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 4px;
 }
 #main-box #avatar-box i {
   color: black;
-  padding: 6px 12px;
+  padding: 6px;
   font-weight: 700;
   font-size: 18px;
-  cursor: pointer;
 }
-#main-box #avatar-box i:hover {
+#main-box #avatar-box button:nth-of-type(1) i {
+  margin-right: 6px;
+}
+#main-box #avatar-box button:nth-of-type(2) i {
+  margin-left: 6px;
+}
+#main-box #avatar-box .slideAvatars {
+  position: relative;
+  border: 2px solid black;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  width: 80px;
+  height: 80px;
+}
+#main-box #avatar-box .slideAvatars img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+}
+#main-box #avatar-box .slideAvatars .numbertext {
+  position: absolute;
+  left: 50%;
+  bottom: -38px;
+  font-size: 12px;
+  transform: translateX(-50%);
+  color: white;
+  opacity: 0.8;
+}
+#main-box #avatar-box button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: none;
+}
+#main-box #avatar-box button:hover i {
   color: rgba(255, 255, 255, 0.8);
+}
+#main-box #avatar-box button:active i {
+  transform: scale(0.9);
 }
 #main-box input {
   width: 45%;
@@ -248,7 +301,7 @@ body {
   margin: 0 auto;
   border-radius: 0px 0px 8px 0px;
   background-color: #e9e9e9;
-  top: 308px;
+  top: 312px;
   z-index: -1;
   transition: 250ms;
 }
@@ -367,6 +420,35 @@ body {
   border: 2px solid white;
 }
 
+#leave-table {
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  font-weight: 700;
+  width: fit-content;
+  cursor: pointer;
+  text-align: center;
+  z-index: 10;
+}
+#leave-table i {
+  color: lime;
+}
+
+#leave-table:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+#leave-table:active {
+  color: white;
+}
+
 #player-result-big {
   position: absolute;
   width: 400px;
@@ -396,6 +478,17 @@ body {
   color: #f20000;
 }
 
+#join-mid-game-label {
+  position: absolute;
+  left: 50%;
+  margin-top: 280px;
+  display: inline-block;
+  font-size: 18px;
+  color: white;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
 #players-container {
   position: absolute;
   width: 80%;
@@ -406,7 +499,6 @@ body {
   display: flex;
   /* flex-flow: wrap; */
   /* flex-direction: row; */
-  border: 2px solid black;
   color: black;
   text-align: center;
   justify-content: space-between;
@@ -735,8 +827,8 @@ i {
 #balance-bet-box {
   position: absolute;
   display: flex;
-  bottom: 50px;
-  width: 200px;
+  bottom: 40px;
+  width: 250px;
   color: white;
   text-align: center;
   border-radius: 10px;
@@ -746,8 +838,9 @@ i {
   background-color: rgba(0, 0, 0, 0.658);
   padding: 4px;
   border: 1px solid white;
-  width: 100px;
+  width: 125px;
   border-radius: 10px;
+  margin-left: 10px;
 }
 .balance-bet #total-bet {
   color: #e0e000;
@@ -848,7 +941,7 @@ i {
 #bets-container .max-clear {
   border-radius: 10px;
   height: 30px;
-  background-color: white;
+  background-color: rgba(0, 0, 0, 0.4);
   border: 2px solid black;
 }
 #bets-container #chip10 {

@@ -95,6 +95,7 @@ wsServer.on("request", request => {
       console.log("join")
       console.log("---------")
       const nickname = result.nickname
+      const avatar = result.avatar
       const gameId = result.gameId;
       const roomId = result.roomId;
       let theClient = result.theClient;
@@ -110,6 +111,9 @@ wsServer.on("request", request => {
       // const partyId = result.partyId;
 
       theClient.nickname = nickname
+      theClient.avatar = avatar
+
+      console.log(theClient.avatar)
 
       if (game.spectators.length >= 7) {
         // Max players reached
@@ -601,7 +605,7 @@ wsServer.on("request", request => {
             if(spectators[s].clientId === players[i].clientId) {
               spectators[s].hasLeft = true;
             }
-          }          
+          }
         }
       }
 
@@ -614,8 +618,11 @@ wsServer.on("request", request => {
       console.log("ÅÄÖ")
       console.log(game.spectators)
       console.log(spectators)
+      console.log(reload)
+      console.log(reload)
 
-      if(gameOn === false) {
+      if(gameOn === false || spectators.length === 1) {
+        // if(spectators.length === 1) gameOn = false;
 
         // If player reloads page, remove him from spectators array
         if(reload === true) {
@@ -648,6 +655,7 @@ wsServer.on("request", request => {
       game.spectators = spectators;
       game.players = players;
       game.playerSlotHTML = playerSlotHTML;
+      // game.gameOn = gameOn
 
       console.log(game.spectators)
       console.log("ÅÄÖ")
@@ -852,6 +860,7 @@ wsServer.on("request", request => {
       // The client object
       let theClient = {
         "nickname": "",
+        "avatar": "",
         "cards": [],
         "bet": 0,
         "balance": 100000,

@@ -93,6 +93,7 @@ wsServer.on("request", function (request) {
       console.log("join");
       console.log("---------");
       var nickname = result.nickname;
+      var avatar = result.avatar;
       var _gameId = result.gameId;
       var _roomId = result.roomId;
       var _theClient2 = result.theClient;
@@ -107,6 +108,8 @@ wsServer.on("request", function (request) {
       var _playerSlotHTML2 = game.playerSlotHTML; // const partyId = result.partyId;
 
       _theClient2.nickname = nickname;
+      _theClient2.avatar = avatar;
+      console.log(_theClient2.avatar);
 
       if (game.spectators.length >= 7) {
         // Max players reached
@@ -568,8 +571,11 @@ wsServer.on("request", function (request) {
       console.log("ÅÄÖ");
       console.log(_game3.spectators);
       console.log(_spectators14);
+      console.log(reload);
+      console.log(reload);
 
-      if (_gameOn3 === false) {
+      if (_gameOn3 === false || _spectators14.length === 1) {
+        // if(spectators.length === 1) gameOn = false;
         // If player reloads page, remove him from spectators array
         if (reload === true) {
           // Terminate player from spectators  
@@ -600,7 +606,8 @@ wsServer.on("request", function (request) {
 
       _game3.spectators = _spectators14;
       _game3.players = _players14;
-      _game3.playerSlotHTML = _playerSlotHTML4;
+      _game3.playerSlotHTML = _playerSlotHTML4; // game.gameOn = gameOn
+
       console.log(_game3.spectators);
       console.log("ÅÄÖ");
       var _payLoad15 = {
@@ -782,6 +789,7 @@ wsServer.on("request", function (request) {
 
   var theClient = {
     "nickname": "",
+    "avatar": "",
     "cards": [],
     "bet": 0,
     "balance": 100000,
