@@ -934,25 +934,22 @@
 
         $('#invite-link').val(gameId);
 
-        // If client joins mid game
-        if(game.gameOn === true) {
-          gameOn = game.gameOn
-          dealer = game.dealer
-          player = game.player
-          if(dealer.hiddenCard.length > 0) {
-            dealerSlot.lastElementChild.innerHTML += 
-          `
-          <div class="hiddenCard">
-            <img src="/imgs/Card_back.svg" alt="">
-          </div>
-          `;
 
-          // dealerHiddenCard = document.querySelector(".hiddenCard")
-          // dealerHiddenCardRemoveNext = true;
+        // retrieve all the names and avatars for all the players currently on the table
+        setTimeout(function() {
+          for(let i = 0; i < playerSlotHTML.length; i++) {
+            for(let x = 0; x < players.length; x++) {
+              if(players[x].clientId === playerSlotHTML[i]) {
+                z = playerSlotHTML.indexOf(playerSlotHTML[i])
+                if(players[x].nickname === "") players[x].nickname = "Player";
+                playerSlot[z].firstElementChild.nextElementSibling.innerText = players[x].nickname
+                playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
+              }
+            }
           }
+        }, 50)
 
-          }
-        }
+      }
 
 
 
@@ -1396,9 +1393,10 @@
         for(let i = 0; i < playerSlotHTML.length; i++) {
           for(let x = 0; x < players.length; x++) {
             if(players[x].clientId === playerSlotHTML[i]) {
+              z = playerSlotHTML.indexOf(playerSlotHTML[i])
               if(players[x].nickname === "") players[x].nickname = "Player";
-              playerSlot[theSlot].firstElementChild.nextElementSibling.nextElementSibling.innerText = players[x].nickname
-              playerSlot[theSlot].firstElementChild.nextElementSibling.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
+              playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerText = players[x].nickname
+              playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
             }
           }
         }
@@ -1492,6 +1490,7 @@
 
         // }
       }
+
 
 
       // UPDATE STYLE ON TABLE
