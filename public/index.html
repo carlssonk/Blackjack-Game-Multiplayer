@@ -88,31 +88,31 @@
           <div class="numbertext">1 / 8</div>
           <img src="/imgs/avatars/user.svg" alt="avatar">
         </span>
-        <span class="slideAvatars" data-value="mafia">
+        <span class="slideAvatars" data-value="mafia" style="display: none;">
           <div class="numbertext">2 / 8</div>
           <img src="/imgs/avatars/mafia.svg" alt="avatar">
         </span>
-        <span class="slideAvatars" data-value="casino">
+        <span class="slideAvatars" data-value="casino" style="display: none;">
           <div class="numbertext">3 / 8</div>
           <img src="/imgs/avatars/casino.svg" alt="avatar">
         </span> 
-        <span class="slideAvatars" data-value="baby">
+        <span class="slideAvatars" data-value="baby" style="display: none;">
           <div class="numbertext">4 / 8</div>
           <img src="/imgs/avatars/baby.svg" alt="avatar">
         </span> 
-        <span class="slideAvatars" data-value="terrorist">
+        <span class="slideAvatars" data-value="terrorist" style="display: none;">
           <div class="numbertext">5 / 8</div>
           <img src="/imgs/avatars/terrorist.svg" alt="avatar">
         </span> 
-        <span class="slideAvatars" data-value="detective">
+        <span class="slideAvatars" data-value="detective" style="display: none;">
           <div class="numbertext">6 / 8</div>
           <img src="/imgs/avatars/detective.svg" alt="avatar">
         </span> 
-        <span class="slideAvatars" data-value="work-out">
+        <span class="slideAvatars" data-value="work-out" style="display: none;">
           <div class="numbertext">7 / 8</div>
           <img src="/imgs/avatars/work-out.svg" alt="avatar">
         </span> 
-        <span class="slideAvatars" data-value="manager">
+        <span class="slideAvatars" data-value="manager" style="display: none;">
           <div class="numbertext">8 / 8</div>
           <img src="/imgs/avatars/manager.svg" alt="avatar">
         </span>
@@ -175,6 +175,11 @@
       <span id="player-result-big-plus-minus"></span>
       <span id="player-result-big-sum"></span>
     </div>
+  </div>
+
+  <div id="deal-start-label" class="hide-element">
+    <p>Deal starts in <span id="seconds">59</span><span>.</span><span id="milliseconds">9</span></p>
+    <!-- </span><span>.</span><span id="milliseconds"></span> -->
   </div>
 
   <div id="join-mid-game-label" class="hide-element">
@@ -306,6 +311,31 @@
       </div>
     </span>
   </div>
+
+  <div id="players-timer-container">
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+    <svg class="players-timer">
+      <circle class="" cx="50" cy="50" r="48" stroke-width="4" fill="transparent"/>
+    </svg>
+  </div>
+
   <div id="bets-container" class="noclick">
     <span>
       <button class="max-clear update-balance-bet">CLEAR</button>
@@ -935,7 +965,7 @@
         $('#invite-link').val(gameId);
 
 
-        // retrieve all the names and avatars for all the players currently on the table
+        // get all the names and avatars for all the players currently on the table when client joins and a player already is on a slot
         setTimeout(function() {
           for(let i = 0; i < playerSlotHTML.length; i++) {
             for(let x = 0; x < players.length; x++) {
@@ -1327,9 +1357,11 @@
 
           // Highlight current player sum so we know who's turn it is
           $(".player-sum").removeClass("current-player-highlight")
+          $(".players-timer circle").removeClass("circle-animation")
           for(let i = 0; i < playerSlotHTML.length; i++) {
             if(playerSlotHTML[i] === player.clientId) {
               $(".player-sum:eq("+i+")").addClass("current-player-highlight")
+              $(".players-timer:eq("+i+") circle").addClass("circle-animation")
             }
           }
 
@@ -1389,7 +1421,7 @@
         theClient = response.theClient
         playerSlotHTML = response.playerSlotHTML
 
-        // Set player Name & player Avatar
+        // Set player Name & player Avatar when someone joins table
         for(let i = 0; i < playerSlotHTML.length; i++) {
           for(let x = 0; x < players.length; x++) {
             if(players[x].clientId === playerSlotHTML[i]) {
@@ -1406,6 +1438,7 @@
         dealersTurn = response.dealersTurn
         console.log(dealersTurn)
         if(dealersTurn === true) {
+          $(".players-timer circle").removeClass("circle-animation")
           $(".player-sum").removeClass("current-player-highlight");
           $("#dealerSum").addClass("current-player-highlight");
         }

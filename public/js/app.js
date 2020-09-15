@@ -769,6 +769,7 @@ function resetGame() {
   // getDeck()
   dealersHiddenCard = "";
   $("#dealerSum").removeClass("current-player-highlight")
+  $(".players-timer circle").removeClass("circle-animation")
   $(".dealer-cards").html(`<div class="visibleCards"></div>`)
   $(".dealer-cards").css('margin-left', '0');  
 
@@ -792,7 +793,7 @@ function resetGame() {
   console.log(gameOn)
   playersCanPlay = false;
   $(".user-action-box").removeClass("noclick")
-  $("#total-bet").text("")
+  $("#total-bet").text("0")
   $("#player-result-big").addClass("hide-element")
   $("#join-mid-game-label").addClass("hide-element")
   $("#player-result-sum-box").removeClass("color-green color-red")
@@ -1242,7 +1243,11 @@ if(playerSlotHTML[i] === clientId) {
     $("#balance").text(theClient.balance)
     for(let i = 0; i < playerSlotHTML.length; i++) {
       if(playerSlotHTML[i] === clientId) {
-        $(".ready:eq("+i+")").removeClass("hide-element")
+        if(theClient.balance === 0 && theClient.bet === 0) {
+          alert("Need more balance")
+        } else {
+          $(".ready:eq("+i+")").removeClass("hide-element")
+        }
       }
     }
   }
@@ -1301,16 +1306,72 @@ function currentSlide(n) {
 function showSlides(n) {
   let i;
   let slides = document.getElementsByClassName("slideAvatars");
-  // let dots = document.getElementsByClassName("dot");
   if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
   for (i = 0; i < slides.length; i++) {
       slides[i].style.display = "none";
   }
-  // for (i = 0; i < dots.length; i++) {
-  //     dots[i].className = dots[i].className.replace(" active", "");
-  // }
   slides[slideIndex-1].style.display = "block";
-  // dots[slideIndex-1].className += " active";
 }
+
+
+
+
+// COUNTDOWN TIMER
+
+function setTimer(duration) {
+  let timer = duration, seconds;
+  let countdown = 41;
+  let timeUntilDeal = setInterval(function () { // Seconds counter
+    seconds = parseInt(timer % 30, 10);
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    document.getElementById("seconds").innerHTML = seconds;
+
+
+    if (--timer < 0) {
+      timer = duration;
+    }
+      
+    // CLEARS TIMER
+    countdown--
+    if(countdown === 0) { //if countdown is 0 or all players is ready, clear timeouts
+      clearInterval(timeUntilDeal);
+      clearInterval(timeUntilDealExtra);
+      document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
+      $("#deal-start-label").addClass("hide-element")
+    }
+    console.log(countdown)
+  }, 1000);
+
+  let decisecond = 9
+  let timeUntilDealExtra = setInterval(function() { // Milliseconds counter
+    if(decisecond === 0) {
+      decisecond = 9
+    } else {
+      decisecond--
+    }
+    document.getElementById("milliseconds").innerHTML = decisecond;
+  }, 100)
+}
+
+function startTimer() {
+  let fortySeconds = 40
+  setTimer(fortySeconds);
+  setTimeout(function() {
+    $("#deal-start-label").removeClass("hide-element")
+  }, 2000)
+};
+
+
+// function displayCount(count) {
+//   let res = Math.floor(count / 1000);
+//   let milliseconds = count.toString().substr(-3);
+//   let seconds = res % 60;
+//   let minutes = (res - seconds) / 60;
+
+//   document.getElementById("demo").innerHTML =
+//       minutes + ' min ' + seconds + ' s ' + milliseconds + ' ms';
+// }
+
 
