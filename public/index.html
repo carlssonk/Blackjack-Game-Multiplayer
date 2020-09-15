@@ -423,8 +423,9 @@
     let doubleDown = null;
     let reload = null;
     let cardIndex = null;
-    let cardIndexJoin = 1;
+    let cardIndexJoin = 0;
     let playerNaturalIndex = null;
+    let dealersHiddenCard = "";
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
@@ -924,27 +925,27 @@
       if (response.method === "joinMidGame") {
         theClient = response.theClient
         game = response.game
-
         // spectators = game.spectators
         players = game.players
         playerSlotHTML = game.playerSlotHTML
         player = game.player
         dealer = game.dealer
         gameOn = game.gameOn
-        if(dealer.hiddenCard.length > 0) {
-          dealerSlot.lastElementChild.innerHTML += 
-          `
-          <div class="hiddenCard">
-            <img src="/imgs/Card_back.svg" alt="">
-          </div>
-          `;
+        // if(dealer.hiddenCard.length > 0) {
+        //   dealerSlot.lastElementChild.innerHTML += 
+        //   `
+        //   <div class="hiddenCard">
+        //     <img src="/imgs/Card_back.svg" alt="">
+        //   </div>
+        //   `;
 
-          // dealerHiddenCard = document.querySelector(".hiddenCard")
-          // dealerHiddenCardRemoveNext = true;
-          }
+        //   // dealerHiddenCard = document.querySelector(".hiddenCard")
+        //   // dealerHiddenCardRemoveNext = true;
+        //   }
 
 
 
+        // Show the Player on the table
           for(let x = 0; x < players.length; x++) {
             for(let i = 0; i < playerSlotHTML.length; i++) {
               if(players[x].clientId === playerSlotHTML[i]) {
@@ -960,17 +961,17 @@
 
           // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
           for(let i = 0; i < players.length; i++) {
-          cardIndexJoin = 1;
             for(let d = 0; d < deckImg.length; d++) {
               for(let c = 0; c < players[i].cards.length; c++) {
 
                 if(players[i].cards[c].suit + players[i].cards[c].value.card === deckImg[d]) {
-
                   // Now apply the cards to the right table slot.
                   for(let s = 0; s < playerSlotHTML.length; s++) {
                     if(players[i].clientId === playerSlotHTML[s]) {
+                      cardIndexJoin++
+                      console.log(3)
                       playerSlot[s].lastElementChild.innerHTML += 
-                      `<img class="cardImg` + " card" + cardIndexJoin++ + `" src="/imgs/` + deckImg[c] + `.svg">`;
+                      `<img class="cardImg` + " card" + cardIndexJoin + `" src="/imgs/` + deckImg[d] + `.svg" width="100" height="150">`;
                     }
                   }
                 }
@@ -984,10 +985,43 @@
             for(let c = 0; c < dealer.cards.length; c++) {
               if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
                 dealerSlot.lastElementChild.firstElementChild.innerHTML += 
-                `<img class="dealerCardImg" src="/imgs/` + deckImg[d] + `.svg">`
+                `<img class="dealerCardImg" src="/imgs/` + deckImg[d] + `.svg" width="100" height="150">`
               }
             }
           }
+        }
+
+        // Update DEALER HIDDEN CARD IF USER JOINS MID GAME
+        if(dealer.hiddenCard.length === 0 || dealer.hiddenCard.length === undefined) {
+          return;
+        } else {
+          dealerSlot.lastElementChild.firstElementChild.innerHTML +=
+          `
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+
+              </div>
+              <div class="flip-card-back">
+
+              </div>
+            </div>
+          </div>
+          `;
+          $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg" width="100" height="150">`)
+          // for(let d = 0; d < deckImg.length; d++) {
+          //   for(let c = 0; c < dealer.cards.length; c++) {
+          //     if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
+
+          //     }
+          //   }
+          // }
+          setTimeout(function() {
+            console.log(dealersHiddenCard)
+            $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealersHiddenCard +`.svg" width="100" height="150">`)
+          }, 50)
+          // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg" width="100" height="150">`)
+          $(".dealer-cards").css('margin-left', '-=100px');
         }
 
         // Update player sum if user joins mid game
@@ -1017,13 +1051,23 @@
       }
 
       if (response.method === "joinMidGameUpdate") {
-        spectators = response.spectators
-        console.log("A PLAYER JOINED")
-        console.log("A PLAYER JOINED")
-        console.log("A PLAYER JOINED")
-        console.log("A PLAYER JOINED")
+        spectators = response.spectators;
+
+        // Send dealersHiddenCard to the new player who joined
+        const payLoad = {
+          "method": "dealersHiddenCard",
+          "spectators": spectators,
+          "dealersHiddenCard": dealersHiddenCard
+        }
+        if(players[currentPlayer].clientId === clientId) {
+          ws.send(JSON.stringify(payLoad));          
+        }
         console.log("A PLAYER JOINED")
       }
+
+    if (response.method === "dealersHiddenCard") {
+      dealersHiddenCard = response.dealersHiddenCard
+    }
 
       // bet
       if (response.method === "bet") {
@@ -1161,6 +1205,7 @@
           // setTimeout(function() {
             $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg" width="100" height="150">`)
             $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card +`.svg" width="100" height="150">`)
+            dealersHiddenCard = dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card
           // }, 1)
           setTimeout(function() {
             $(".flip-card").removeClass("cardAnimationDealer")
@@ -1350,7 +1395,14 @@
           // players[i] = theClient
           theClient = players[i]
         }
+
+        // Keep the values for game array in sync, so when a player joins mid game, everything will display correctly.
+        // for(let g = 0; g < game.players.length; g++) {
+        //   game.players[g].cards = players[i].cards 
+
+        // }
       }
+
 
       // UPDATE STYLE ON TABLE
       for(let i = 0; i < playerSlotHTML.length; i++) {

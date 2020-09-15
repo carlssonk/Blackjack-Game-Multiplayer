@@ -737,6 +737,19 @@ wsServer.on("request", function (request) {
       }
     }
 
+    if (result.method === "dealersHiddenCard") {
+      var _spectators21 = result.spectators;
+      var dealersHiddenCard = result.dealersHiddenCard;
+      var _payLoad21 = {
+        "method": "dealersHiddenCard",
+        "dealersHiddenCard": dealersHiddenCard
+      };
+
+      _spectators21.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad21));
+      });
+    }
+
     if (result.method === "syncGame") {
       var _gameId8 = result.gameId;
       var _game7 = games[_gameId8];
@@ -744,7 +757,7 @@ wsServer.on("request", function (request) {
       var _dealer3 = result.dealer;
       var _players19 = result.players;
       var _player5 = result.player;
-      var _spectators21 = result.spectators;
+      var _spectators22 = result.spectators;
       var _playerSlotHTML5 = result.playerSlotHTML;
 
       if (_game7 === undefined) {
@@ -756,7 +769,7 @@ wsServer.on("request", function (request) {
       _game7.dealer = _dealer3;
       _game7.players = _players19;
       _game7.player = _player5;
-      _game7.spectators = _spectators21;
+      _game7.spectators = _spectators22;
       _game7.playerSlotHTML = _playerSlotHTML5;
     }
   }); // The ClientId

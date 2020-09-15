@@ -767,6 +767,7 @@ function resetGame() {
   // Reset Deck
   deck = [];
   // getDeck()
+  dealersHiddenCard = "";
   $("#dealerSum").removeClass("current-player-highlight")
   $(".dealer-cards").html(`<div class="visibleCards"></div>`)
   $(".dealer-cards").css('margin-left', '0');  

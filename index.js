@@ -799,6 +799,20 @@ wsServer.on("request", request => {
 
     }
 
+    if(result.method === "dealersHiddenCard") {
+      const spectators = result.spectators
+      const dealersHiddenCard = result.dealersHiddenCard
+
+      const payLoad = {
+        "method": "dealersHiddenCard",
+        "dealersHiddenCard": dealersHiddenCard
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
+
 
     if(result.method === "syncGame") {
       const gameId = result.gameId;
