@@ -272,11 +272,13 @@ wsServer.on("request", function (request) {
       var _players3 = result.players;
       var _spectators3 = result.spectators;
       var deck = result.deck;
+      var clientDeal = result.clientDeal;
       var _gameOn = result.gameOn;
       var _payLoad4 = {
         "method": "deck",
         "deck": deck,
-        "gameOn": _gameOn
+        "gameOn": _gameOn,
+        "clientDeal": clientDeal
       };
 
       _spectators3.forEach(function (c) {
@@ -537,8 +539,13 @@ wsServer.on("request", function (request) {
       var _playerSlotHTML4 = result.playerSlotHTML;
       var reload = result.reload;
       var _gameOn3 = result.gameOn;
-      console.log(_players14);
-      console.log(_spectators14); // To prevent error when user disconnects outside a game
+      var _player5 = result.player;
+      var _clientDeal = result.clientDeal;
+      var playersCanPlay = result.playersCanPlay; // Remove players from player array if the client with the dealscript leaves during 2 card deal phase
+      // if(playersCanPlay === false && clientDeal === theClient.clientId) {
+      //   players = [];
+      // }
+      // To prevent error when user disconnects outside a game
 
       if (_game3 === undefined) {
         _game3 = {
@@ -610,6 +617,8 @@ wsServer.on("request", function (request) {
 
       console.log(_game3.spectators);
       console.log("ÅÄÖ");
+      console.log(_players14);
+      console.log(_game3.players);
       var _payLoad15 = {
         "method": "leave",
         "playerSlotIndex": playerSlotIndex,
@@ -763,7 +772,7 @@ wsServer.on("request", function (request) {
       var _gameOn4 = result.gameOn;
       var _dealer3 = result.dealer;
       var _players19 = result.players;
-      var _player5 = result.player;
+      var _player6 = result.player;
       var _spectators22 = result.spectators;
       var _playerSlotHTML5 = result.playerSlotHTML;
 
@@ -775,7 +784,7 @@ wsServer.on("request", function (request) {
       _game7.gameOn = _gameOn4;
       _game7.dealer = _dealer3;
       _game7.players = _players19;
-      _game7.player = _player5;
+      _game7.player = _player6;
       _game7.spectators = _spectators22;
       _game7.playerSlotHTML = _playerSlotHTML5;
     }

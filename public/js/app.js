@@ -30,7 +30,7 @@ let showSum = false;
 let chipIndex = null;
 let playersCanPlay = false;
 // resetCards = false;
-let clientDeal = null;
+let clientDeal = {};
 
 // Cards (suit)
 const suit = ["Heart", "Diamond", "Spade", "Club"]
@@ -270,6 +270,7 @@ function playerBets() {
   $(document).on("click", ".ready", function() {
     chipPlace.play();
     sendPlayerBets()
+    $("#leave-table").addClass("noclick");
     $(".ready").addClass("hide-element")
     player = players[currentPlayer];
     updateCurrentPlayer()
@@ -277,15 +278,21 @@ function playerBets() {
     clientIsReady()
 
     // Check if all players is ready
-    if(players.every(player => player.isReady)) {
-      gameOn = true;
-      clientDeal = clientId;
-      getDeck();
-      sendPlayerDeck();
-      setTimeout(dealCards, 1000);
+    if(players.every(player => player.isReady === true) && gameOn === false) {
+      console.log("ONLY ONE")
+      startDeal();
     }
 
   });
+
+  function startDeal() {
+    console.log("startDeal")
+    gameOn = true;
+    clientDeal = clientId;
+    getDeck();
+    sendPlayerDeck();
+    setTimeout(dealCards, 1000);        
+  }
 
 
 
@@ -414,9 +421,11 @@ function naturalPlayerAceSum(i) {
 
 
 function thePlay() {
+  // Show thePlay buttons (Hit Stand And DoubleDown)
   $(".user-action-container").removeClass("hide-element")
-  // Alert current player
-  // player.alert.....
+  // Set 30 second timer for player
+  startPlayTimer()
+
   for(let i = 0; i < userAction.length; i++) {
     userAction[i].addEventListener("click", function() {
       actionClick.play();
@@ -425,6 +434,7 @@ function thePlay() {
         doubleDown = false;
 
         $(".user-action-container").addClass("hide-element")
+        clearInterval(thePlayTime);
         $(".user-action-box").last().addClass("noclick")
         // for(let i = 0; i < game.players.length; i++) {
         //   for(let x = 0; x < players.length; x++) {
@@ -450,6 +460,7 @@ function thePlay() {
         doubleDown = false;
 
         $(".user-action-container").addClass("hide-element")
+        clearInterval(thePlayTime);
         $(".user-action-box").last().addClass("noclick")
         playerHit() 
         // updatePlayers();
@@ -460,6 +471,7 @@ function thePlay() {
 
         
         $(".user-action-container").addClass("hide-element")
+        clearInterval(thePlayTime);
         playerDoubleDown();
         // updatePlayers();
 
@@ -708,32 +720,7 @@ function dealerWin(i) {
 
 function resetGame() {
 
-  for(let x = 0; x < playerSlotHTML.length; x++) {
-    for(let i = 0; i < players.length; i++) {    
-      if(players[i].hasLeft === true) {
-        if(players[i].clientId === playerSlotHTML[x]) {
-          playerSlot[x].innerHTML = 
-          `
-          <div><button class="ready hide-element">PLACE BET</button></div>
-          <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
-          <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-          <div class="player-sum"></div>
-          <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
-          <div class="player-result hide-element"></div>
-          <div class="player-cards">
-    
-          </div>
-          `
-          playerSlot[x].classList.remove("player-left", "plug")
-          playerSlotIndex = x;
-          playerSlotHTML[x] = {}
-          players.splice(i, 1);
-          game.players.splice(i, 1);
-          console.log(game.players)
-        }        
-      }
-    }
-  }
+  terminatePlayerFromSlot()
 
   // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
   for(let i = 0; i < spectators.length; i++) {
@@ -783,14 +770,12 @@ function resetGame() {
   storedPlayers = [];
   playersReady = 0;
   resetCards = true;
+  timerStarted = false;
   dealersTurn = false;
   startedGame = false;
   doubleDown = false;
   gameOn = false;
-  console.log(gameOn)
-  console.log(gameOn)
-  console.log(gameOn)
-  console.log(gameOn)
+  game.gameOn = false
   playersCanPlay = false;
   $(".user-action-box").removeClass("noclick")
   $("#total-bet").text("0")
@@ -834,6 +819,36 @@ function resetGame() {
   // updateCurrentPlayer();
   // updatePlayers();
   console.log("resetGameState1")
+}
+
+function terminatePlayerFromSlot() {
+  for(let x = 0; x < playerSlotHTML.length; x++) {
+    for(let i = 0; i < players.length; i++) {    
+      if(players[i].hasLeft === true) {
+        if(players[i].clientId === playerSlotHTML[x]) {
+          playerSlot[x].innerHTML = 
+          `
+          <div><button class="ready hide-element">PLACE BET</button></div>
+          <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
+          <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+          <div class="player-sum"></div>
+          <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
+          <div class="player-result hide-element"></div>
+          <div class="player-cards">
+    
+          </div>
+          `
+          playerSlot[x].classList.remove("player-left", "plug")
+          // playerSlotIndex = x;
+          playerSlotHTML[x] = {}
+          game.playerSlotHTML[x] = {}
+          players.splice(i, 1);
+          game.players.splice(i, 1);
+          console.log(game.players)
+        }        
+      }
+    }
+  }    
 }
 
 // *************************************************************
@@ -1321,9 +1336,9 @@ function showSlides(n) {
 
 function setTimer(duration) {
   let timer = duration, seconds;
-  let countdown = 41;
+  let countdown = 40;
   let timeUntilDeal = setInterval(function () { // Seconds counter
-    seconds = parseInt(timer % 30, 10);
+    seconds = parseInt(timer % 40, 10);
     seconds = seconds < 10 ? "0" + seconds : seconds;
 
     document.getElementById("seconds").innerHTML = seconds;
@@ -1335,13 +1350,23 @@ function setTimer(duration) {
       
     // CLEARS TIMER
     countdown--
-    if(countdown === 0) { //if countdown is 0 or all players is ready, clear timeouts
+    if(countdown === 0 || players.every(player => player.isReady)) { //if countdown is 0 or all players is ready, clear timeouts
       clearInterval(timeUntilDeal);
       clearInterval(timeUntilDealExtra);
       document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
       $("#deal-start-label").addClass("hide-element")
+      // If not all players are ready when countdown is 0
+      if(players.some(player => player.isReady === false && gameOn === false)) {
+        for(let i = 0; i < players.length; i++) {
+          if(players[i].isReady === false) {
+            if(players[i].clientId === clientId) {
+              joined = false;
+              terminatePlayer();
+            }
+          }
+        }        
+      }
     }
-    console.log(countdown)
   }, 1000);
 
   let decisecond = 9
@@ -1356,11 +1381,29 @@ function setTimer(duration) {
 }
 
 function startTimer() {
-  let fortySeconds = 40
+  let fortySeconds = 38
   setTimer(fortySeconds);
-  setTimeout(function() {
-    $("#deal-start-label").removeClass("hide-element")
-  }, 2000)
+  $("#deal-start-label").removeClass("hide-element")
+};
+
+
+function startPlayTimer() {
+  let thirtySeconds = 30
+  let thePlayTime = setInterval(function() {
+    thirtySeconds--
+
+    // Alert with sound when theres 10 seconds left
+    if(thirtySeconds === 5) {
+      timerRunningOut.play()
+    }
+
+    // Go to next player when time runs out
+    if(thirtySeconds === 0) {
+      sendPlayerNext();
+      $(".user-action-container").addClass("hide-element")
+    }
+
+  }, 1000)
 };
 
 
@@ -1372,6 +1415,35 @@ function startTimer() {
 
 //   document.getElementById("demo").innerHTML =
 //       minutes + ' min ' + seconds + ' s ' + milliseconds + ' ms';
+// }
+
+// function removePlayerFromSlotTimer(i) {
+//   console.log(players[i].clientId)
+//   console.log(clientId)
+//   for(let x = 0; x < playerSlotHTML.length; x++) { 
+//     if(players[i].clientId === playerSlotHTML[x]) {
+//       playerSlot[x].innerHTML = 
+//       `
+//       <div><button class="ready hide-element">PLACE BET</button></div>
+//       <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
+//       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+//       <div class="player-sum"></div>
+//       <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
+//       <div class="player-result hide-element"></div>
+//       <div class="player-cards">
+
+//       </div>
+//       `
+//       playerSlot[x].classList.remove("player-left", "plug")
+//       playerSlotHTML[x] = {};
+//       game.playerSlotHTML[x] = {}
+//       console.log(players[i].clientId)
+//       console.log(clientId)
+//       players.splice(i, 1);
+//       game.players.splice(i, 1);
+//       break;
+//     }
+//   }    
 // }
 
 

@@ -297,12 +297,14 @@ wsServer.on("request", request => {
       const players = result.players
       const spectators = result.spectators
       const deck = result.deck
+      const clientDeal = result.clientDeal
       const gameOn = result.gameOn
 
       const payLoad = {
         "method": "deck",
         "deck": deck,
-        "gameOn": gameOn
+        "gameOn": gameOn,
+        "clientDeal": clientDeal
       }
 
       spectators.forEach(c => {
@@ -582,9 +584,15 @@ wsServer.on("request", request => {
       let playerSlotHTML = result.playerSlotHTML;
       const reload = result.reload;
       const gameOn = result.gameOn;
+      const player = result.player;
+      const clientDeal = result.clientDeal;
+      const playersCanPlay = result.playersCanPlay;
 
-      console.log(players)
-      console.log(spectators)
+
+      // Remove players from player array if the client with the dealscript leaves during 2 card deal phase
+      // if(playersCanPlay === false && clientDeal === theClient.clientId) {
+      //   players = [];
+      // }
 
       // To prevent error when user disconnects outside a game
       if(game === undefined) {
@@ -659,6 +667,8 @@ wsServer.on("request", request => {
 
       console.log(game.spectators)
       console.log("ÅÄÖ")
+      console.log(players)
+      console.log(game.players)
       
       const payLoad = {
         "method": "leave",

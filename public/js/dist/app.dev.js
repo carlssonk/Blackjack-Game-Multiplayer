@@ -28,7 +28,7 @@ var showSum = false;
 var chipIndex = null;
 var playersCanPlay = false; // resetCards = false;
 
-var clientDeal = null; // Cards (suit)
+var clientDeal = {}; // Cards (suit)
 
 var suit = ["Heart", "Diamond", "Spade", "Club"]; // Cards (values)
 
@@ -186,6 +186,7 @@ function playerBets() {
 $(document).on("click", ".ready", function () {
   chipPlace.play();
   sendPlayerBets();
+  $("#leave-table").addClass("noclick");
   $(".ready").addClass("hide-element");
   player = players[currentPlayer];
   updateCurrentPlayer();
@@ -193,15 +194,22 @@ $(document).on("click", ".ready", function () {
   clientIsReady(); // Check if all players is ready
 
   if (players.every(function (player) {
-    return player.isReady;
-  })) {
-    gameOn = true;
-    clientDeal = clientId;
-    getDeck();
-    sendPlayerDeck();
-    setTimeout(dealCards, 1000);
+    return player.isReady === true;
+  }) && gameOn === false) {
+    console.log("ONLY ONE");
+    startDeal();
   }
-}); // ***************INITIALIZE ROUND / ROUND START*******************
+});
+
+function startDeal() {
+  console.log("startDeal");
+  gameOn = true;
+  clientDeal = clientId;
+  getDeck();
+  sendPlayerDeck();
+  setTimeout(dealCards, 1000);
+} // ***************INITIALIZE ROUND / ROUND START*******************
+
 
 function dealCards() {
   // Set current player
@@ -328,8 +336,10 @@ function naturalPlayerAceSum(i) {
 
 
 function thePlay() {
-  $(".user-action-container").removeClass("hide-element"); // Alert current player
-  // player.alert.....
+  // Show thePlay buttons (Hit Stand And DoubleDown)
+  $(".user-action-container").removeClass("hide-element"); // Set 30 second timer for player
+
+  startPlayTimer();
 
   for (var i = 0; i < userAction.length; i++) {
     userAction[i].addEventListener("click", function () {
@@ -339,6 +349,7 @@ function thePlay() {
         clicked = true;
         doubleDown = false;
         $(".user-action-container").addClass("hide-element");
+        clearInterval(thePlayTime);
         $(".user-action-box").last().addClass("noclick"); // for(let i = 0; i < game.players.length; i++) {
         //   for(let x = 0; x < players.length; x++) {
         //     game.players[i].sum = players[x].sum
@@ -357,12 +368,14 @@ function thePlay() {
         clicked = true;
         doubleDown = false;
         $(".user-action-container").addClass("hide-element");
+        clearInterval(thePlayTime);
         $(".user-action-box").last().addClass("noclick");
         playerHit(); // updatePlayers();
       } else if (this === userAction[2] && theClient.balance >= theClient.bet && clicked === false) {
         clicked = true;
         doubleDown = true;
         $(".user-action-container").addClass("hide-element");
+        clearInterval(thePlayTime);
         playerDoubleDown(); // updatePlayers();
       }
     }, {
@@ -594,27 +607,12 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  for (var x = 0; x < playerSlotHTML.length; x++) {
-    for (var i = 0; i < players.length; i++) {
-      if (players[i].hasLeft === true) {
-        if (players[i].clientId === playerSlotHTML[x]) {
-          playerSlot[x].innerHTML = "\n          <div><button class=\"ready hide-element\">PLACE BET</button></div>\n          <div class=\"empty-slot noclick\"><i class=\"fas fa-user-plus\"></i></div>\n          <div class=\"player-name hide-element\"><span class=\"hide-element\"><img class=\"player-avatar\" src=\"\" alt=\"avatar\"></span></div>\n          <div class=\"player-sum\"></div>\n          <div class=\"player-coin hide-element\"><div class=\"player-bet hide-element\"></div></div>\n          <div class=\"player-result hide-element\"></div>\n          <div class=\"player-cards\">\n    \n          </div>\n          ";
-          playerSlot[x].classList.remove("player-left", "plug");
-          playerSlotIndex = x;
-          playerSlotHTML[x] = {};
-          players.splice(i, 1);
-          game.players.splice(i, 1);
-          console.log(game.players);
-        }
-      }
-    }
-  } // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
+  terminatePlayerFromSlot(); // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
 
-
-  for (var _i = 0; _i < spectators.length; _i++) {
-    if (spectators[_i].hasLeft === true) {
-      spectators.splice(_i, 1);
-      game.spectators.splice(_i, 1);
+  for (var i = 0; i < spectators.length; i++) {
+    if (spectators[i].hasLeft === true) {
+      spectators.splice(i, 1);
+      game.spectators.splice(i, 1);
     }
   } // Reset Players 
 
@@ -622,13 +620,13 @@ function resetGame() {
   $(".player-bet").text("");
   $(".player-coin").removeClass("player-coin-animation"); // $(".player-coin").text("")
 
-  for (var _i2 = 0; _i2 < players.length; _i2++) {
-    players[_i2].cards = [];
-    players[_i2].hasAce = false;
-    players[_i2].sum = null;
-    players[_i2].isReady = false;
-    players[_i2].blackjack = false;
-    players[_i2].bet = 0;
+  for (var _i = 0; _i < players.length; _i++) {
+    players[_i].cards = [];
+    players[_i].hasAce = false;
+    players[_i].sum = null;
+    players[_i].isReady = false;
+    players[_i].blackjack = false;
+    players[_i].bet = 0;
   } // Reset Dealer
 
 
@@ -656,14 +654,12 @@ function resetGame() {
   storedPlayers = [];
   playersReady = 0;
   resetCards = true;
+  timerStarted = false;
   dealersTurn = false;
   startedGame = false;
   doubleDown = false;
   gameOn = false;
-  console.log(gameOn);
-  console.log(gameOn);
-  console.log(gameOn);
-  console.log(gameOn);
+  game.gameOn = false;
   playersCanPlay = false;
   $(".user-action-box").removeClass("noclick");
   $("#total-bet").text("0");
@@ -676,8 +672,8 @@ function resetGame() {
   $(".players .player-coin").css("background", "");
   $(".players .player-coin").css("opacity", "");
 
-  for (var _i3 = 0; _i3 < players.length; _i3++) {
-    if (players[_i3].clientId === clientId) {
+  for (var _i2 = 0; _i2 < players.length; _i2++) {
+    if (players[_i2].clientId === clientId) {
       $("#bets-container").removeClass("noclick");
     }
   } // If player does not sit on slot
@@ -713,6 +709,25 @@ function resetGame() {
 
 
   console.log("resetGameState1");
+}
+
+function terminatePlayerFromSlot() {
+  for (var x = 0; x < playerSlotHTML.length; x++) {
+    for (var i = 0; i < players.length; i++) {
+      if (players[i].hasLeft === true) {
+        if (players[i].clientId === playerSlotHTML[x]) {
+          playerSlot[x].innerHTML = "\n          <div><button class=\"ready hide-element\">PLACE BET</button></div>\n          <div class=\"empty-slot noclick\"><i class=\"fas fa-user-plus\"></i></div>\n          <div class=\"player-name hide-element\"><span class=\"hide-element\"><img class=\"player-avatar\" src=\"\" alt=\"avatar\"></span></div>\n          <div class=\"player-sum\"></div>\n          <div class=\"player-coin hide-element\"><div class=\"player-bet hide-element\"></div></div>\n          <div class=\"player-result hide-element\"></div>\n          <div class=\"player-cards\">\n    \n          </div>\n          ";
+          playerSlot[x].classList.remove("player-left", "plug"); // playerSlotIndex = x;
+
+          playerSlotHTML[x] = {};
+          game.playerSlotHTML[x] = {};
+          players.splice(i, 1);
+          game.players.splice(i, 1);
+          console.log(game.players);
+        }
+      }
+    }
+  }
 } // *************************************************************
 // ******************PLAYER ACTION ANSWERS**********************
 
@@ -1081,12 +1096,12 @@ $(".max-clear").click(function () {
         $("#total-bet").text(theClient.bet);
         $("#balance").text(theClient.balance);
 
-        for (var _i4 = 0; _i4 < playerSlotHTML.length; _i4++) {
-          if (playerSlotHTML[_i4] === clientId) {
+        for (var _i3 = 0; _i3 < playerSlotHTML.length; _i3++) {
+          if (playerSlotHTML[_i3] === clientId) {
             if (theClient.balance === 0 && theClient.bet === 0) {
               alert("Need more balance");
             } else {
-              $(".ready:eq(" + _i4 + ")").removeClass("hide-element");
+              $(".ready:eq(" + _i3 + ")").removeClass("hide-element");
             }
           }
         }
@@ -1152,10 +1167,10 @@ function showSlides(n) {
 function setTimer(duration) {
   var timer = duration,
       seconds;
-  var countdown = 41;
+  var countdown = 40;
   var timeUntilDeal = setInterval(function () {
     // Seconds counter
-    seconds = parseInt(timer % 30, 10);
+    seconds = parseInt(timer % 40, 10);
     seconds = seconds < 10 ? "0" + seconds : seconds;
     document.getElementById("seconds").innerHTML = seconds;
 
@@ -1166,16 +1181,29 @@ function setTimer(duration) {
 
     countdown--;
 
-    if (countdown === 0) {
+    if (countdown === 0 || players.every(function (player) {
+      return player.isReady;
+    })) {
       //if countdown is 0 or all players is ready, clear timeouts
       clearInterval(timeUntilDeal);
       clearInterval(timeUntilDealExtra);
       document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
 
-      $("#deal-start-label").addClass("hide-element");
-    }
+      $("#deal-start-label").addClass("hide-element"); // If not all players are ready when countdown is 0
 
-    console.log(countdown);
+      if (players.some(function (player) {
+        return player.isReady === false && gameOn === false;
+      })) {
+        for (var i = 0; i < players.length; i++) {
+          if (players[i].isReady === false) {
+            if (players[i].clientId === clientId) {
+              joined = false;
+              terminatePlayer();
+            }
+          }
+        }
+      }
+    }
   }, 1000);
   var decisecond = 9;
   var timeUntilDealExtra = setInterval(function () {
@@ -1191,11 +1219,28 @@ function setTimer(duration) {
 }
 
 function startTimer() {
-  var fortySeconds = 40;
+  var fortySeconds = 38;
   setTimer(fortySeconds);
-  setTimeout(function () {
-    $("#deal-start-label").removeClass("hide-element");
-  }, 2000);
+  $("#deal-start-label").removeClass("hide-element");
+}
+
+;
+
+function startPlayTimer() {
+  var thirtySeconds = 30;
+  var thePlayTime = setInterval(function () {
+    thirtySeconds--; // Alert with sound when theres 10 seconds left
+
+    if (thirtySeconds === 5) {
+      timerRunningOut.play();
+    } // Go to next player when time runs out
+
+
+    if (thirtySeconds === 0) {
+      sendPlayerNext();
+      $(".user-action-container").addClass("hide-element");
+    }
+  }, 1000);
 }
 
 ; // function displayCount(count) {
@@ -1205,4 +1250,31 @@ function startTimer() {
 //   let minutes = (res - seconds) / 60;
 //   document.getElementById("demo").innerHTML =
 //       minutes + ' min ' + seconds + ' s ' + milliseconds + ' ms';
+// }
+// function removePlayerFromSlotTimer(i) {
+//   console.log(players[i].clientId)
+//   console.log(clientId)
+//   for(let x = 0; x < playerSlotHTML.length; x++) { 
+//     if(players[i].clientId === playerSlotHTML[x]) {
+//       playerSlot[x].innerHTML = 
+//       `
+//       <div><button class="ready hide-element">PLACE BET</button></div>
+//       <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
+//       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
+//       <div class="player-sum"></div>
+//       <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
+//       <div class="player-result hide-element"></div>
+//       <div class="player-cards">
+//       </div>
+//       `
+//       playerSlot[x].classList.remove("player-left", "plug")
+//       playerSlotHTML[x] = {};
+//       game.playerSlotHTML[x] = {}
+//       console.log(players[i].clientId)
+//       console.log(clientId)
+//       players.splice(i, 1);
+//       game.players.splice(i, 1);
+//       break;
+//     }
+//   }    
 // }

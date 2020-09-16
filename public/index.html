@@ -178,12 +178,12 @@
   </div>
 
   <div id="deal-start-label" class="hide-element">
-    <p>Deal starts in <span id="seconds">59</span><span>.</span><span id="milliseconds">9</span></p>
+    <p>Waiting for bets <span id="seconds">39</span><span>.</span><span id="milliseconds">9</span></p>
     <!-- </span><span>.</span><span id="milliseconds"></span> -->
   </div>
 
   <div id="join-mid-game-label" class="hide-element">
-    Game currently running...
+    Game currently ongoing...
   </div>
   <div id="dealer">
     <h1>Dealer</h1>
@@ -495,6 +495,7 @@
     let cardIndexJoin = 0;
     let playerNaturalIndex = null;
     let dealersHiddenCard = "";
+    let timerStarted = false;
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
@@ -588,9 +589,12 @@
       $("#balance").text(theClient.balance)
       $("#bets-container").addClass("noclick");
       $("#leave-table").addClass("noclick");
-      if(gameOn === false) {
-          $(".empty-slot").removeClass("noclick")
-        }
+      $(".empty-slot").addClass("noclick")
+      // setTimeout(function() {
+        // if(gameOn === false) {
+        //   $(".empty-slot").removeClass("noclick")
+        // }
+      // }, 50)
       terminatePlayer();
     });
 
@@ -665,6 +669,7 @@
         "players": players,
         "spectators": spectators,
         "deck": deck,
+        "clientDeal": clientDeal,
         "gameOn": gameOn
       }
       ws.send(JSON.stringify(payLoad));
@@ -699,7 +704,7 @@
         "spectators": spectators,
         "dealer": dealer,
         "deck": deck,
-        "gameOn": gameOn,
+        "gameOn": gameOn
       }
       ws.send(JSON.stringify(payLoad));
     }
@@ -785,6 +790,9 @@
         "playerSlotHTML": playerSlotHTML,
         "players": players,
         "reload": reload,
+        "clientDeal": clientDeal,
+        "playersCanPlay": playersCanPlay,
+        "player": player,
         "gameOn": gameOn
       }
       ws.send(JSON.stringify(payLoad));
@@ -873,14 +881,42 @@
         reload = false;
         gameOn = response.gameOn;
 
-        // // Terminate player from playerSlotHTML
-        // for(let i = 0; i < playerSlotHTML.length; i++) {
-        //   if(clientId === playerSlotHTML[i]) {
-        //     playerSlotIndex = i;
+
+        for(let i = 0; i < players.length; i++) {
+          if(players[i].hasLeft === true){
+            if(playersCanPlay === false && players[i].clientId === clientDeal) {
+              resetGameState();
+            }
+          }
+        }
+
+        // Check if all players on the table are ready
+        // if(players.every(player => player.isReady) && gameOn === false) {
+        //   // Just make the first player in array get the execute script
+        //   if(players[0].clientId === clientId) {
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     console.log("NO")
+        //     gameOn = true
+        //     clientDeal = players[0].clientId;
+        //     getDeck();
+        //     sendPlayerDeck();
+        //     setTimeout(dealCards(), 1000);            
         //   }
         // }
 
-
+        console.log(gameOn)
+        console.log(gameOn)
+        console.log(gameOn)
+        console.log(gameOn)
+        console.log(gameOn)
+        console.log(gameOn)
         if(gameOn === false) {
           if(playerSlotIndex === undefined || playerSlotIndex === null) {
             return;
@@ -908,6 +944,7 @@
 
 
         // If player not sits on a slot
+        console.log("LEAVE")
           if(gameOn === true) {
             $(".empty-slot").addClass("noclick")
             playerSlot[playerSlotIndex].classList.add("player-left", "plug");
@@ -923,6 +960,9 @@
         // if(players[players.findIndex(players => players.hasLeft === false)].clientId === clientId) {
         //   sendPlayerNext();
         // }
+        if(gameOn === false && players.every(player => player.isReady)) {
+          if(players[0].clientId === clientId && gameOn === false) startDeal();
+        }
 
 
       }
@@ -1033,7 +1073,18 @@
             }
           }
 
-          
+
+        // get all the names and avatars for all the players currently on the table when client joins and a player already is on a slot
+          for(let i = 0; i < playerSlotHTML.length; i++) {
+            for(let x = 0; x < players.length; x++) {
+              if(players[x].clientId === playerSlotHTML[i]) {
+                z = playerSlotHTML.indexOf(playerSlotHTML[i])
+                if(players[x].nickname === "") players[x].nickname = "Player";
+                playerSlot[z].firstElementChild.nextElementSibling.innerText = players[x].nickname
+                playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
+              }
+            }
+          }
 
 
           // UPDATE PLAYER CARDS IF A USER JOINS MID GAME
@@ -1174,16 +1225,30 @@
       // deck
       if (response.method === "deck") {
         players = mapOrder(players, playerSlotHTML, 'clientId');
-        // console.log(players)
-        // console.log('Ordered:', JSON.stringify(players));
-        // console.log(JSON.stringify(players));
         deck = response.deck;
+        clientDeal = response.clientDeal
         gameOn = response.gameOn
+
+                // Optimize this later so it doesnt fire like every second
+        if(gameOn) {
+          for(let i = 0; i < players.length; i++) {
+            if(players[i].clientId === clientId) {
+              $("#bets-container").addClass("noclick");
+            }
+          }
+          $(".empty-slot").addClass("noclick");
+          $("#leave-table").addClass("noclick");
+          $("#deal-start-label").addClass("hide-element")
+        }
       }
 
       if (response.method === "isReady") {
         players = response.players;
         setPlayersBet()
+        if(players.length > 1 && players.every(player => player.isReady) === false && timerStarted === false) {
+          timerStarted = true;
+          startTimer()
+        }
       }
 
       if (response.method === "hasLeft") {
@@ -1398,6 +1463,10 @@
 
       }
 
+      if (response.method === "sendPlayerNextWs") {
+
+      }
+
       if(response.method === "showSum") {
         players = response.players;
 
@@ -1461,21 +1530,6 @@
         console.log("final compare go")
         finalCompareGo();
       }
-
-      // Optimize this later so it doesnt fire like every second
-      if(gameOn) {
-        for(let i = 0; i < players.length; i++) {
-          if(players[i].clientId === clientId) {
-            if(!$("#bets-container").hasClass("noclick")) $("#bets-container").addClass("noclick");
-          }
-        }
-        if(!$(".empty-slot").hasClass("noclick")) $(".empty-slot").addClass("noclick");
-        if(!$("#leave-table").hasClass("noclick")) $("#leave-table").addClass("noclick");
-      }
-
-      // if(!gameOn) {
-      //   if($("#bets-container").hasClass("noclick")) $("#bets-container").removeClass("noclick");
-      // }
 
       if(response.method === "resetGameState") {
         game = response.game
@@ -1656,15 +1710,12 @@
     window.addEventListener('beforeunload', function() {
       reload = true;
       theClient.hasLeft = true;
-      terminatePlayer();
-      if(player.clientId === clientId && playersCanPlay === true) {
+      if(playersCanPlay === true && player.clientId === clientId) {
         sendPlayerNext();
+        console.log("sendPlayerNext")
       }
-      if(clientDeal === clientId && playersCanPlay === false) {
-        resetGameState();
-      }
-      // Have terminate player as last
       terminatePlayer();
+      // Dont add more code below terminatePlayer(), its dangerous
     });
 
   </script>
@@ -1695,6 +1746,9 @@
     });
     let clickFiller = new Howl({
       src: ['sounds/click_filler.mp3']
+    });
+    let timerRunningOut = new Howl({
+      src: ['sounds/timer_running_out.mp3']
     });
 
     $(".betButtons").hover(function() {
