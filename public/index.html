@@ -185,6 +185,26 @@
   <div id="join-mid-game-label" class="hide-element">
     Game currently ongoing...
   </div>
+
+  <div id="users-online-box">
+    <div>
+      <h4>Users in room</h4>
+    </div>
+    <ul id="users-online-container">
+      <!-- <li class="users-list-box">
+        <div class="users-list-info">
+          <div class="user-list-name">Name</div>
+          <div>Balance: <span class="users-list-balance">1000</span></div>
+        </div>
+        <div class="users-list-img">
+          <img src="/imgs/avatars/user.svg" alt="avatar">
+        </div>
+      </li> -->
+    </ul>
+  </div>
+
+
+
   <div id="dealer">
     <h1>Dealer</h1>
     <div id="dealerSum">sum here</div>
@@ -879,7 +899,12 @@
         playerSlotHTML = response.playerSlotHTML
         playerSlotIndex = response.playerSlotIndex;
         reload = false;
+        oldPlayerIndex = response.oldPlayerIndex
         gameOn = response.gameOn;
+
+
+        // Remove player from "users in room" LIST
+        $(".users-list-box:eq("+oldPlayerIndex+")").remove();
 
 
         for(let i = 0; i < players.length; i++) {
@@ -890,32 +915,7 @@
           }
         }
 
-        // Check if all players on the table are ready
-        // if(players.every(player => player.isReady) && gameOn === false) {
-        //   // Just make the first player in array get the execute script
-        //   if(players[0].clientId === clientId) {
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     console.log("NO")
-        //     gameOn = true
-        //     clientDeal = players[0].clientId;
-        //     getDeck();
-        //     sendPlayerDeck();
-        //     setTimeout(dealCards(), 1000);            
-        //   }
-        // }
 
-        console.log(gameOn)
-        console.log(gameOn)
-        console.log(gameOn)
-        console.log(gameOn)
-        console.log(gameOn)
         console.log(gameOn)
         if(gameOn === false) {
           if(playerSlotIndex === undefined || playerSlotIndex === null) {
@@ -1008,27 +1008,60 @@
         // get all the names and avatars for all the players currently on the table when client joins and a player already is on a slot
         setTimeout(function() {
           for(let i = 0; i < playerSlotHTML.length; i++) {
-            for(let x = 0; x < players.length; x++) {
-              if(players[x].clientId === playerSlotHTML[i]) {
+            for(let x = 0; x < spectators.length; x++) {
+              if(spectators[x].clientId === playerSlotHTML[i]) {
                 z = playerSlotHTML.indexOf(playerSlotHTML[i])
-                if(players[x].nickname === "") players[x].nickname = "Player";
-                playerSlot[z].firstElementChild.nextElementSibling.innerText = players[x].nickname
-                playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
+                if(spectators[x].nickname === "") spectators[x].nickname = "Player";
+                playerSlot[z].firstElementChild.nextElementSibling.innerText = spectators[x].nickname
+                playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+spectators[x].avatar+`.svg" alt="avatar"></span>`
               }
             }
           }
         }, 50)
 
-      }
 
+        // Append users in room html
+        for(let i = 0; i < spectators.length; i++) {
+          if(spectators[i].nickname === "") spectators[i].nickname = "Player";
+          $("#users-online-container").append(`
+          <li class="users-list-box">
+            <div class="users-list-info">
+              <div class="user-list-name">`+spectators[i].nickname+`</div>
+              <div>Balance: <span class="users-list-balance">`+spectators[i].balance+`</span></div>
+            </div>
+            <div class="users-list-img">
+              <img src="/imgs/avatars/`+spectators[i].avatar+`.svg" alt="avatar">
+            </div>
+          </li>
+          `);
+          if(spectators[i].clientId === clientId) {
+            $(".user-list-name:eq("+i+")").addClass("highlight")
+          }
+        }
+      }
 
 
       // Updated players array (i.e. players[i] = theClient)
       if(response.method === "updateClientArray") {
         players = response.players
-        // spectators = response.spectators
+        newPlayer = response.newPlayer
         playerSlotHTML = response.playerSlotHTML
-        // player = game.player
+
+        // Update for players that already are in da game
+        if(spectators.length > $("#users-online-container").children().length) {
+          if(newPlayer.nickname === "") newPlayer.nickname = "Player";
+          $("#users-online-container").append(`
+          <li class="users-list-box">
+            <div class="users-list-info">
+              <div class="user-list-name">`+newPlayer.nickname+`</div>
+              <div>Balance: <span class="users-list-balance">`+newPlayer.balance+`</span></div>
+            </div>
+            <div class="users-list-img">
+              <img src="/imgs/avatars/`+newPlayer.avatar+`.svg" alt="avatar">
+            </div>
+          </li>
+          `)
+        }
 
       }
 
@@ -1426,7 +1459,9 @@
           for(let i = 0; i < playerSlotHTML.length; i++) {
             if(playerSlotHTML[i] === player.clientId) {
               $(".player-sum:eq("+i+")").addClass("current-player-highlight")
-              $(".players-timer:eq("+i+") circle").addClass("circle-animation")
+              setTimeout(function() {
+                $(".players-timer:eq("+i+") circle").addClass("circle-animation")
+              }, 50)
             }
           }
 

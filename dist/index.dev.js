@@ -163,12 +163,14 @@ wsServer.on("request", function (request) {
 
       if (!game.gameOn === true) {
         clients[_clientId2].connection.send(JSON.stringify(payLoadClient));
-      } // Important to send this payLoad last, because it needs to know the the clientId
+      }
 
+      var newPlayer = _theClient2; // Important to send this payLoad last, because it needs to know the the clientId
 
       var payLoadClientArray = {
         "method": "updateClientArray",
         "players": _players,
+        "newPlayer": newPlayer,
         "spectators": _spectators,
         "playerSlot": _playerSlot,
         "playerSlotHTML": _playerSlotHTML2
@@ -541,11 +543,16 @@ wsServer.on("request", function (request) {
       var _gameOn3 = result.gameOn;
       var _player5 = result.player;
       var _clientDeal = result.clientDeal;
-      var playersCanPlay = result.playersCanPlay; // Remove players from player array if the client with the dealscript leaves during 2 card deal phase
+      var playersCanPlay = result.playersCanPlay;
+
+      var oldPlayerIndex = _spectators14.findIndex(function (spectators) {
+        return spectators.clientId === _theClient6.clientId;
+      }); // Remove players from player array if the client with the dealscript leaves during 2 card deal phase
       // if(playersCanPlay === false && clientDeal === theClient.clientId) {
       //   players = [];
       // }
       // To prevent error when user disconnects outside a game
+
 
       if (_game3 === undefined) {
         _game3 = {
@@ -615,16 +622,19 @@ wsServer.on("request", function (request) {
       _game3.players = _players14;
       _game3.playerSlotHTML = _playerSlotHTML4; // game.gameOn = gameOn
 
-      console.log(_game3.spectators);
-      console.log("ÅÄÖ");
-      console.log(_players14);
-      console.log(_game3.players);
+      console.log("-----------");
+      console.log(oldPlayerIndex);
+      console.log(oldPlayerIndex);
+      console.log(oldPlayerIndex);
+      console.log(oldPlayerIndex);
+      console.log("-----------");
       var _payLoad15 = {
         "method": "leave",
         "playerSlotIndex": playerSlotIndex,
         "players": _players14,
         "playerSlotHTML": _playerSlotHTML4,
         "spectators": _spectators14,
+        "oldPlayerIndex": oldPlayerIndex,
         "game": _game3,
         "gameOn": _gameOn3
       };

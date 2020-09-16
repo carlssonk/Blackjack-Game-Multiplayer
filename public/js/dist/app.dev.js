@@ -1225,10 +1225,11 @@ function startTimer() {
 }
 
 ;
+var thePlayTime;
 
 function startPlayTimer() {
   var thirtySeconds = 30;
-  var thePlayTime = setInterval(function () {
+  thePlayTime = setInterval(function () {
     thirtySeconds--; // Alert with sound when theres 10 seconds left
 
     if (thirtySeconds === 5) {

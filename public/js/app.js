@@ -1387,9 +1387,11 @@ function startTimer() {
 };
 
 
+
+let thePlayTime;
 function startPlayTimer() {
   let thirtySeconds = 30
-  let thePlayTime = setInterval(function() {
+  thePlayTime = setInterval(function() {
     thirtySeconds--
 
     // Alert with sound when theres 10 seconds left

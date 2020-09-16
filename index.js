@@ -173,10 +173,13 @@ wsServer.on("request", request => {
       if(!game.gameOn === true) {
         clients[clientId].connection.send(JSON.stringify(payLoadClient))
       }
+
+      const newPlayer = theClient
       // Important to send this payLoad last, because it needs to know the the clientId
       const payLoadClientArray = {
         "method": "updateClientArray",
         "players": players,
+        "newPlayer": newPlayer,
         "spectators": spectators,
         "playerSlot": playerSlot,
         "playerSlotHTML": playerSlotHTML
@@ -588,6 +591,8 @@ wsServer.on("request", request => {
       const clientDeal = result.clientDeal;
       const playersCanPlay = result.playersCanPlay;
 
+      const oldPlayerIndex = spectators.findIndex(spectators => spectators.clientId === theClient.clientId);
+
 
       // Remove players from player array if the client with the dealscript leaves during 2 card deal phase
       // if(playersCanPlay === false && clientDeal === theClient.clientId) {
@@ -665,10 +670,12 @@ wsServer.on("request", request => {
       game.playerSlotHTML = playerSlotHTML;
       // game.gameOn = gameOn
 
-      console.log(game.spectators)
-      console.log("ÅÄÖ")
-      console.log(players)
-      console.log(game.players)
+      console.log("-----------")
+      console.log(oldPlayerIndex)
+      console.log(oldPlayerIndex)
+      console.log(oldPlayerIndex)
+      console.log(oldPlayerIndex)
+      console.log("-----------")
       
       const payLoad = {
         "method": "leave",
@@ -676,6 +683,7 @@ wsServer.on("request", request => {
         "players": players,
         "playerSlotHTML": playerSlotHTML,
         "spectators": spectators,
+        "oldPlayerIndex": oldPlayerIndex,
         "game": game,
         "gameOn": gameOn
       }

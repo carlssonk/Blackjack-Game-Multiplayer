@@ -371,6 +371,65 @@ body {
 
 // #############GAME MENU#############
 
+#users-online-box {
+  position: absolute;
+  width: 220px;
+  left: 0;
+  top: 80px;
+  background-color: rgba(4, 14, 59, 0.5);
+  color: white;
+  text-align: center;
+  // border-bottom: 2px solid #d84a17;
+  z-index: 201;
+  h4 {
+    margin: 12px 40px 12px 0px;
+  }
+  ul {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    font-size: 15px;
+    // border-top: 2px solid #d84a17c0;
+    .users-list-box {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 56px;
+      border-top: 2px solid #d84a17c0;
+      .users-list-info {
+        // display: inline-block;
+        margin-right: 40px;
+        span {
+          color: lime;
+        }
+      }
+      .users-list-img {
+        position: absolute;
+        right: 0;
+        border: 2px solid black;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        width: 42px;
+        height: 42px;
+        margin: 4px;
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+}
+
+
+
+
 #invite-link-box {
   position: absolute;
   width: 260px;
@@ -599,7 +658,7 @@ body {
     stroke: lime;
     stroke-dasharray: 301;
     stroke-dashoffset: 301;
-    animation: dash 30s linear forwards;
+    animation: dash 29.5s linear forwards;
   }
 }
 
