@@ -536,7 +536,7 @@ body {
   left: 50%;
   margin-top: 280px;
   display: inline-block;
-  font-size: 18px;
+  font-size: 36px;
   color: white;
   transform: translateX(-50%);
   text-align: center;
@@ -547,7 +547,7 @@ body {
   left: 50%;
   margin-top: 240px;
   display: inline-block;
-  font-size: 48px;
+  font-size: 36px;
   color: white;
   transform: translateX(-50%);
   text-align: center;

@@ -609,12 +609,22 @@
       $("#balance").text(theClient.balance)
       $("#bets-container").addClass("noclick");
       $("#leave-table").addClass("noclick");
-      $(".empty-slot").addClass("noclick")
-      // setTimeout(function() {
-        // if(gameOn === false) {
-        //   $(".empty-slot").removeClass("noclick")
-        // }
-      // }, 50)
+      $(".empty-slot").removeClass("noclick");
+
+      // Check if all players are ready that is on the table now
+      if(players.length > 1) {
+        let playersMinusOne = players;
+        // Remove player from a clone of players array
+        playersMinusOne.splice(players.findIndex(players => players.clientId === clientId), 1)
+        for(let i = 0; i < playersMinusOne.length; i++) {
+          if(playersMinusOne.every(playersMinuesOne => playersMinuesOne.isReady === true)) {
+            $(".empty-slot").addClass("noclick");
+          } else {
+            $(".empty-slot").removeClass("noclick");
+          }        
+        }
+      }
+
       terminatePlayer();
     });
 
@@ -903,8 +913,17 @@
         gameOn = response.gameOn;
 
 
+
+        // if(spectators[oldPlayerIndex].clientId === clientId) {
+        //   $(".empty-slot").removeClass("noclick");
+        //   console.log("remove")
+        // }
+
         // Remove player from "users in room" LIST
-        $(".users-list-box:eq("+oldPlayerIndex+")").remove();
+        if(spectators[oldPlayerIndex].hasLeft === true) {
+          $(".users-list-box:eq("+oldPlayerIndex+")").remove();          
+        }
+
 
 
         for(let i = 0; i < players.length; i++) {
@@ -939,7 +958,10 @@
 
         // Add noclick class to the class that the player just left, IF the player currently sits on a slot
         if(players.some(e => e.clientId === clientId)) {
-          if(!$(".empty-slot").is("noclick")) $(".empty-slot").addClass("noclick");
+          if(!$(".empty-slot").is("noclick")) {
+            $(".empty-slot").addClass("noclick");
+            console.log("NO")
+          } 
         }
 
 
@@ -947,7 +969,13 @@
         console.log("LEAVE")
           if(gameOn === true) {
             $(".empty-slot").addClass("noclick")
-            playerSlot[playerSlotIndex].classList.add("player-left", "plug");
+
+            if(playerSlotIndex === undefined || playerSlotIndex === null) {
+              return;
+            } else { 
+              playerSlot[playerSlotIndex].classList.add("player-left", "plug");            
+            }
+
           }
 
         if(game.players.length === 0 && $("#dealerSum").text().length > 0) {
@@ -960,7 +988,7 @@
         // if(players[players.findIndex(players => players.hasLeft === false)].clientId === clientId) {
         //   sendPlayerNext();
         // }
-        if(gameOn === false && players.every(player => player.isReady)) {
+        if(gameOn === false && players.length > 0 && players.every(player => player.isReady)) {
           if(players[0].clientId === clientId && gameOn === false) startDeal();
         }
 
@@ -1223,7 +1251,7 @@
           "spectators": spectators,
           "dealersHiddenCard": dealersHiddenCard
         }
-        if(players[currentPlayer].clientId === clientId) {
+        if(players[players.findIndex(players => players.hasLeft === false)].clientId === clientId) {
           ws.send(JSON.stringify(payLoad));          
         }
         console.log("A PLAYER JOINED")
@@ -1517,12 +1545,16 @@
 
       // Join Table
       if(response.method === "joinTable") {
+        console.log(theClient.bet)
         game = response.game;
+        console.log(theClient.bet)
         spectators = response.spectators
         players = response.players
         theSlot = response.theSlot
+        console.log(theClient.bet)
         user = response.user
-        theClient = response.theClient
+        console.log(theClient.bet)
+        // theClient = response.theClient
         playerSlotHTML = response.playerSlotHTML
 
         // Set player Name & player Avatar when someone joins table
@@ -1536,6 +1568,7 @@
             }
           }
         }
+        console.log(theClient.bet)
       }
 
       if(response.method === "dealersTurn") {
@@ -1582,6 +1615,7 @@
       if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural" || response.method === "getRoute") {
         return;
       } else {
+        console.log(theClient.bet)
         updateAllPlayers()
         syncTheGame()
       }
@@ -1594,7 +1628,7 @@
       // // UPDATE SPECTATORS STATUS (IMPORTANT TO HAVE THIS AVOVE PLAYERS STATUS, ELSE IT WILL OVERRIDE)
       for(let i = 0; i < spectators.length; i++) {
         if(spectators[i].clientId === clientId) {
-          // spectators[i] = theClient
+          spectators[i].bet = theClient.bet
           theClient = spectators[i]
         }
       }
@@ -1602,7 +1636,7 @@
       // // UPDATE PLAYERS STATUS
       for(let i = 0; i < players.length; i++) {
         if(players[i].clientId === clientId) {
-          // players[i] = theClient
+          players[i].bet = theClient.bet
           theClient = players[i]
         }
 

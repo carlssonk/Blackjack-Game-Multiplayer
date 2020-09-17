@@ -1167,7 +1167,7 @@ function showSlides(n) {
 function setTimer(duration) {
   var timer = duration,
       seconds;
-  var countdown = 40;
+  var countdown = 10;
   var timeUntilDeal = setInterval(function () {
     // Seconds counter
     seconds = parseInt(timer % 40, 10);
@@ -1197,6 +1197,8 @@ function setTimer(duration) {
         for (var i = 0; i < players.length; i++) {
           if (players[i].isReady === false) {
             if (players[i].clientId === clientId) {
+              $("#bets-container").addClass("noclick");
+              $("#leave-table").addClass("noclick");
               joined = false;
               terminatePlayer();
             }
