@@ -720,6 +720,21 @@ function dealerWin(i) {
 
 function resetGame() {
 
+  // Assign players balance to the list
+  for(let i = 0; i < spectators.length; i++) {
+    for(let x = 0; x < players.length; x++) {
+      if(spectators[i].clientId === players[x].clientId) {
+        spectators[i].balance = players[x].balance
+      }
+    }
+    $(".users-list-balance:eq("+i+")").text(spectators[i].balance)
+    if(spectators[i].balance === 0) {
+      $(".users-list-balance:eq("+i+")").addClass("color-red")      
+    } else {
+      $(".users-list-balance:eq("+i+")").addClass("color-green")     
+    }
+  }
+
   terminatePlayerFromSlot()
 
   // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
@@ -729,8 +744,6 @@ function resetGame() {
       game.spectators.splice(i, 1);
     }
   }
-
-
 
 
 
@@ -746,6 +759,9 @@ function resetGame() {
     players[i].blackjack = false;
     players[i].bet = 0;
   }
+
+
+
   // Reset Dealer
   dealer.cards = [];
   dealer.hiddenCard = [];
@@ -848,7 +864,7 @@ function terminatePlayerFromSlot() {
         }        
       }
     }
-  }    
+  }
 }
 
 // *************************************************************
@@ -1333,10 +1349,11 @@ function showSlides(n) {
 
 
 // COUNTDOWN TIMER
-
+let spectatorsClone = [];
 function setTimer(duration) {
+  spectatorsClone = spectators
   let timer = duration, seconds;
-  let countdown = 10;
+  let countdown = 40;
   let timeUntilDeal = setInterval(function () { // Seconds counter
     seconds = parseInt(timer % 40, 10);
     seconds = seconds < 10 ? "0" + seconds : seconds;
@@ -1347,10 +1364,33 @@ function setTimer(duration) {
     if (--timer < 0) {
       timer = duration;
     }
-      
+
+
+    // Fix timer if a new users joins during this phase
+    if(spectators.length > spectatorsClone.length) {
+      clearInterval(timeUntilDeal);
+      clearInterval(timeUntilDealExtra);
+      document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
+      $("#deal-start-label").addClass("hide-element")
+
+      // send Start Timer Again
+      setTimeout(function() {
+        const payLoad = {
+          "method": "startTimer",
+          "spectators": spectators,
+        }
+        ws.send(JSON.stringify(payLoad));
+      }, 100)
+
+      // setTimeout(function() {
+      //   startTimer()
+      // }, 2000)
+
+    }
+
     // CLEARS TIMER
     countdown--
-    if(countdown === 0 || players.every(player => player.isReady)) { //if countdown is 0 or all players is ready, clear timeouts
+    if(countdown === 0 || players.every(player => player.isReady === true)) { //if countdown is 0 or all players is ready, clear timeouts
       clearInterval(timeUntilDeal);
       clearInterval(timeUntilDealExtra);
       document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
@@ -1369,6 +1409,15 @@ function setTimer(duration) {
         }        
       }
     }
+
+    // Stop countdown if EVERY PLAYER is NOT ready
+    if(players.every(player => player.isReady === false)) {
+      clearInterval(timeUntilDeal);
+      clearInterval(timeUntilDealExtra);
+      document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
+      $("#deal-start-label").addClass("hide-element")
+    }
+
   }, 1000);
 
   let decisecond = 9
@@ -1379,6 +1428,7 @@ function setTimer(duration) {
       decisecond--
     }
     document.getElementById("milliseconds").innerHTML = decisecond;
+
   }, 100)
 }
 

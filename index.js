@@ -210,7 +210,8 @@ wsServer.on("request", request => {
       // Send this to ALL clients, to let them know that a new spectator joined
       const payLoadMidGameUpdate = {
         "method": "joinMidGameUpdate",
-        "spectators": spectators
+        "spectators": spectators,
+        "newPlayer": newPlayer
       }
       if(game.gameOn === true) {
         game.spectators.forEach(c => {
@@ -665,17 +666,23 @@ wsServer.on("request", request => {
 
       }
 
+      // else if(gameOn === true && players.length === 1) {
+      //   players = []
+      // }
+
       game.spectators = spectators;
       game.players = players;
       game.playerSlotHTML = playerSlotHTML;
       // game.gameOn = gameOn
 
-      console.log("-----------")
+      console.log("-----DICK------")
       console.log(oldPlayerIndex)
       console.log(oldPlayerIndex)
       console.log(oldPlayerIndex)
       console.log(oldPlayerIndex)
-      console.log("-----------")
+      console.log(oldPlayerIndex)
+      console.log("-----DICK------")
+
       
       const payLoad = {
         "method": "leave",
@@ -832,6 +839,18 @@ wsServer.on("request", request => {
       const payLoad = {
         "method": "dealersHiddenCard",
         "dealersHiddenCard": dealersHiddenCard
+      }
+
+      spectators.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      })
+    }
+
+    if(result.method === "startTimer") {
+      const spectators = result.spectators
+
+      const payLoad = {
+        "method": "startTimer",
       }
 
       spectators.forEach(c => {

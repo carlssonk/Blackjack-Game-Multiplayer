@@ -524,11 +524,11 @@ body {
 }
 
 .color-green {
-  color: #00de00;
+  color: #00de00 !important;
 }
 
 .color-red {
-  color: #f20000;
+  color: #f20000 !important;
 }
 
 #join-mid-game-label {
@@ -536,7 +536,7 @@ body {
   left: 50%;
   margin-top: 280px;
   display: inline-block;
-  font-size: 36px;
+  font-size: 22px;
   color: white;
   transform: translateX(-50%);
   text-align: center;

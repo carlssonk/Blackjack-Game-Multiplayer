@@ -199,7 +199,8 @@ wsServer.on("request", function (request) {
 
       var payLoadMidGameUpdate = {
         "method": "joinMidGameUpdate",
-        "spectators": _spectators
+        "spectators": _spectators,
+        "newPlayer": newPlayer
       };
 
       if (game.gameOn === true) {
@@ -616,18 +617,22 @@ wsServer.on("request", function (request) {
 
           }
         }
-      }
+      } // else if(gameOn === true && players.length === 1) {
+      //   players = []
+      // }
+
 
       _game3.spectators = _spectators14;
       _game3.players = _players14;
       _game3.playerSlotHTML = _playerSlotHTML4; // game.gameOn = gameOn
 
-      console.log("-----------");
+      console.log("-----DICK------");
       console.log(oldPlayerIndex);
       console.log(oldPlayerIndex);
       console.log(oldPlayerIndex);
       console.log(oldPlayerIndex);
-      console.log("-----------");
+      console.log(oldPlayerIndex);
+      console.log("-----DICK------");
       var _payLoad15 = {
         "method": "leave",
         "playerSlotIndex": playerSlotIndex,
@@ -776,6 +781,17 @@ wsServer.on("request", function (request) {
       });
     }
 
+    if (result.method === "startTimer") {
+      var _spectators22 = result.spectators;
+      var _payLoad22 = {
+        "method": "startTimer"
+      };
+
+      _spectators22.forEach(function (c) {
+        clients[c.clientId].connection.send(JSON.stringify(_payLoad22));
+      });
+    }
+
     if (result.method === "syncGame") {
       var _gameId8 = result.gameId;
       var _game7 = games[_gameId8];
@@ -783,7 +799,7 @@ wsServer.on("request", function (request) {
       var _dealer3 = result.dealer;
       var _players19 = result.players;
       var _player6 = result.player;
-      var _spectators22 = result.spectators;
+      var _spectators23 = result.spectators;
       var _playerSlotHTML5 = result.playerSlotHTML;
 
       if (_game7 === undefined) {
@@ -795,7 +811,7 @@ wsServer.on("request", function (request) {
       _game7.dealer = _dealer3;
       _game7.players = _players19;
       _game7.player = _player6;
-      _game7.spectators = _spectators22;
+      _game7.spectators = _spectators23;
       _game7.playerSlotHTML = _playerSlotHTML5;
     }
   }); // The ClientId

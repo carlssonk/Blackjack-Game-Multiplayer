@@ -607,12 +607,29 @@ function dealerWin(i) {
 }
 
 function resetGame() {
+  // Assign players balance to the list
+  for (var i = 0; i < spectators.length; i++) {
+    for (var x = 0; x < players.length; x++) {
+      if (spectators[i].clientId === players[x].clientId) {
+        spectators[i].balance = players[x].balance;
+      }
+    }
+
+    $(".users-list-balance:eq(" + i + ")").text(spectators[i].balance);
+
+    if (spectators[i].balance === 0) {
+      $(".users-list-balance:eq(" + i + ")").addClass("color-red");
+    } else {
+      $(".users-list-balance:eq(" + i + ")").addClass("color-green");
+    }
+  }
+
   terminatePlayerFromSlot(); // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
 
-  for (var i = 0; i < spectators.length; i++) {
-    if (spectators[i].hasLeft === true) {
-      spectators.splice(i, 1);
-      game.spectators.splice(i, 1);
+  for (var _i = 0; _i < spectators.length; _i++) {
+    if (spectators[_i].hasLeft === true) {
+      spectators.splice(_i, 1);
+      game.spectators.splice(_i, 1);
     }
   } // Reset Players 
 
@@ -620,13 +637,13 @@ function resetGame() {
   $(".player-bet").text("");
   $(".player-coin").removeClass("player-coin-animation"); // $(".player-coin").text("")
 
-  for (var _i = 0; _i < players.length; _i++) {
-    players[_i].cards = [];
-    players[_i].hasAce = false;
-    players[_i].sum = null;
-    players[_i].isReady = false;
-    players[_i].blackjack = false;
-    players[_i].bet = 0;
+  for (var _i2 = 0; _i2 < players.length; _i2++) {
+    players[_i2].cards = [];
+    players[_i2].hasAce = false;
+    players[_i2].sum = null;
+    players[_i2].isReady = false;
+    players[_i2].blackjack = false;
+    players[_i2].bet = 0;
   } // Reset Dealer
 
 
@@ -672,8 +689,8 @@ function resetGame() {
   $(".players .player-coin").css("background", "");
   $(".players .player-coin").css("opacity", "");
 
-  for (var _i2 = 0; _i2 < players.length; _i2++) {
-    if (players[_i2].clientId === clientId) {
+  for (var _i3 = 0; _i3 < players.length; _i3++) {
+    if (players[_i3].clientId === clientId) {
       $("#bets-container").removeClass("noclick");
     }
   } // If player does not sit on slot
@@ -1096,12 +1113,12 @@ $(".max-clear").click(function () {
         $("#total-bet").text(theClient.bet);
         $("#balance").text(theClient.balance);
 
-        for (var _i3 = 0; _i3 < playerSlotHTML.length; _i3++) {
-          if (playerSlotHTML[_i3] === clientId) {
+        for (var _i4 = 0; _i4 < playerSlotHTML.length; _i4++) {
+          if (playerSlotHTML[_i4] === clientId) {
             if (theClient.balance === 0 && theClient.bet === 0) {
               alert("Need more balance");
             } else {
-              $(".ready:eq(" + _i3 + ")").removeClass("hide-element");
+              $(".ready:eq(" + _i4 + ")").removeClass("hide-element");
             }
           }
         }
@@ -1164,10 +1181,13 @@ function showSlides(n) {
 } // COUNTDOWN TIMER
 
 
+var spectatorsClone = [];
+
 function setTimer(duration) {
+  spectatorsClone = spectators;
   var timer = duration,
       seconds;
-  var countdown = 10;
+  var countdown = 40;
   var timeUntilDeal = setInterval(function () {
     // Seconds counter
     seconds = parseInt(timer % 40, 10);
@@ -1176,13 +1196,32 @@ function setTimer(duration) {
 
     if (--timer < 0) {
       timer = duration;
+    } // Fix timer if a new users joins during this phase
+
+
+    if (spectators.length > spectatorsClone.length) {
+      clearInterval(timeUntilDeal);
+      clearInterval(timeUntilDealExtra);
+      document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
+
+      $("#deal-start-label").addClass("hide-element"); // send Start Timer Again
+
+      setTimeout(function () {
+        var payLoad = {
+          "method": "startTimer",
+          "spectators": spectators
+        };
+        ws.send(JSON.stringify(payLoad));
+      }, 100); // setTimeout(function() {
+      //   startTimer()
+      // }, 2000)
     } // CLEARS TIMER
 
 
     countdown--;
 
     if (countdown === 0 || players.every(function (player) {
-      return player.isReady;
+      return player.isReady === true;
     })) {
       //if countdown is 0 or all players is ready, clear timeouts
       clearInterval(timeUntilDeal);
@@ -1205,6 +1244,17 @@ function setTimer(duration) {
           }
         }
       }
+    } // Stop countdown if EVERY PLAYER is NOT ready
+
+
+    if (players.every(function (player) {
+      return player.isReady === false;
+    })) {
+      clearInterval(timeUntilDeal);
+      clearInterval(timeUntilDealExtra);
+      document.getElementById("milliseconds").innerHTML = 0; // make sure it stops at 0
+
+      $("#deal-start-label").addClass("hide-element");
     }
   }, 1000);
   var decisecond = 9;

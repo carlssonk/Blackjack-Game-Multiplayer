@@ -516,6 +516,7 @@
     let playerNaturalIndex = null;
     let dealersHiddenCard = "";
     let timerStarted = false;
+    let newPlayer = null;
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
@@ -913,17 +914,7 @@
         gameOn = response.gameOn;
 
 
-
-        // if(spectators[oldPlayerIndex].clientId === clientId) {
-        //   $(".empty-slot").removeClass("noclick");
-        //   console.log("remove")
-        // }
-
-        // Remove player from "users in room" LIST
-        if(spectators[oldPlayerIndex].hasLeft === true) {
-          $(".users-list-box:eq("+oldPlayerIndex+")").remove();          
-        }
-
+        $(".users-list-box:eq("+oldPlayerIndex+")").remove();
 
 
         for(let i = 0; i < players.length; i++) {
@@ -935,7 +926,6 @@
         }
 
 
-        console.log(gameOn)
         if(gameOn === false) {
           if(playerSlotIndex === undefined || playerSlotIndex === null) {
             return;
@@ -1075,6 +1065,10 @@
         newPlayer = response.newPlayer
         playerSlotHTML = response.playerSlotHTML
 
+
+        console.log(newPlayer)
+        console.log(newPlayer)
+        console.log(newPlayer)
         // Update for players that already are in da game
         if(spectators.length > $("#users-online-container").children().length) {
           if(newPlayer.nickname === "") newPlayer.nickname = "Player";
@@ -1090,6 +1084,7 @@
           </li>
           `)
         }
+
 
       }
 
@@ -1120,6 +1115,29 @@
         $('#invite-link').val(gameId);
         // Add label that says game is currently running
         $("#join-mid-game-label").removeClass("hide-element")
+
+
+        // Append users in room html
+        setTimeout(function() {
+          for(let i = 0; i < spectators.length; i++) {
+            if(spectators[i].nickname === "") spectators[i].nickname = "Player";
+            $("#users-online-container").append(`
+            <li class="users-list-box">
+              <div class="users-list-info">
+                <div class="user-list-name">`+spectators[i].nickname+`</div>
+                <div>Balance: <span class="users-list-balance">`+spectators[i].balance+`</span></div>
+              </div>
+              <div class="users-list-img">
+                <img src="/imgs/avatars/`+spectators[i].avatar+`.svg" alt="avatar">
+              </div>
+            </li>
+            `);
+            if(spectators[i].clientId === clientId) {
+              $(".user-list-name:eq("+i+")").addClass("highlight")
+            }
+          }
+        }, 200)
+
 
 
 
@@ -1241,6 +1259,7 @@
 
       if (response.method === "joinMidGameUpdate") {
         spectators = response.spectators;
+        newPlayer = response.newPlayer;
         console.log(players)
         console.log(currentPlayer)
 
@@ -1271,7 +1290,29 @@
         }
         } else {
           resetGame();
-        }        
+        }
+        
+        // Update for players that already are in da game
+        if(newPlayer.clientId === clientId) {
+          // Do nothing
+        } else {
+          if(spectators.length > $("#users-online-container").children().length) {
+            if(newPlayer.nickname === "") newPlayer.nickname = "Player";
+            $("#users-online-container").append(`
+            <li class="users-list-box">
+              <div class="users-list-info">
+                <div class="user-list-name">`+newPlayer.nickname+`</div>
+                <div>Balance: <span class="users-list-balance">`+newPlayer.balance+`</span></div>
+              </div>
+              <div class="users-list-img">
+                <img src="/imgs/avatars/`+newPlayer.avatar+`.svg" alt="avatar">
+              </div>
+            </li>
+            `)
+          }          
+        }
+
+
       }
 
     if (response.method === "dealersHiddenCard") {
@@ -1281,7 +1322,18 @@
       // bet
       if (response.method === "bet") {
         players = response.players;
-        // spectators = response.spectators
+
+        // Assign players balance to the list
+        for(let i = 0; i < spectators.length; i++) {
+          for(let x = 0; x < players.length; x++) {
+            if(spectators[i].clientId === players[x].clientId) {
+              spectators[i].balance = players[x].balance
+            }
+          }
+          $(".users-list-balance:eq("+i+")").text(spectators[i].balance)
+          if(spectators[i].balance === 0) $(".users-list-balance:eq("+i+")").addClass("color-red")
+        }
+
       }
       // deck
       if (response.method === "deck") {
@@ -1607,6 +1659,10 @@
       if(response.method === "redirect") {
         window.location.href = "/";
       }
+
+      if(response.method === "startTimer") {
+        startTimer()
+      }
       
 
 
@@ -1779,7 +1835,7 @@
     window.addEventListener('beforeunload', function() {
       reload = true;
       theClient.hasLeft = true;
-      if(playersCanPlay === true && player.clientId === clientId) {
+      if(playersCanPlay === true && player.clientId === clientId && players.length > 1) {
         sendPlayerNext();
         console.log("sendPlayerNext")
       }
