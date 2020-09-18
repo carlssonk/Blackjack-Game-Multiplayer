@@ -23,7 +23,6 @@ var playersReady = 0;
 var sum = null;
 var dealersTurn = false;
 var gameOn = false;
-var bool;
 var showSum = false;
 var chipIndex = null;
 var playersCanPlay = false; // resetCards = false;
@@ -337,13 +336,15 @@ function naturalPlayerAceSum(i) {
 
 function thePlay() {
   // Show thePlay buttons (Hit Stand And DoubleDown)
-  $(".user-action-container").removeClass("hide-element"); // Set 30 second timer for player
+  $(".user-action-container").removeClass("hide-element");
+  $("#dark-overlay").css("opacity", "1"); // Set 30 second timer for player
 
   startPlayTimer();
 
   for (var i = 0; i < userAction.length; i++) {
     userAction[i].addEventListener("click", function () {
       actionClick.play();
+      timerRunningOut.stop();
 
       if (this === userAction[0] && clicked === false) {
         clicked = true;
@@ -398,7 +399,9 @@ function playerHit() {
 
 function sendPlayerNext() {
   console.log("player next");
-  $(".user-action-box").removeClass("noclick"); // if player sum.length === 2. Fix players sum before going to next player
+  $(".user-action-box").removeClass("noclick");
+  $("#dark-overlay").css("opacity", "");
+  timerRunningOut.stop(); // if player sum.length === 2. Fix players sum before going to next player
 
   if (player.sum.length === 2 && player.sum[1] <= 21) {
     player.sum.shift();
@@ -460,7 +463,13 @@ function dealerPlay() {
 
 function finalCompareGo() {
   // This should fire up for all players
-  // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
+  console.log("finalCompare");
+  console.log("finalCompare");
+  console.log("finalCompare");
+  console.log("finalCompare");
+  console.log("finalCompare");
+  console.log("finalCompare"); // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
+
   if (dealer.sum.length === 2 && dealer.sum[1] <= 21) {
     dealer.sum.shift();
     dealer.sum = dealer.sum[0];
@@ -474,25 +483,25 @@ function finalCompareGo() {
   })) $("#player-result-big").removeClass("hide-element");
 
   if (theClient.sum > 21) {
-    youLose.play();
+    // youLose.play();
     $("#player-result-big-answer").text("YOU BUSTED");
     $("#player-result-big-sum").text(theClient.bet);
     $("#player-result-big-plus-minus").text("-");
     $("#player-result-sum-box").addClass("color-red");
   } else if (theClient.blackjack === true) {
-    youWin.play();
+    // youWin.play();
     $("#player-result-big-answer").text("BLACKJACK");
     $("#player-result-big-sum").text(1.5 * theClient.bet + theClient.bet);
     $("#player-result-big-plus-minus").text("+");
     $("#player-result-sum-box").addClass("color-green");
   } else if (dealer.sum > 21) {
-    youWin.play();
+    // youWin.play();
     $("#player-result-big-answer").text("YOU WIN");
     $("#player-result-big-sum").text(theClient.bet * 2);
     $("#player-result-big-plus-minus").text("+");
     $("#player-result-sum-box").addClass("color-green");
   } else if (dealer.sum < theClient.sum) {
-    youWin.play();
+    // youWin.play();
     $("#player-result-big-answer").text("YOU WIN");
     $("#player-result-big-sum").text(theClient.bet * 2);
     $("#player-result-big-plus-minus").text("+");
@@ -501,7 +510,7 @@ function finalCompareGo() {
     $("#player-result-big-answer").text("DRAW"); // $("#player-result-big-sum").text(theClient.bet)
     // $("#player-result-big-plus-minus").text("+")
   } else {
-    youLose.play();
+    // youLose.play();
     $("#player-result-big-answer").text("DEALER WINS");
     $("#player-result-big-sum").text(theClient.bet);
     $("#player-result-big-plus-minus").text("-");
@@ -928,7 +937,7 @@ function outputCardSumAceDealer() {
 
     if (dealersTurn === true) {
       if (player.sum < 17) {
-        playerHit();
+        setTimeout(playerHit, 500);
       } else {
         console.log("FINAL COMPARE"); // Remove dealer from players array, then compare
 
@@ -944,7 +953,7 @@ function outputCardSumAceDealer() {
 
     if (dealersTurn === true) {
       if (player.sum[1] < 17) {
-        playerHit();
+        setTimeout(playerHit, 500);
       } else {
         console.log("FINAL COMPARE"); // Remove dealer from players array, then compare
 
@@ -963,7 +972,7 @@ function outputCardSumDealer() {
 
   if (dealersTurn === true) {
     if (player.sum < 17) {
-      playerHit();
+      setTimeout(playerHit, 500);
     } else {
       console.log("FINAL COMPARE"); // Remove dealer from players array, then compare
 
@@ -1051,23 +1060,68 @@ if (window.location.href.length > 22) {
   $("#btnJoin").removeClass("hide-element");
 }
 
+var bool1;
 $("#about").click(function () {
-  bool = !bool;
+  bool1 = !bool1;
 
-  if (bool === true) {
+  if (bool1 === true) {
     $("#about-box").css("top", "506px");
   } else {
     $("#about-box").css("top", "");
   }
 });
+var bool2;
 $("#how-to-play").click(function () {
-  bool = !bool;
+  bool2 = !bool2;
 
-  if (bool === true) {
+  if (bool2 === true) {
     $("#info-rules").css("right", "14px");
   } else {
     $("#info-rules").css("right", "");
   }
+});
+var bool3;
+$("#users-online-button").click(function () {
+  bool3 = !bool3;
+
+  if (bool3 === true) {
+    $("#users-online-box").css("left", "0");
+    $("#users-online-button i").css("transform", "rotate(180deg)");
+  } else {
+    $("#users-online-box").css("left", "");
+    $("#users-online-button i").css("transform", "");
+  }
+});
+var bool4;
+$("#volume-button").click(function () {
+  bool4 = !bool4;
+
+  if (bool4 === true) {
+    $("#volume-button").html("<i class=\"fas fa-volume-mute\"></i>");
+    Howler.volume(0);
+  } else {
+    $("#volume-button").html("<i class=\"fas fa-volume-up\"></i>");
+    Howler.volume(1);
+  }
+}); // BACKGROUND COLORS
+
+$(".bg-colors").click(function () {
+  if ($(this).attr("id") === "bg-green") {
+    $("body").css("background", "");
+  } else if ($(this).attr("id") === "bg-blue") {
+    $("body").css("background", "radial-gradient(#388183, #1e3d42)");
+  } else if ($(this).attr("id") === "bg-purple") {
+    $("body").css("background", "radial-gradient(#723883, #1e2b42)");
+  } else if ($(this).attr("id") === "bg-red") {
+    $("body").css("background", "radial-gradient(#833838, #421e1e)");
+  } else {
+    $("body").css("background", "radial-gradient(#837538, #423e1e)");
+  }
+
+  $(".bg-colors").removeClass("bg-selected");
+  $(".bg-colors").css("background-color", "");
+  $(this).addClass("bg-selected");
+  $(this).css("background-color", "rgba(0, 0, 0, 0");
 }); // UPDATE CSS BET AND BALANCE
 
 $(".update-balance-bet").click(function () {
@@ -1296,38 +1350,4 @@ function startPlayTimer() {
   }, 1000);
 }
 
-; // function displayCount(count) {
-//   let res = Math.floor(count / 1000);
-//   let milliseconds = count.toString().substr(-3);
-//   let seconds = res % 60;
-//   let minutes = (res - seconds) / 60;
-//   document.getElementById("demo").innerHTML =
-//       minutes + ' min ' + seconds + ' s ' + milliseconds + ' ms';
-// }
-// function removePlayerFromSlotTimer(i) {
-//   console.log(players[i].clientId)
-//   console.log(clientId)
-//   for(let x = 0; x < playerSlotHTML.length; x++) { 
-//     if(players[i].clientId === playerSlotHTML[x]) {
-//       playerSlot[x].innerHTML = 
-//       `
-//       <div><button class="ready hide-element">PLACE BET</button></div>
-//       <div class="empty-slot noclick"><i class="fas fa-user-plus"></i></div>
-//       <div class="player-name hide-element"><span class="hide-element"><img class="player-avatar" src="" alt="avatar"></span></div>
-//       <div class="player-sum"></div>
-//       <div class="player-coin hide-element"><div class="player-bet hide-element"></div></div>
-//       <div class="player-result hide-element"></div>
-//       <div class="player-cards">
-//       </div>
-//       `
-//       playerSlot[x].classList.remove("player-left", "plug")
-//       playerSlotHTML[x] = {};
-//       game.playerSlotHTML[x] = {}
-//       console.log(players[i].clientId)
-//       console.log(clientId)
-//       players.splice(i, 1);
-//       game.players.splice(i, 1);
-//       break;
-//     }
-//   }    
-// }
+;

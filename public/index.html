@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blackjack21.io</title>
-  <!-- <link rel="stylesheet" href="/css/lib/normalize.css"> -->
   <link rel="stylesheet" href="/css/dist/style.css">
   <link rel="stylesheet" href="/css/style.scss">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Play&family=Roboto&family=Rubik&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="loading-screen" class="hide-element">
@@ -151,6 +150,12 @@
 
   <div id="game-room" class="hide-element">
 
+
+    <div id="dark-overlay"></div>
+
+    <div id="table-graphics"></div>
+    <!-- <img id="table-graphics" src="/imgs/table-graphics3.svg" alt=""> -->
+
   <!-- <div id="leave-box"> -->
     <!-- <i class="fas fa-sign-out-alt"></i> -->
     <button id="leave-button" onclick="exitRoom()">
@@ -168,6 +173,19 @@
     <input id="invite-link" type="text">
     <button>COPY</button>
   </div>
+
+  <div id="volume-button">
+    <i class="fas fa-volume-up"></i>
+  </div>
+
+  <div id="bg-color-box">
+    <div class="bg-colors bg-selected" id="bg-green"></div>
+    <div class="bg-colors" id="bg-blue"></div>
+    <div class="bg-colors" id="bg-purple"></div>
+    <div class="bg-colors" id="bg-red"></div>
+    <div class="bg-colors" id="bg-brown"></div>
+  </div>
+
 
   <div id="player-result-big" class="hide-element">
     <div id="player-result-big-answer"></div>
@@ -188,7 +206,8 @@
 
   <div id="users-online-box">
     <div>
-      <h4>Users in room</h4>
+      <div id="users-online-label">USERS IN ROOM</div>
+      <div id="users-online-button"><i class="fas fa-chevron-right"></i></div>
     </div>
     <ul id="users-online-container">
       <!-- <li class="users-list-box">
@@ -206,7 +225,7 @@
 
 
   <div id="dealer">
-    <h1>Dealer</h1>
+    <h1>DEALER</h1>
     <div id="dealerSum">sum here</div>
     <div class="dealer-cards">
       <div class="visibleCards">
@@ -1857,12 +1876,6 @@
     let chipPlace = new Howl({
       src: ['sounds/chip_place.mp3']
     });
-    let youWin = new Howl({
-      src: ['sounds/you_win.mp3']
-    });
-    let youLose = new Howl({
-      src: ['sounds/you_lose.mp3']
-    });
     let actionClick = new Howl({
       src: ['sounds/actionClick.mp3']
     });
@@ -1875,6 +1888,15 @@
     let timerRunningOut = new Howl({
       src: ['sounds/timer_running_out.mp3']
     });
+
+    // let youWin = new Howl({
+    //   src: ['sounds/you_win.mp3']
+    // });
+    // let youLose = new Howl({
+    //   src: ['sounds/you_lose.mp3']
+    // });
+
+
 
     $(".betButtons").hover(function() {
       chipHover.play();
