@@ -14,6 +14,7 @@ body {
   background-attachment: fixed;
   padding: 0;
   margin: 0;
+  opacity: 1;
 }
 
 #table-graphics {
@@ -109,28 +110,33 @@ body {
 
 #main-menu {
   position: relative;
-  height: 100%;
+  height: 100vh;
   width: 100%;
+  overflow: auto;
 }
 #main-menu #blackjack-title {
+  position: absolute;
   display: flex;
-  margin: 50px auto;
-  margin-bottom: 60px;
-  width: 600px;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 #main-box {
+  position: relative;
   width: 500px;
   border: 3px solid #00001e;
   border-bottom: 3px solid #000000;
-  margin: 0 auto;
+  margin: 160px auto 0 auto;
   text-align: center;
   border-radius: 10px 10px 0px 0px;
   background-color: #2d6b30;
   -webkit-box-shadow: 0px 0px 50px -20px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 50px -20px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 50px -20px rgba(0, 0, 0, 0.75);
-  z-index: 2;
+  z-index: 3;
 }
 #main-box div {
   margin: 20px 0px 20px 0px;
@@ -314,7 +320,7 @@ body {
 }
 
 #about-box {
-  position: absolute;
+  position: relative;
   margin-left: auto;
   margin-right: auto;
   font-size: 14px;
@@ -325,8 +331,8 @@ body {
   margin: 0 auto;
   border-radius: 0px 0px 8px 0px;
   background-color: #e9e9e9;
-  top: 312px;
-  z-index: -1;
+  top: -158px;
+  z-index: 0;
   transition: 250ms;
 }
 #about-box ul {
@@ -345,7 +351,6 @@ body {
   border-radius: 0px 0px 12px 12px;
   bottom: -21px;
   left: 0;
-  z-index: 10;
 }
 
 #about:after {
@@ -364,6 +369,29 @@ body {
   border-radius: 0 0 0 12px;
   right: -11px;
   transform: rotate(90deg);
+}
+
+#credits {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(87, 221, 255, 0.8);
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-decoration-line: none;
+}
+
+#credits:hover {
+  color: rgba(69, 171, 196, 0.8);
+  text-decoration-line: underline;
+}
+
+#credits-container {
+  color: white;
+}
+#credits-container a {
+  color: rgba(87, 165, 255, 0.8);
 }
 
 #game-room {

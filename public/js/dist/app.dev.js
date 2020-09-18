@@ -282,19 +282,18 @@ function naturals() {
             playerNaturalIndex = x;
             playerResultNatural();
           }
-        }
-      } else if (players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {
-        // Checks if player has TWO aces
-        console.log("TWO aces");
-        naturalBlackjack(i);
-        players[i].hasAce = true; // Send player index to webSocket
+        } // } else if(players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {         // Checks if player has TWO aces
+        //   console.log("TWO aces")
+        //   naturalBlackjack(i)
+        //   players[i].hasAce = true;
+        //   // Send player index to webSocket
+        //   for(let x = 0; x < playerSlotHTML.length; x++) {
+        //     if(players[i].clientId === playerSlotHTML[x]) {
+        //       playerNaturalIndex = x;
+        //       playerResultNatural();
+        //     }
+        //   }
 
-        for (var _x = 0; _x < playerSlotHTML.length; _x++) {
-          if (players[i].clientId === playerSlotHTML[_x]) {
-            playerNaturalIndex = _x;
-            playerResultNatural();
-          }
-        }
       } else {
         // Checks all cards except for ACE and TEN
         console.log("an ace with a defualt card");
@@ -560,32 +559,32 @@ function winLoseComponents() {
           playerWin(i);
           console.log("player win");
 
-          for (var _x2 = 0; _x2 < playerSlotHTML.length; _x2++) {
-            if (players[i].clientId === playerSlotHTML[_x2]) {
-              $(".player-result:eq(" + _x2 + ")").removeClass("hide-element");
-              $(".player-result:eq(" + _x2 + ")").addClass("result-win");
-              $(".player-result:eq(" + _x2 + ")").text("WIN");
+          for (var _x = 0; _x < playerSlotHTML.length; _x++) {
+            if (players[i].clientId === playerSlotHTML[_x]) {
+              $(".player-result:eq(" + _x + ")").removeClass("hide-element");
+              $(".player-result:eq(" + _x + ")").addClass("result-win");
+              $(".player-result:eq(" + _x + ")").text("WIN");
             }
           }
         } else if (dealer.sum === players[i].sum) {
           playerDraw(i);
           console.log("Draw!");
 
-          for (var _x3 = 0; _x3 < playerSlotHTML.length; _x3++) {
-            if (players[i].clientId === playerSlotHTML[_x3]) {
-              $(".player-result:eq(" + _x3 + ")").removeClass("hide-element");
-              $(".player-result:eq(" + _x3 + ")").addClass("result-draw");
-              $(".player-result:eq(" + _x3 + ")").text("DRAW");
+          for (var _x2 = 0; _x2 < playerSlotHTML.length; _x2++) {
+            if (players[i].clientId === playerSlotHTML[_x2]) {
+              $(".player-result:eq(" + _x2 + ")").removeClass("hide-element");
+              $(".player-result:eq(" + _x2 + ")").addClass("result-draw");
+              $(".player-result:eq(" + _x2 + ")").text("DRAW");
             }
           }
         } else {
           dealerWin(i);
 
-          for (var _x4 = 0; _x4 < playerSlotHTML.length; _x4++) {
-            if (players[i].clientId === playerSlotHTML[_x4]) {
-              $(".player-result:eq(" + _x4 + ")").removeClass("hide-element");
-              $(".player-result:eq(" + _x4 + ")").addClass("result-lose");
-              $(".player-result:eq(" + _x4 + ")").text("LOSE");
+          for (var _x3 = 0; _x3 < playerSlotHTML.length; _x3++) {
+            if (players[i].clientId === playerSlotHTML[_x3]) {
+              $(".player-result:eq(" + _x3 + ")").removeClass("hide-element");
+              $(".player-result:eq(" + _x3 + ")").addClass("result-lose");
+              $(".player-result:eq(" + _x3 + ")").text("LOSE");
             }
           }
         } // If player busted, make him Bust!
@@ -1065,7 +1064,7 @@ $("#about").click(function () {
   bool1 = !bool1;
 
   if (bool1 === true) {
-    $("#about-box").css("top", "506px");
+    $("#about-box").css("top", "0");
   } else {
     $("#about-box").css("top", "");
   }

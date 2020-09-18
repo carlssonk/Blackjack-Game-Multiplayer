@@ -962,7 +962,13 @@ function partyId() {
 console.log(partyId());
 
 
+// app.get('/offline', (req,res) => {
+//   res.sendFile(__dirname +'/public/offline.html');
+// });
 
+// app.get('/credits', (req,res) => {
+//   res.sendFile(__dirname +'/public/credits.html');
+// });
 
 app.get('/:id', (req,res) => {
   res.sendFile(__dirname +'/public/index.html');

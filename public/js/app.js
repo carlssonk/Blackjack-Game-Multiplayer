@@ -369,17 +369,17 @@ function naturals() {
             playerResultNatural();
           }
         }
-      } else if(players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {         // Checks if player has TWO aces
-        console.log("TWO aces")
-        naturalBlackjack(i)
-        players[i].hasAce = true;
-        // Send player index to webSocket
-        for(let x = 0; x < playerSlotHTML.length; x++) {
-          if(players[i].clientId === playerSlotHTML[x]) {
-            playerNaturalIndex = x;
-            playerResultNatural();
-          }
-        }
+      // } else if(players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {         // Checks if player has TWO aces
+      //   console.log("TWO aces")
+      //   naturalBlackjack(i)
+      //   players[i].hasAce = true;
+      //   // Send player index to webSocket
+      //   for(let x = 0; x < playerSlotHTML.length; x++) {
+      //     if(players[i].clientId === playerSlotHTML[x]) {
+      //       playerNaturalIndex = x;
+      //       playerResultNatural();
+      //     }
+      //   }
       } else {                                                                                              // Checks all cards except for ACE and TEN
         console.log("an ace with a defualt card");
         naturalPlayerAceSum(i)
@@ -1220,7 +1220,7 @@ let bool1
 $("#about").click(function() {
   bool1 = !bool1;
   if(bool1 === true) {
-    $("#about-box").css("top", "506px")
+    $("#about-box").css("top", "0")
   } else {
     $("#about-box").css("top", "")
   }

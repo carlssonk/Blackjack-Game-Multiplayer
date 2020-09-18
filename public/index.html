@@ -33,7 +33,7 @@
     <div>
       <h1>BETTING</h1>
       <p>
-        Before the dealer begins dealing out cards, each player must place a bet and hit ready.</p>
+        Before the dealer begins dealing out cards, each player must place a bet.</p>
     </div>
     <div>
       <h1>THE DEAL</h1>
@@ -43,7 +43,7 @@
     <div>
       <h1>NATURALS</h1>
       <p>
-        When the intial 2 cards has been dealt: If a player gets a count to 21 on the first 2 cards, the player gets whats called Blackjack. Blakjack pays out 3:2 directly to the player and he will wait until next round to play again.</p>
+        If a player gets a count to 21 on the first 2 cards, the player gets Blackjack. Blakjack pays out 3:2 directly to the player and he will wait until next round to play again.</p>
     </div>
     <div>
       <h1>THE PLAY</h1>
@@ -51,16 +51,16 @@
         Now its time for the first player to make his move.
         The player can Hit, Stand, Or Double Down.
         <ul>
-          <li><strong>Hit</strong> = ask for another card in attempt to get closer to 21.</li>
-          <li><strong>Stand</strong> = Don't ask for any cards, moves on to the next player</li>
-          <li><strong>Double Down</strong> = Double the bet and ask for another card. (Can only double down once per round & can't draw any more cards after double'd down).</li>
+          <li><strong style="color: green">Hit</strong> = Ask for another card in attempt to get closer to 21.</li>
+          <li><strong style="color: red">Stand</strong> = Don't ask for any cards, moves on to the next player</li>
+          <li><strong style="color: goldenrod">Double Down</strong> = Double the bet and ask for another card. (You can only double down once per round & can't draw any more cards after double'd down).</li>
         </ul>
       </p>
     </div>
     <div>
       <h1>THE DEALER'S PLAY</h1>
       <p>
-        Dealer starts with taking his card facing down. Dealer will draw until he reaches 17, when dealer's sum is 17 or above, he stops taking cards.
+        Dealer starts with flipping his card facing down. Dealer will draw until he reaches 17, when dealer's sum is 17 or above, he stops taking cards.
       </p>
     </div>
     <div>
@@ -77,7 +77,8 @@
   </div>
 
   <div id="main-menu" class="">
-    <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io">
+    <h1 id="blackjack-title">blackjack.io</h1>
+    <!-- <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io"> -->
     <div id="main-box">
       <div id="avatar-box">
         <button class="prev" onclick="plusSlides(-1)">
@@ -134,12 +135,10 @@
       </div>
     </div>
     <div id="about-box">
-      <strong>blackjack21.io</strong> is a free multiplayer casino game.
+      <strong>blackjack21.io</strong> is a free multiplayer casino game. It's an online version of the traditional blackjack played at real casinos, with some exceptions.
       <ul>
-        <strong>NOTE:</strong>
-        <li>Every game uses ONE standard 52-card pack that shuffles every round.</li>
+        <li>Every game uses 1 standard 52-card pack that shuffles every round.</li>
         <li>Current version of the game does not support Splitting Cards & Insurance.</li>
-        <li>2 aces on the first two cards gives you blackjack (21).</li>
         <li>A private room can consist up to 7 players.</li>
       </ul>
       <button id="about">
@@ -147,6 +146,15 @@
       </button>
     </div>
   </div>
+
+    <!-- <div id="credits"></div>
+      <div>Icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      <div>Icons made by <a href="https://www.flaticon.com/authors/nikita-golubev" title="Nikita Golubev">Nikita Golubev</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      <div>Icons made by <a href="https://creativemarket.com/eucalyp" title="Eucalyp">Eucalyp</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
+      <div>Icons made by <a href="https://smashicons.com/" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+    </div> -->
+    <a id="credits" href="/credits" target="_blank">Credits</a>
 
   <div id="game-room" class="hide-element">
 
@@ -590,6 +598,7 @@
         setTimeout(function() {
           $("#loading-screen").addClass("hide-element")
           $("#main-menu").addClass("hide-element")
+          console.log("remove class")
           $("#game-room").removeClass("hide-element")
           }, 250)
         }
@@ -933,7 +942,11 @@
         gameOn = response.gameOn;
 
 
-        $(".users-list-box:eq("+oldPlayerIndex+")").remove();
+        // If player object is undefined (i.e has left, remove him from list)
+        if(spectators[oldPlayerIndex] === undefined) {
+          $(".users-list-box:eq("+oldPlayerIndex+")").remove();          
+        }
+
 
 
         for(let i = 0; i < players.length; i++) {
