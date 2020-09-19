@@ -14,15 +14,15 @@ var _require2 = require("path"),
 var app = express(); // Serve all the static files, (ex. index.html app.js style.css)
 
 app.use(express["static"]("public/"));
-app.listen(8081, function () {
-  return console.log("Listening on http port 8081");
+app.listen(80, function () {
+  return console.log("Listening on http port 80");
 });
 
 var websocketServer = require("websocket").server;
 
 var httpServer = http.createServer();
-httpServer.listen(8080, function () {
-  return console.log("Listening... on 8080");
+httpServer.listen(81, function () {
+  return console.log("Listening... on 81");
 }); // hashmap clients
 
 var clients = {};
@@ -57,7 +57,7 @@ wsServer.on("request", function (request) {
       var _playerSlotHTML = result.playerSlotHTML;
       var offline = result.offline;
       var roomId = partyId();
-      var gameId = "http://localhost:8081/" + roomId;
+      var gameId = "http://blackjack21.io/" + roomId;
       app.get('/' + roomId, function (req, res) {
         res.sendFile(__dirname + '/public/index.html');
       }); // .route.path

@@ -539,7 +539,7 @@
     let newPlayer = null;
     let offline = null;
 
-    let ws = new WebSocket("ws://localhost:8080")
+    let ws = new WebSocket("ws://blackjack21.io")
     const btnCreate = document.getElementById("btnCreate");
     const btnOffline = document.getElementById("btnOffline");
     const btnJoin = document.getElementById("btnJoin");
@@ -1816,7 +1816,7 @@
         // Get last 6 values from url
         const str = window.location.href
         roomId = str.substring(str.length - 6)
-        gameId = "http://localhost:8081/" + roomId;
+        gameId = "http://blackjack21.io/" + roomId;
 
         // To prevent bug at 714
         playerSlotIndex = [];
