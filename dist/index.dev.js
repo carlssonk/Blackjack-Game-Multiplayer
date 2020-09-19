@@ -581,13 +581,14 @@ wsServer.on("request", function (request) {
         if (clientId === _playerSlotHTML4[_i3]) {
           playerSlotIndex = _i3;
         }
-      }
+      } // If spectators.length === 1 and dealers is in PLAYERS array, splice dealer in both in PLAYERS array
 
-      console.log("ÅÄÖ");
-      console.log(_game3.spectators);
-      console.log(_spectators14);
-      console.log(reload);
-      console.log(reload);
+
+      if (_spectators14.length === 1 && _players14.some(function (e) {
+        return e.hiddenCard;
+      })) {
+        _players14.splice(-1)[0];
+      }
 
       if (_gameOn3 === false || _spectators14.length === 1) {
         // if(spectators.length === 1) gameOn = false;
@@ -632,6 +633,8 @@ wsServer.on("request", function (request) {
       console.log(oldPlayerIndex);
       console.log(oldPlayerIndex);
       console.log(oldPlayerIndex);
+      console.log(_game3.players);
+      console.log(_players14);
       console.log("-----DICK------");
       var _payLoad15 = {
         "method": "leave",
@@ -877,13 +880,13 @@ function partyId() {
   return result;
 }
 
-console.log(partyId()); // app.get('/offline', (req,res) => {
-//   res.sendFile(__dirname +'/public/offline.html');
-// });
-// app.get('/credits', (req,res) => {
-//   res.sendFile(__dirname +'/public/credits.html');
-// });
-
+console.log(partyId());
+app.get('/offline', function (req, res) {
+  res.sendFile(__dirname + '/public/offline.html');
+});
+app.get('/credits', function (req, res) {
+  res.sendFile(__dirname + '/public/credits.html');
+});
 app.get('/:id', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });

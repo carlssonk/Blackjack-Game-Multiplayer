@@ -118,17 +118,50 @@ body {
   position: absolute;
   display: flex;
   justify-content: center;
+  font-size: 60px;
+  font-weight: 500;
+  font-family: "Ultra", sans-serif;
+  color: goldenrod;
   width: 100%;
-  height: 100%;
   padding: 0;
-  margin: 0;
+  margin-top: 40px;
+  pointer-events: none;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f2f6f8+0,d8e1e7+50,b5c6d0+51,e0eff9+100;Grey+Gloss+%232 */
+  background: #f2f6f8;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#f2f6f8", endColorstr="#e0eff9",GradientType=0 );
+  /* IE6-9 */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+#main-menu #blackjack-title span {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#aebcbf+0,6e7774+50,0a0e0a+51,0a0809+100;Black+Gloss */
+  background: #aebcbf;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #aebcbf 0%, #6e7774 50%, #0a0e0a 51%, #0a0809 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #aebcbf 0%, #6e7774 50%, #0a0e0a 51%, #0a0809 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #aebcbf 0%, #6e7774 50%, #0a0e0a 51%, #0a0809 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#aebcbf", endColorstr="#0a0809",GradientType=0 );
+  /* IE6-9 */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: white;
 }
 
 #main-box {
   position: relative;
   width: 500px;
-  border: 3px solid #00001e;
-  border-bottom: 3px solid #000000;
+  border: 3px solid black;
   margin: 160px auto 0 auto;
   text-align: center;
   border-radius: 10px 10px 0px 0px;
@@ -232,16 +265,16 @@ body {
 }
 #main-box #btnOffline {
   margin-top: 40px;
-  background-color: #003761;
+  background-color: #143853;
 }
 #main-box #btnOffline:hover {
-  background-color: #002541;
+  background-color: #0d2436;
 }
 #main-box #btnCreate, #main-box #btnJoin {
-  background-color: #e50051;
+  background-color: #c7971d;
 }
 #main-box #btnCreate:hover, #main-box #btnJoin:hover {
-  background-color: #bd0042;
+  background-color: #9e750d;
 }
 
 #info-rules {
@@ -554,7 +587,7 @@ body {
   width: 42px;
   height: 42px;
   background-color: rgba(4, 14, 59, 0.5);
-  right: 200px;
+  right: 160px;
   margin-top: 10px;
   z-index: 200;
   border: 1px solid black;
@@ -574,9 +607,9 @@ body {
 
 #bg-color-box {
   position: absolute;
-  width: 280px;
+  width: 260px;
   height: 42px;
-  right: 260px;
+  right: 215px;
   margin-top: 10px;
   z-index: 200;
   display: flex;
@@ -1140,7 +1173,7 @@ i {
   position: absolute;
   display: flex;
   bottom: 40px;
-  width: 250px;
+  width: 200px;
   color: white;
   text-align: center;
   border-radius: 10px;
@@ -1229,22 +1262,22 @@ i {
 
 #bets-container {
   position: absolute;
-  width: 950px;
+  width: calc(64% - 200px);
   height: 150px;
   margin: 0 auto;
   bottom: 0;
   left: 50%;
-  margin-left: -475px;
+  transform: translateX(-50%);
   display: flex;
   color: black;
   text-align: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 }
 #bets-container button {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 68px;
+  height: 68px;
   display: inline-block;
   color: black;
   border-radius: 100%;
@@ -1453,4 +1486,77 @@ i {
 
 .flip-card-back {
   transform: rotateY(180deg);
+}
+
+@media all and (max-width: 1200px) {
+  .players {
+    width: 90px;
+    height: 90px;
+  }
+  .players .empty-slot {
+    font-size: 42px;
+  }
+
+  .players-timer {
+    width: 90px;
+    height: 90px;
+  }
+
+  #bets-container button {
+    width: 62px;
+    height: 62px;
+  }
+
+  #balance-bet-box {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+  }
+  #balance-bet-box .balance-bet {
+    height: calc(48px - 10px);
+    width: calc(90px - 10px);
+    margin-top: 8px;
+  }
+
+  #bg-color-box {
+    height: 260px;
+    width: 42px;
+    flex-direction: column;
+    right: 20px;
+    top: 60px;
+  }
+
+  #invite-link-box {
+    width: 230px;
+  }
+  #invite-link-box #invite-label {
+    padding: 0px 4px;
+    font-size: 15px;
+  }
+}
+@media all and (max-width: 992px) {
+  .players {
+    width: 80px;
+    height: 80px;
+  }
+  .players .empty-slot {
+    font-size: 36px;
+  }
+
+  .players-timer {
+    width: 80px;
+    height: 80px;
+  }
+
+  #bets-container button {
+    width: 54px;
+    height: 54px;
+  }
+
+  #invite-link-box {
+    width: 132px;
+  }
+  #invite-link-box #invite-label {
+    font-size: 14px;
+  }
 }

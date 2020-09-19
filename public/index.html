@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/style.scss">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Play&family=Roboto&family=Rubik&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Inline&family=Luckiest+Guy&family=Ultra&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="loading-screen" class="hide-element">
@@ -77,7 +78,7 @@
   </div>
 
   <div id="main-menu" class="">
-    <h1 id="blackjack-title">blackjack.io</h1>
+    <h1 id="blackjack-title">blackjack21<span>.io</span></h1>
     <!-- <img id="blackjack-title" src="/imgs/blackjack21io.png" alt="blackjack21.io"> -->
     <div id="main-box">
       <div id="avatar-box">
@@ -145,6 +146,7 @@
         About
       </button>
     </div>
+    <a id="credits" href="/credits" target="_blank">Credits</a>
   </div>
 
     <!-- <div id="credits"></div>
@@ -154,7 +156,6 @@
       <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
       <div>Icons made by <a href="https://smashicons.com/" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </div> -->
-    <a id="credits" href="/credits" target="_blank">Credits</a>
 
   <div id="game-room" class="hide-element">
 
@@ -1657,7 +1658,7 @@
 
       if(response.method === "dealersTurn") {
         dealersTurn = response.dealersTurn
-        console.log(dealersTurn)
+        playersCanPlay = false
         if(dealersTurn === true) {
           $(".players-timer circle").removeClass("circle-animation")
           $(".player-sum").removeClass("current-player-highlight");

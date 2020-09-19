@@ -629,11 +629,13 @@ wsServer.on("request", request => {
           playerSlotIndex = i;
         }
       }
-      console.log("ÅÄÖ")
-      console.log(game.spectators)
-      console.log(spectators)
-      console.log(reload)
-      console.log(reload)
+
+
+      // If spectators.length === 1 and dealers is in PLAYERS array, splice dealer in both in PLAYERS array
+      if(spectators.length === 1 && players.some(e => e.hiddenCard)) {
+        players.splice(-1)[0]
+      }
+
 
       if(gameOn === false || spectators.length === 1) {
         // if(spectators.length === 1) gameOn = false;
@@ -681,6 +683,8 @@ wsServer.on("request", request => {
       console.log(oldPlayerIndex)
       console.log(oldPlayerIndex)
       console.log(oldPlayerIndex)
+      console.log(game.players)
+      console.log(players)
       console.log("-----DICK------")
 
       
@@ -962,13 +966,13 @@ function partyId() {
 console.log(partyId());
 
 
-// app.get('/offline', (req,res) => {
-//   res.sendFile(__dirname +'/public/offline.html');
-// });
+app.get('/offline', (req,res) => {
+  res.sendFile(__dirname +'/public/offline.html');
+});
 
-// app.get('/credits', (req,res) => {
-//   res.sendFile(__dirname +'/public/credits.html');
-// });
+app.get('/credits', (req,res) => {
+  res.sendFile(__dirname +'/public/credits.html');
+});
 
 app.get('/:id', (req,res) => {
   res.sendFile(__dirname +'/public/index.html');

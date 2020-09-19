@@ -1518,3 +1518,36 @@ function startPlayTimer() {
 
   }, 1000)
 };
+
+
+
+
+
+// MEDIA QUERIES
+
+updateMediaQuery()
+function updateMediaQuery() {
+  if($(".players").css("width") === "90px") {
+    $("circle").attr({
+      r: "43",
+      cx: "45",
+      cy: "45"
+    })
+    $("#invite-label").text("Hover to see invite link")
+  } else if($(".players").css("width") === "80px") {
+    $("circle").attr({
+      r: "38",
+      cx: "40",
+      cy: "40"
+    })
+    $("#invite-label").text("invite link")
+  } else if($(".players").css("width") === "100px") {
+    $("circle").attr({
+      r: "48",
+      cx: "50",
+      cy: "50"
+    })
+  }
+}
+
+window.onresize = updateMediaQuery;
