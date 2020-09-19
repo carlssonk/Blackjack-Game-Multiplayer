@@ -28,8 +28,8 @@ let gameOn = false;
 let showSum = false;
 let chipIndex = null;
 let playersCanPlay = false;
-// resetCards = false;
 let clientDeal = {};
+
 
 // Cards (suit)
 const suit = ["Heart", "Diamond", "Spade", "Club"]
@@ -157,6 +157,7 @@ const chipImg = [
   "Black"
 ]
 
+
 // Actual deck (suit & values combined)
 let deck = []
 // theDeal is false when the deal is done
@@ -261,7 +262,6 @@ function playerBets() {
         } else {
           alert("Need more balance")
         }
-        console.log("sendPlayerBets")
       });
     }
 }
@@ -278,14 +278,12 @@ function playerBets() {
 
     // Check if all players is ready
     if(players.every(player => player.isReady === true) && gameOn === false) {
-      console.log("ONLY ONE")
       startDeal();
     }
 
   });
 
   function startDeal() {
-    console.log("startDeal")
     gameOn = true;
     clientDeal = clientId;
     getDeck();
@@ -308,7 +306,7 @@ function dealCards() {
   // Give each player 1 card
   for(let i = 0; i < players.length; i++) {
     setTimeout(function(){
-      console.log(deck[0])
+      // console.log(deck[0])
       player.cards.push(deck[0])
       deck.shift()
       updatePlayerCards()
@@ -323,7 +321,7 @@ function dealCards() {
 
 function dealDealerCards() {
   setTimeout(function () {
-    console.log(deck[0])
+    // console.log(deck[0])
     if(dealer.cards.length === 1) {
       // If dealer has 1 card, push next card to hidden card
       dealer.hiddenCard.push(deck[0])
@@ -333,7 +331,6 @@ function dealDealerCards() {
       // Check if natural and Enable the First player to take an action
       setTimeout(function() {
         naturals();
-        console.log("SEND THE PLAY")
         hasPlayers0Left() // check if players[0] has left during this phase
         sendPlayerThePlay();
         sendShowSum();
@@ -359,7 +356,6 @@ function naturals() {
     if (Array.isArray(players[i].cards[0].value.value) || Array.isArray(players[i].cards[1].value.value)) { // Checks if player has a card with an ACE (the ace is an array)
 
       if (players[i].cards[0].value.value === 10 || players[i].cards[1].value.value === 10) {               // Checks if player has a TEN
-        console.log("A ten & and ace")
         naturalBlackjack(i)
         players[i].hasAce = true;
         // Send player index to webSocket
@@ -381,12 +377,10 @@ function naturals() {
       //     }
       //   }
       } else {                                                                                              // Checks all cards except for ACE and TEN
-        console.log("an ace with a defualt card");
         naturalPlayerAceSum(i)
         players[i].hasAce = true;
       }
     } else {                                                                                                // All cards except for ACE
-      console.log("defualt cards");
       players[i].sum = players[i].cards[0].value.value + players[i].cards[1].value.value;
     }
   }
@@ -437,24 +431,8 @@ function thePlay() {
         $(".user-action-container").addClass("hide-element")
         clearInterval(thePlayTime);
         $(".user-action-box").last().addClass("noclick")
-        // for(let i = 0; i < game.players.length; i++) {
-        //   for(let x = 0; x < players.length; x++) {
-        //     game.players[i].sum = players[x].sum
-        //     game.players[i].bet = players[x].bet
-        //   }
-        // }
-        console.log(player)
-        console.log(player)
-        console.log(player)
-
-        
-        // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-        // storedPlayers = players // To prevent bug because we reset the players after this line
-        // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
 
         sendPlayerNext();
-        // updatePlayers()
-
 
       } else if(this === userAction[1] && clicked === false) {
         clicked = true;
@@ -499,7 +477,6 @@ function playerHit() {
 }
 
 function sendPlayerNext() {
-  console.log("player next")
   $(".user-action-box").removeClass("noclick")
   $("#dark-overlay").css("opacity", "")
   timerRunningOut.stop()
@@ -523,7 +500,6 @@ function sendPlayerNext() {
     sendDealersTurn()
     setTimeout(dealerPlay, 500)
   } else {
-    console.log("SEND THE PLAY")
     sendPlayerThePlay();
   }
   updatePlayers()
@@ -543,17 +519,10 @@ function playerDoubleDown() {
 // *************************DEALER PLAY*************************
 
 function dealerPlay() {
-  console.log("DealerPlay")
-  console.log("DealerPlay")
-  console.log("DealerPlay")
-  // sendDealersTurn();
   // // PUSH DEALER TO PLAYER ARRAY
-  // players = game.players
   players.push(dealer);
   //PUSH DEALERS HIDDEN CARD TO DECK[0]
   deck.unshift(dealer.hiddenCard[0])
-  // Push dealers hidden card to deck[0] REMOVE
-  // dealer.cards.push(dealer.hiddenCard[0]); REMOVE
   dealer.hiddenCard = [];
   player = players[currentPlayer];
 
@@ -573,12 +542,6 @@ function dealerPlay() {
 // ***********************FINAL COMPARE*************************
 
 function finalCompareGo() { // This should fire up for all players
-  console.log("finalCompare")
-  console.log("finalCompare")
-  console.log("finalCompare")
-  console.log("finalCompare")
-  console.log("finalCompare")
-  console.log("finalCompare")
   // if dealer sum.length === 2. Fix dealer sum before proceeding (I know this block of code is repetetive, will fix later)
   if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
     dealer.sum.shift()
@@ -627,30 +590,12 @@ function finalCompareGo() { // This should fire up for all players
           }
   // Function for display win/lose/draw/bj coins as well as payout
   winLoseComponents()
-  // Function for RESET GAME
-  // setTimeout(function() {
-  // resetGame();
-  // }, 4000);
 }
 
 function winLoseComponents() {
-  // if dealer sum.length === 2. Fix dealer sum before proceeding
-  // if(dealer.sum.length === 2 && dealer.sum[1] <= 21) {
-  //   dealer.sum.shift()
-  //   dealer.sum = dealer.sum[0]
-  // } else if(dealer.sum.length === 2 && dealer.sum[1] > 21) {
-  //   dealer.sum.pop()
-  //   dealer.sum = dealer.sum[0]
-  // }
+
 
   dealerSlot.firstElementChild.nextElementSibling.innerHTML = dealer.sum
-  // // remove dealer from player
-
-  // players.splice(-1)[0]
-  console.log(players[0].sum)
-  console.log(game.players[0].sum)
-
-  // sendPlayerBets() // <--- this only updates players array
   // For all players That have NOT busted, compare sum to dealer
   for(let i = 0; i < players.length; i++) {
     // exclude all players that already have blackjack
@@ -659,7 +604,6 @@ function winLoseComponents() {
       // Also check if dealer has bust
       if(dealer.sum > 21) {
         playerWin(i)
-        console.log("DEALER BUST")
         for(let x = 0; x < playerSlotHTML.length; x++) {
           if(players[i].clientId === playerSlotHTML[x]) {
             $(".player-result:eq("+x+")").removeClass("hide-element")
@@ -669,7 +613,6 @@ function winLoseComponents() {
         }
       } else if(dealer.sum < players[i].sum) {
         playerWin(i)
-        console.log("player win")
         for(let x = 0; x < playerSlotHTML.length; x++) {
           if(players[i].clientId === playerSlotHTML[x]) {
             $(".player-result:eq("+x+")").removeClass("hide-element")
@@ -679,7 +622,6 @@ function winLoseComponents() {
         }
       } else if(dealer.sum === players[i].sum) {
         playerDraw(i)
-        console.log("Draw!")
         for(let x = 0; x < playerSlotHTML.length; x++) {
           if(players[i].clientId === playerSlotHTML[x]) {
             $(".player-result:eq("+x+")").removeClass("hide-element")
@@ -839,10 +781,6 @@ function resetGame() {
     resetCards = false;
   }
 
-
-  // updateCurrentPlayer();
-  // updatePlayers();
-  console.log("resetGameState1")
 }
 
 function terminatePlayerFromSlot() {
@@ -868,7 +806,6 @@ function terminatePlayerFromSlot() {
           game.playerSlotHTML[x] = {}
           players.splice(i, 1);
           game.players.splice(i, 1);
-          console.log(game.players)
         }        
       }
     }
@@ -883,18 +820,9 @@ function terminatePlayerFromSlot() {
 
 function bust() {
   player.cards = [];
-  // player.bet = 0;
-  // updatePlayerCards()
-  // updatePlayers();
-  // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-  // storedPlayers = players // To prevent bug because we reset the players after this line
-  // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
   sendPlayerNext();
 }
 
-function finalResult() {
-  
-}
 
 // *************************************************************
 
@@ -949,9 +877,6 @@ function compareSum() {
   if(!player.hasAce && !deck[0].value.hasAce) {
     player.sum = player.sum + deck[0].value.value // add sum
     player.hasAce = false;
-    console.log(player.sum)
-    console.log(player.sum)
-    console.log(player.sum)
     givePlayerCard() // give player card
     // if(dealer.cards[1] === dealer.cards[2]) dealer.cards.splice(1, 1)
 
@@ -988,17 +913,10 @@ function outputCardSum() {
   player.hasAce = false;
   if(dealersTurn === false) {
     if(player.sum === 21) {
-      // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-      // storedPlayers = players // To prevent bug because we reset the players after this line
-      // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
       sendPlayerNext() 
     } else if(player.sum < 21 && doubleDown === false) {
-      console.log("SEND THE PLAY")
       sendPlayerThePlay();
     } else if(player.sum < 21 && doubleDown === true) {
-      // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-      // storedPlayers = players // To prevent bug because we reset the players after this line
-      // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
       sendPlayerNext();
     } else if(player.sum > 21) {
       bust();
@@ -1017,17 +935,10 @@ function outputCardSumAce() {
     // Take the current value and do the following...
     if(dealersTurn === false) {
       if(player.sum === 21) {
-        // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-        // storedPlayers = players // To prevent bug because we reset the players after this line
-        // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext() 
       } else if(player.sum < 21 && doubleDown === false) {
-        console.log("SEND THE PLAY")
         sendPlayerThePlay();
       } else {
-        // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-        // storedPlayers = players // To prevent bug because we reset the players after this line
-        // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
       }
     }  
@@ -1038,18 +949,11 @@ function outputCardSumAce() {
       if(player.sum[1] === 21) {
         player.sum.shift()
         player.sum = player.sum[0]
-        // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-        // storedPlayers = players // To prevent bug because we reset the players after this line
-        // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
       } 
       if(player.sum[1] < 21 && doubleDown === false) {
-        console.log("SEND THE PLAY")
         sendPlayerThePlay();
       } else {
-        // if(players.length > game.players.length - fixCurrentPlayerLength) fixCurrentPlayerLength++;
-        // storedPlayers = players // To prevent bug because we reset the players after this line
-        // players = game.players // Have this line above all sendPlayerNext EXCEPT for the initial cards
         sendPlayerNext();
       }
     }
@@ -1068,7 +972,6 @@ function outputCardSumAceDealer() {
       if(player.sum < 17) {
         setTimeout(playerHit, 500)
       } else {
-        console.log("FINAL COMPARE")
         // Remove dealer from players array, then compare
         setTimeout(function() {
           resetGameState()
@@ -1084,7 +987,6 @@ function outputCardSumAceDealer() {
       if(player.sum[1] < 17) {
         setTimeout(playerHit, 500)
       } else {
-        console.log("FINAL COMPARE")
         // Remove dealer from players array, then compare
         setTimeout(function() {
           resetGameState()
@@ -1102,7 +1004,6 @@ function outputCardSumDealer() {
     if(player.sum < 17) {
       setTimeout(playerHit, 500)
     } else {
-      console.log("FINAL COMPARE")
       // Remove dealer from players array, then compare
       setTimeout(function() {
         resetGameState()
@@ -1125,7 +1026,6 @@ function givePlayerCard() {
     deck.shift()
 
     if(dealersTurn === true) {
-     console.log("updateDealerCards") 
       updateDealerCards()
     }
     
@@ -1142,20 +1042,14 @@ function nextPlayer() {
   currentPlayer = currentPlayer+1;
   player = players[currentPlayer];
 
-
-  // if(players[currentPlayer] === undefined) currentPlayer = players.length - 1
-  // This checks if any players have left during the game
-  // if(players[currentPlayer] !== undefined) {
     for(let i = 0; i < players.length; i++) {
       if(players[currentPlayer] !== undefined && players[currentPlayer].hasLeft === true) {
         currentPlayer = currentPlayer+1;
-        console.log(1)
         player = players[currentPlayer];
       } else {
         break;
       }
     }
-  // }
 
 }
 
@@ -1164,7 +1058,6 @@ function hasPlayers0Left() {
   for(let i = 0; i < players.length; i++) {
     if(players[currentPlayer] !== undefined && players[currentPlayer].hasLeft === true) {
       currentPlayer = currentPlayer+1;
-      console.log(1)
       player = players[currentPlayer];
     } else {
       break;
@@ -1172,38 +1065,7 @@ function hasPlayers0Left() {
   }
 }
 
-// currentPlayer = (currentPlayer+1)%(players.length); <--- cycle through players
-
 // ****************************************************
-
-
-
-
-
-
-
-
-// if player Blackjack Bust or Stay, go to next player
-
-// Compare the sums of the cards between D & P
-// If P card sum is greater than 21 = Bust
-// If P card sum is less than 21 = Option Hit or Stand
-// If P option is stay, compare sum of D & P
-// If P sum < 21 && > D sum then P wins
-// IF P sum < D sum then P loses
-// #############################
-
-
-// Sorts defualt cards
-// players[i].cards.sort(
-//   function(a, b) {
-//      return a.value.value > b.value.value ? 1 : -1;
-//   });
-
-// Skicka denna loggen tilla alla clients som har joinat en lobby och tryckt på "ready"
-
-
-// MULTIPLAYER WIRING EVENTS
 
 
 
@@ -1305,7 +1167,6 @@ $(".update-balance-bet").click(function() {
 // CLEAR AND MAX BOTH ACTUAL UPDATE AND CSS UPDATE
 $(".max-clear").click(function() {
   defaultClick.play();
-  console.log(this.innerText)
 for(let i = 0; i < playerSlotHTML.length; i++) {
 if(playerSlotHTML[i] === clientId) {
 
@@ -1551,3 +1412,4 @@ function updateMediaQuery() {
 }
 
 window.onresize = updateMediaQuery;
+

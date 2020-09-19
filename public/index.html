@@ -219,15 +219,7 @@
       <div id="users-online-button"><i class="fas fa-chevron-right"></i></div>
     </div>
     <ul id="users-online-container">
-      <!-- <li class="users-list-box">
-        <div class="users-list-info">
-          <div class="user-list-name">Name</div>
-          <div>Balance: <span class="users-list-balance">1000</span></div>
-        </div>
-        <div class="users-list-img">
-          <img src="/imgs/avatars/user.svg" alt="avatar">
-        </div>
-      </li> -->
+
     </ul>
   </div>
 
@@ -545,9 +537,11 @@
     let dealersHiddenCard = "";
     let timerStarted = false;
     let newPlayer = null;
+    let offline = null;
 
     let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
+    const btnOffline = document.getElementById("btnOffline");
     const btnJoin = document.getElementById("btnJoin");
     const txtGameId = document.getElementById("txtGameId");
     const divPlayers = document.getElementById("divPlayers");
@@ -599,7 +593,6 @@
         setTimeout(function() {
           $("#loading-screen").addClass("hide-element")
           $("#main-menu").addClass("hide-element")
-          console.log("remove class")
           $("#game-room").removeClass("hide-element")
           }, 250)
         }
@@ -615,6 +608,29 @@
         "playerSlot": playerSlot,
         "playerSlotHTML": playerSlotHTML,
         "roomId": roomId
+      }
+      ws.send(JSON.stringify(payLoad));
+
+      // setTimeout(playerJoin, 500)
+      setTimeout(function() {
+      playerJoin()
+      $("#loading-screen").addClass("hide-element")
+      $("#main-menu").addClass("hide-element")
+      $("#game-room").removeClass("hide-element")
+      }, 300)
+    });
+
+    btnOffline.addEventListener("click", (e) => {
+      let offline = true;
+      $("#loading-screen").removeClass("hide-element")
+      const payLoad = {
+        "method": "create",
+        "clientId": clientId,
+        "theClient": theClient,
+        "playerSlot": playerSlot,
+        "playerSlotHTML": playerSlotHTML,
+        "roomId": roomId,
+        "offline": offline
       }
       ws.send(JSON.stringify(payLoad));
 
@@ -781,7 +797,6 @@
     }
 
     function sendPlayerThePlay() {
-      console.log(player)
       const payLoad = {
         "method": "thePlay",
         "players": players,
@@ -840,7 +855,6 @@
     }
 
     function terminatePlayer() {
-      console.log("terminate")
       const payLoad = {
         "method": "terminate",
         "spectators": spectators,
@@ -923,12 +937,12 @@
     ws.onmessage = message => {
       // message.data
       const response = JSON.parse(message.data)
-      console.log(response);
+      // console.log(response);
       // connect
       if (response.method === "connect") {
         clientId = response.clientId;
         theClient = response.theClient;
-        console.log("Client id Set successfully " + clientId);
+        // console.log("Client id Set successfully " + clientId);
 
       }
 
@@ -983,13 +997,11 @@
         if(players.some(e => e.clientId === clientId)) {
           if(!$(".empty-slot").is("noclick")) {
             $(".empty-slot").addClass("noclick");
-            console.log("NO")
           } 
         }
 
 
         // If player not sits on a slot
-        console.log("LEAVE")
           if(gameOn === true) {
             $(".empty-slot").addClass("noclick")
 
@@ -1022,25 +1034,31 @@
       if (response.method === "create") {
         gameId = response.game.id;
         roomId = response.roomId;
-        console.log(roomId)
-        console.log(gameId)
-        console.log("Game successfully created with id " + response.game.id);
+        offline = response.offline
+        // console.log(roomId)
+        // console.log(gameId)
+        // console.log("Game successfully created with id " + response.game.id);
+
+        if(offline === true) {
+          window.history.pushState('offline_page', 'Offline Mode', '/');
+          $("#invite-link-box").remove();
+          $("#users-online-label").text("OFFLINE MODE")
+        }
       }
 
 
       // join
       if (response.method === "join") {
-        console.log("asd")
-        console.log(spectators)
         game = response.game;
-        console.log(game.spectators)
         player = game.player
         spectators = game.spectators
         playerSlotHTML = response.playerSlotHTML
         roomId = response.roomId;
 
         roomId = gameId.substring(gameId.length - 6)
-        window.history.pushState('game', 'Title', '/' + roomId);
+        if(offline !== true) {
+          window.history.pushState('game', 'Title', '/' + roomId);          
+        }
 
       }
 
@@ -1050,7 +1068,6 @@
         game = response.game
         players = response.players
         spectators = game.spectators
-        console.log(spectators)
         playerSlotHTML = response.playerSlotHTML
 
         $('#invite-link').val(gameId);
@@ -1099,9 +1116,6 @@
         playerSlotHTML = response.playerSlotHTML
 
 
-        console.log(newPlayer)
-        console.log(newPlayer)
-        console.log(newPlayer)
         // Update for players that already are in da game
         if(spectators.length > $("#users-online-container").children().length) {
           if(newPlayer.nickname === "") newPlayer.nickname = "Player";
@@ -1178,7 +1192,6 @@
           for(let x = 0; x < players.length; x++) {
             for(let i = 0; i < playerSlotHTML.length; i++) {
               if(players[x].clientId === playerSlotHTML[i]) {
-                console.log(2)
                 z = playerSlotHTML.indexOf(playerSlotHTML[i])
                 if(playerSlot[z].firstElementChild.nextElementSibling.classList.contains("empty-slot")) playerSlot[z].firstElementChild.nextElementSibling.remove();
               }
@@ -1209,7 +1222,6 @@
                   for(let s = 0; s < playerSlotHTML.length; s++) {
                     if(players[i].clientId === playerSlotHTML[s]) {
                       cardIndexJoin++
-                      console.log(3)
                       playerSlot[s].lastElementChild.innerHTML += 
                       `<img class="cardImg` + " card" + cardIndexJoin + `" src="/imgs/` + deckImg[d] + `.svg" width="100" height="150">`;
                     }
@@ -1249,15 +1261,8 @@
           </div>
           `;
           $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg" width="100" height="150">`)
-          // for(let d = 0; d < deckImg.length; d++) {
-          //   for(let c = 0; c < dealer.cards.length; c++) {
-          //     if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
 
-          //     }
-          //   }
-          // }
           setTimeout(function() {
-            console.log(dealersHiddenCard)
             $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealersHiddenCard +`.svg" width="100" height="150">`)
           }, 50)
           // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg" width="100" height="150">`)
@@ -1293,8 +1298,6 @@
       if (response.method === "joinMidGameUpdate") {
         spectators = response.spectators;
         newPlayer = response.newPlayer;
-        console.log(players)
-        console.log(currentPlayer)
 
         if(players.length > 0) {
         // Send dealersHiddenCard to the new player who joined
@@ -1306,7 +1309,6 @@
         if(players[players.findIndex(players => players.hasLeft === false)].clientId === clientId) {
           ws.send(JSON.stringify(payLoad));          
         }
-        console.log("A PLAYER JOINED")
         // Reset the game if players array is not in the spectators array
         if(players.length === 1 && players[0].hasLeft === true) {
           // dry block of code, it just adds hasLeft to spectators array so we can later delete it in resetGame();
@@ -1436,24 +1438,6 @@
 
           }
         }
-        // Animation
-        // // console.log(z)
-        // setTimeout(function() {
-        //   // console.log(z)
-        //   $(".players:eq("+z+") .player-cards").children().removeClass("cardAnimation")
-        // }, 50)
-        
-
-
-        // $(".player-cards:eq("+z+")").children().removeClass("cardAnimation")
-        // playerSlot[z].lastElementChild.children.classList.remove("cardAnimation")
-        // if(resetCards === true) {
-        //   for(let s = 0; s < playerSlot.length; s++) {
-        //     playerSlot[s].lastElementChild.innerHTML = ""
-        //   }
-        //   dealerSlot.lastElementChild.lastElementChild.innerHTML = "";
-        //   resetCards = false;
-        // }
 
       }
 
@@ -1561,7 +1545,6 @@
 
       // the playe
       if (response.method === "thePlay") {
-        console.log("the Play")
         player = response.player;
         currentPlayer = response.currentPlayer;
         playersCanPlay = true;
@@ -1583,14 +1566,11 @@
           } else {
             if(player.clientId === clientId && player.sum < 21 || player.clientId === clientId && theClient.sum.length > 1) {
               clicked = false;
-              console.log("ITS YOUR TURN")
               thePlay()
             } else if(player.clientId === clientId && player.sum >= 21) {
-              console.log("you blackjacked or busted")
               sendPlayerNext()
             } else {
               clicked = true;          
-              console.log("WAIT FOR YOUR TURN")    
             }          
           }
 
@@ -1598,7 +1578,6 @@
         for(let i = 0; i < players.length; i++) {
           if(players[currentPlayer] !== undefined && players[currentPlayer].hasLeft === true) {
             currentPlayer = currentPlayer+1;
-            console.log(1)
             player = players[currentPlayer];
           } else {
             break;
@@ -1630,15 +1609,11 @@
 
       // Join Table
       if(response.method === "joinTable") {
-        console.log(theClient.bet)
         game = response.game;
-        console.log(theClient.bet)
         spectators = response.spectators
         players = response.players
         theSlot = response.theSlot
-        console.log(theClient.bet)
         user = response.user
-        console.log(theClient.bet)
         // theClient = response.theClient
         playerSlotHTML = response.playerSlotHTML
 
@@ -1653,7 +1628,6 @@
             }
           }
         }
-        console.log(theClient.bet)
       }
 
       if(response.method === "dealersTurn") {
@@ -1680,7 +1654,6 @@
       }
 
       if(response.method === "finalCompare") {
-        console.log("final compare go")
         finalCompareGo();
       }
 
@@ -1704,7 +1677,6 @@
       if (response.method === "connect" || response.method === "create" || response.method === "joinClient" || response.method === "join" || response.method === "playersLength" || response.method === "playerResult" || response.method === "playerResultNatural" || response.method === "getRoute") {
         return;
       } else {
-        console.log(theClient.bet)
         updateAllPlayers()
         syncTheGame()
       }
@@ -1748,14 +1720,7 @@
             if(playerSlot[z].firstElementChild.nextElementSibling.classList.contains("empty-slot")) playerSlot[z].firstElementChild.nextElementSibling.remove();
             playerSlot[z].firstElementChild.nextElementSibling.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
-            // playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.classList.remove("hide-element")
             playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.innerHTML = players[x].sum
-            console.log("asd")
-            // console.log(playerSlot[z].firstElementChild.nextElementSibling.innerHTML)
-            // playerSlot[z].firstElementChild.nextElementSibling.innerHTML += `<span><img class="player-avatar" src="/imgs/avatars/`+players[x].avatar+`.svg" alt="avatar"></span>`
-            // console.log(playerSlot[z].firstElementChild.nextElementSibling.innerHTML)
-            // playerSlot[z].firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = players[x].bet
-            // Player busts
             if(players[x].sum > 21) {
               $(".player-result:eq("+z+")").removeClass("hide-element")
               $(".player-result:eq("+z+")").addClass("result-lose")
@@ -1793,7 +1758,6 @@
     for(let s = 0; s < playerSlot.length; s++) {
       (function(index){
         playerSlot[s].addEventListener("click", function() {
-          console.log(this)
           if(joined === false && this.firstElementChild.nextElementSibling.classList.value === "empty-slot" && gameOn === false) {
             joined = true;
             theSlot = index
@@ -1813,7 +1777,6 @@
       for(let s = 0; s < playerSlotHTML.length; s++) {
         for(let i = 0; i < players.length; i++) {
           if(players[i].isReady && players[i].clientId === playerSlotHTML[s]) {
-            console.log("player " + s + " is ready")
             // players[i].isReady = false;
             if(players[i].bet >= 10 && players[i].bet < 50) {chipIndex = "White"} else 
             if(players[i].bet >= 50 && players[i].bet < 100) {chipIndex = "Red"} else 
@@ -1825,9 +1788,7 @@
             if(players[i].bet >= 50000 && players[i].bet < 100000) {chipIndex = "Brown"} else 
             if(players[i].bet >= 100000) {chipIndex = "Black"};
             $(".players:eq("+s+") .player-bet").text(players[i].bet)
-            console.log("hahaha")
             $(".players:eq("+s+") .player-coin").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)")
-            console.log(players[i].bet)
             if(players[i].bet > 999) {
               $(".players:eq("+s+") .player-coin").html($(".players:eq("+s+") .player-bet").text().slice(0, -3) + "K" + `<div class="player-bet hide-element"></div>`);
             } else {
@@ -1836,7 +1797,6 @@
             $(".players:eq("+s+") .player-bet").text(players[i].bet)
 
             setTimeout(function() {
-              console.log("PLAYER COIN ANIMATION")
               $(".players:eq("+s+") .player-coin").addClass("player-coin-animation")
             }, 50)
             
@@ -1870,7 +1830,6 @@
       theClient.hasLeft = true;
       if(playersCanPlay === true && player.clientId === clientId && players.length > 1) {
         sendPlayerNext();
-        console.log("sendPlayerNext")
       }
       terminatePlayer();
       // Dont add more code below terminatePlayer(), its dangerous

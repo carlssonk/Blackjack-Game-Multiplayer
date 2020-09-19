@@ -44,27 +44,23 @@ wsServer.on("request", function (request) {
     return console.log("opened");
   });
   connection.on("close", function () {
-    console.log("closed"); // console.log(clients)
+    console.log("closed");
   });
   connection.on("message", function (message) {
     var result = JSON.parse(message.utf8Data); // a user want to create a new game
 
     if (result.method === "create") {
-      console.log("create");
+      // console.log("create")
       var _clientId = result.clientId;
       var _theClient = result.theClient;
       var playerSlot = result.playerSlot;
       var _playerSlotHTML = result.playerSlotHTML;
+      var offline = result.offline;
       var roomId = partyId();
       var gameId = "http://localhost:8081/" + roomId;
       app.get('/' + roomId, function (req, res) {
         res.sendFile(__dirname + '/public/index.html');
-      });
-      console.log(app._router.stack.slice(-1, 1));
-      console.log(app._router.stack.length);
-      setTimeout(function () {
-        console.log(app._router.stack.length);
-      }, 5000); // .route.path
+      }); // .route.path
 
       games[gameId] = {
         "id": gameId,
@@ -82,7 +78,8 @@ wsServer.on("request", function (request) {
       var _payLoad = {
         "method": "create",
         "game": games[gameId],
-        "roomId": roomId
+        "roomId": roomId,
+        "offline": offline
       };
       var con = clients[_clientId].connection;
       con.send(JSON.stringify(_payLoad));
@@ -90,8 +87,6 @@ wsServer.on("request", function (request) {
 
 
     if (result.method === "join") {
-      console.log("join");
-      console.log("---------");
       var nickname = result.nickname;
       var avatar = result.avatar;
       var _gameId = result.gameId;
@@ -100,24 +95,19 @@ wsServer.on("request", function (request) {
       var _clientId2 = result.clientId; // const gameId = result.gameId;
 
       var game = games[_gameId];
-      console.log(game.spectators);
-      var _players = game.players; // console.log(players)
-
+      var _players = game.players;
       var _spectators = game.spectators;
       var _playerSlot = game.playerSlot;
       var _playerSlotHTML2 = game.playerSlotHTML; // const partyId = result.partyId;
 
       _theClient2.nickname = nickname;
       _theClient2.avatar = avatar;
-      console.log(_theClient2.avatar);
 
       if (game.spectators.length >= 7) {
         // Max players reached
         return;
-      }
+      } // Push unique Id to the client
 
-      console.log(game.spectators);
-      console.log(_spectators); // Push unique Id to the client
 
       _theClient2.clientId = _clientId2; // Push client to players array
       // game.players.push(theClient)
@@ -138,9 +128,7 @@ wsServer.on("request", function (request) {
         "spectators": _spectators,
         "playerSlotHTML": _playerSlotHTML2,
         "roomId": _roomId
-      };
-      console.log(game.spectators);
-      console.log(_spectators); // loop through all clients and tell them that people has joined
+      }; // loop through all clients and tell them that people has joined
       // if(game.players.length === 0) {
 
       if (!game.gameOn === true) {
@@ -150,7 +138,6 @@ wsServer.on("request", function (request) {
       } // }
 
 
-      console.log(_spectators);
       var payLoadClient = {
         "method": "joinClient",
         "theClient": _theClient2,
@@ -181,10 +168,8 @@ wsServer.on("request", function (request) {
           clients[c.clientId].connection.send(JSON.stringify(payLoadClientArray));
         });
       } // }
+      // If a player joins mid-game
 
-
-      console.log(_spectators);
-      console.log("---------"); // If a player joins mid-game
 
       var payLoadMidGame = {
         "method": "joinMidGame",
@@ -208,39 +193,6 @@ wsServer.on("request", function (request) {
           clients[c.clientId].connection.send(JSON.stringify(payLoadMidGameUpdate));
         });
       }
-    }
-
-    if (result.method === "joinLobby") {//   const gameId = result.gameId;
-      //   const roomId = result.roomId;
-      //   const game = games[gameId];
-      //   const spectators = game.spectators;
-      //   const lobbySpectators = game.lobbySpectators
-      //   let theClient = result.theClient;
-      //   const clientId = result.clientId;
-      //   theClient.clientId = clientId
-      //   game.lobbySpectators.push(theClient)
-      //   for(let i = 0; i < game.lobbySpectators.length; i++) {
-      //     if(game.lobbySpectators[i].clientId === clientId) {
-      //       // theClient = game.spectators[i]
-      //       game.lobbySpectators[i] = theClient
-      //     }
-      //   }
-      //   console.log(game.lobbySpectators)
-      //   console.log(game.lobbySpectators)
-      //   console.log(game.lobbySpectators)
-      //   const payLoad = {
-      //     "method": "joinLobby",
-      //     "game": game,
-      //     "spectators": spectators,
-      //     "lobbySpectators": lobbySpectators,
-      //     "roomId": roomId
-      //   }
-      //   // Send to All clients that are in room
-      //   game.spectators.forEach(c => {
-      //     clients[c.clientId].connection.send(JSON.stringify(payLoad))
-      //   });
-      //   // Send to the lobby client
-      //   connection.send(JSON.stringify(payLoad))
     }
 
     if (result.method === "terminateRoom") {} // let roomId = result.roomId
@@ -309,8 +261,6 @@ wsServer.on("request", function (request) {
       var _theClient4 = result.theClient;
       var _players5 = result.players;
       var _spectators5 = result.spectators;
-      console.log(_theClient4.hasLeft);
-      console.log(_players5);
       var _payLoad6 = {
         "method": "hasLeft",
         "players": _players5,
@@ -532,7 +482,6 @@ wsServer.on("request", function (request) {
     }
 
     if (result.method === "terminate") {
-      console.log("terminate player");
       var _gameId4 = result.gameId;
       var _game3 = games[_gameId4]; // let game = result.game
 
@@ -627,15 +576,6 @@ wsServer.on("request", function (request) {
       _game3.players = _players14;
       _game3.playerSlotHTML = _playerSlotHTML4; // game.gameOn = gameOn
 
-      console.log("-----DICK------");
-      console.log(oldPlayerIndex);
-      console.log(oldPlayerIndex);
-      console.log(oldPlayerIndex);
-      console.log(oldPlayerIndex);
-      console.log(oldPlayerIndex);
-      console.log(_game3.players);
-      console.log(_players14);
-      console.log("-----DICK------");
       var _payLoad15 = {
         "method": "leave",
         "playerSlotIndex": playerSlotIndex,
@@ -750,7 +690,6 @@ wsServer.on("request", function (request) {
     if (result.method === "getRoute") {
       var getRouteId = result.getRouteId;
       var isRouteDefined = null;
-      console.log(app._router.stack.length);
 
       for (var _i7 = 3; _i7 < app._router.stack.length; _i7++) {
         if (app._router.stack[_i7].route.path === "/" + getRouteId) {
@@ -830,7 +769,7 @@ wsServer.on("request", function (request) {
     "avatar": "",
     "cards": [],
     "bet": 0,
-    "balance": 100000,
+    "balance": 5000,
     "sum": null,
     "hasAce": false,
     "isReady": false,
@@ -878,9 +817,9 @@ function partyId() {
   }
 
   return result;
-}
+} // console.log(partyId());
 
-console.log(partyId());
+
 app.get('/offline', function (req, res) {
   res.sendFile(__dirname + '/public/offline.html');
 });

@@ -34,7 +34,6 @@ wsServer.on("request", request => {
   connection.on("open", () => console.log("opened"))
   connection.on("close", () => {
     console.log("closed")
-    // console.log(clients)
   });
 
   connection.on("message", message => {
@@ -42,21 +41,19 @@ wsServer.on("request", request => {
 
     // a user want to create a new game
     if (result.method === "create") {
-      console.log("create")
+      // console.log("create")
       const clientId = result.clientId;
       const theClient = result.theClient;
       const playerSlot = result.playerSlot
       const playerSlotHTML = result.playerSlotHTML
+      const offline = result.offline
       const roomId = partyId();
       const gameId = "http://localhost:8081/" + roomId;
+      
       app.get('/' + roomId, (req,res) => {
         res.sendFile(__dirname +'/public/index.html');
-      });
-      console.log(app._router.stack.slice(-1, 1))
-      console.log(app._router.stack.length)
-      setTimeout(function() {
-      console.log(app._router.stack.length)
-      }, 5000)
+      });        
+
       // .route.path
       games[gameId] = {
         "id": gameId,
@@ -83,7 +80,8 @@ wsServer.on("request", request => {
       const payLoad = {
         "method": "create",
         "game": games[gameId],
-        "roomId": roomId
+        "roomId": roomId,
+        "offline": offline
       }
 
       const con = clients[clientId].connection
@@ -92,8 +90,6 @@ wsServer.on("request", request => {
 
     // a client want to join
     if (result.method === "join") {
-      console.log("join")
-      console.log("---------")
       const nickname = result.nickname
       const avatar = result.avatar
       const gameId = result.gameId;
@@ -102,9 +98,7 @@ wsServer.on("request", request => {
       const clientId = result.clientId;
       // const gameId = result.gameId;
       const game = games[gameId];
-      console.log(game.spectators)
       let players = game.players;
-      // console.log(players)
       const spectators = game.spectators;
       const playerSlot = game.playerSlot;
       const playerSlotHTML = game.playerSlotHTML
@@ -113,15 +107,11 @@ wsServer.on("request", request => {
       theClient.nickname = nickname
       theClient.avatar = avatar
 
-      console.log(theClient.avatar)
 
       if (game.spectators.length >= 7) {
         // Max players reached
         return;
       }
-
-      console.log(game.spectators)
-      console.log(spectators)
 
       // Push unique Id to the client
       theClient.clientId = clientId
@@ -146,8 +136,6 @@ wsServer.on("request", request => {
         "roomId": roomId
       }
 
-      console.log(game.spectators)
-      console.log(spectators)
 
       // loop through all clients and tell them that people has joined
       // if(game.players.length === 0) {
@@ -159,7 +147,6 @@ wsServer.on("request", request => {
 
       // }
 
-      console.log(spectators)
       const payLoadClient = {
         "method": "joinClient",
         "theClient": theClient,
@@ -193,8 +180,6 @@ wsServer.on("request", request => {
         }
       // }
 
-      console.log(spectators)
-      console.log("---------")
     
       // If a player joins mid-game
       const payLoadMidGame = {
@@ -222,49 +207,6 @@ wsServer.on("request", request => {
 
     }
 
-
-    if(result.method === "joinLobby") {
-    //   const gameId = result.gameId;
-    //   const roomId = result.roomId;
-    //   const game = games[gameId];
-    //   const spectators = game.spectators;
-    //   const lobbySpectators = game.lobbySpectators
-    //   let theClient = result.theClient;
-    //   const clientId = result.clientId;
-
-
-    //   theClient.clientId = clientId
-    //   game.lobbySpectators.push(theClient)
-
-    //   for(let i = 0; i < game.lobbySpectators.length; i++) {
-    //     if(game.lobbySpectators[i].clientId === clientId) {
-    //       // theClient = game.spectators[i]
-    //       game.lobbySpectators[i] = theClient
-    //     }
-    //   }
-
-    //   console.log(game.lobbySpectators)
-    //   console.log(game.lobbySpectators)
-    //   console.log(game.lobbySpectators)
-
-
-    //   const payLoad = {
-    //     "method": "joinLobby",
-    //     "game": game,
-    //     "spectators": spectators,
-    //     "lobbySpectators": lobbySpectators,
-    //     "roomId": roomId
-    //   }
-
-    //   // Send to All clients that are in room
-    //   game.spectators.forEach(c => {
-    //     clients[c.clientId].connection.send(JSON.stringify(payLoad))
-    //   });
-    //   // Send to the lobby client
-    //   connection.send(JSON.stringify(payLoad))
-
-
-    }
 
     if(result.method === "terminateRoom") {
       // let roomId = result.roomId
@@ -340,8 +282,6 @@ wsServer.on("request", request => {
       const players = result.players
       const spectators = result.spectators
      
-      console.log(theClient.hasLeft)
-      console.log(players)
 
       const payLoad = {
         "method": "hasLeft",
@@ -578,7 +518,6 @@ wsServer.on("request", request => {
     }
 
     if(result.method === "terminate") {
-      console.log("terminate player")
       let gameId = result.gameId;
       let game = games[gameId];
       // let game = result.game
@@ -677,15 +616,6 @@ wsServer.on("request", request => {
       game.playerSlotHTML = playerSlotHTML;
       // game.gameOn = gameOn
 
-      console.log("-----DICK------")
-      console.log(oldPlayerIndex)
-      console.log(oldPlayerIndex)
-      console.log(oldPlayerIndex)
-      console.log(oldPlayerIndex)
-      console.log(oldPlayerIndex)
-      console.log(game.players)
-      console.log(players)
-      console.log("-----DICK------")
 
       
       const payLoad = {
@@ -816,7 +746,6 @@ wsServer.on("request", request => {
       const getRouteId = result.getRouteId
       let isRouteDefined = null;
 
-      console.log(app._router.stack.length)
       for(let i = 3; i < app._router.stack.length; i++) {
         if(app._router.stack[i].route.path === "/" + getRouteId) {
           isRouteDefined = true;
@@ -904,7 +833,7 @@ wsServer.on("request", request => {
         "avatar": "",
         "cards": [],
         "bet": 0,
-        "balance": 100000,
+        "balance": 5000,
         "sum": null,
         "hasAce": false,
         "isReady": false,
@@ -963,7 +892,7 @@ function partyId() {
   return result;
 }
 
-console.log(partyId());
+// console.log(partyId());
 
 
 app.get('/offline', (req,res) => {

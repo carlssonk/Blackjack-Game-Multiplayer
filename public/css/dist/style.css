@@ -158,6 +158,10 @@ body {
   color: white;
 }
 
+#a_offline {
+  text-decoration-line: none;
+}
+
 #main-box {
   position: relative;
   width: 500px;
