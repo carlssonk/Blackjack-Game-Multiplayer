@@ -12,7 +12,7 @@
 </head>
 <body>
   <div id="loading-screen" class="hide-element">
-    <img id="loading-icon" src="/imgs/Loadingicon.png" alt="Loading...">    
+    <img id="loading-icon" src="/imgs/LoadingIcon.png" alt="Loading...">    
   </div>
 
   <div id="info-rules">
@@ -539,7 +539,7 @@
     let newPlayer = null;
     let offline = null;
 
-    let ws = new WebSocket("ws://blackjack21.io")
+    let ws = new WebSocket("ws://localhost:8080")
     const btnCreate = document.getElementById("btnCreate");
     const btnOffline = document.getElementById("btnOffline");
     const btnJoin = document.getElementById("btnJoin");
@@ -1816,7 +1816,7 @@
         // Get last 6 values from url
         const str = window.location.href
         roomId = str.substring(str.length - 6)
-        gameId = "http://blackjack21.io/" + roomId;
+        gameId = "http://localhost:8081/" + roomId;
 
         // To prevent bug at 714
         playerSlotIndex = [];

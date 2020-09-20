@@ -6,10 +6,12 @@ const { join } = require("path");
 const app = express();
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
-app.listen(80, ()=>console.log("Listening on http port 80"))
+// Before 8081
+app.listen(8081, ()=>console.log("Listening on http port 8081"))
 const websocketServer = require("websocket").server
 const httpServer = http.createServer();
-httpServer.listen(81, () => console.log("Listening... on 81"));
+// Before 8080
+httpServer.listen(8080, () => console.log("Listening... on 8080"));
 // hashmap clients
 const clients = {};
 const games = {};
@@ -48,7 +50,7 @@ wsServer.on("request", request => {
       const playerSlotHTML = result.playerSlotHTML
       const offline = result.offline
       const roomId = partyId();
-      const gameId = "http://blackjack21.io/" + roomId;
+      const gameId = "http://localhost:8081/" + roomId;
       
       app.get('/' + roomId, (req,res) => {
         res.sendFile(__dirname +'/public/index.html');
