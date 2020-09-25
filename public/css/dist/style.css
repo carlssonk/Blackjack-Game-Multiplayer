@@ -658,6 +658,7 @@ body {
   margin-top: 10px;
   margin-left: 10px;
   height: 30px;
+  padding: 0px 6px;
   background-color: transparent;
   border: none;
   outline: none;
@@ -694,6 +695,7 @@ body {
   position: absolute;
   bottom: 40px;
   right: 10px;
+  padding: 0px 6px;
   height: 30px;
   background-color: rgba(0, 0, 0, 0.2);
   border: none;
