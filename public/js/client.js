@@ -711,7 +711,7 @@ ws.onmessage = message => {
                 if(players[i].clientId === playerSlotHTML[s]) {
                   cardIndexJoin++
                   playerSlot[s].lastElementChild.innerHTML += 
-                  `<img class="cardImg` + " card" + cardIndexJoin + `" src="/imgs/` + deckImg[d] + `.svg" width="100" height="150">`;
+                  `<img class="cardImg` + " card" + cardIndexJoin + `" src="/imgs/` + deckImg[d] + `.svg">`;
                 }
               }
             }
@@ -725,7 +725,7 @@ ws.onmessage = message => {
         for(let c = 0; c < dealer.cards.length; c++) {
           if(dealer.cards[c].suit + dealer.cards[c].value.card === deckImg[d]) {
             dealerSlot.lastElementChild.firstElementChild.innerHTML += 
-            `<img class="dealerCardImg" src="/imgs/` + deckImg[d] + `.svg" width="100" height="150">`
+            `<img class="dealerCardImg" src="/imgs/` + deckImg[d] + `.svg">`
           }
         }
       }
@@ -748,13 +748,13 @@ ws.onmessage = message => {
         </div>
       </div>
       `;
-      $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg" width="100" height="150">`)
+      $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg">`)
 
       setTimeout(function() {
-        $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealersHiddenCard +`.svg" width="100" height="150">`)
+        $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealersHiddenCard +`.svg">`)
       }, 50)
-      // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg" width="100" height="150">`)
-      $(".dealer-cards").css('margin-left', '-=100px');
+      // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg">`)
+      $(".dealer-cards").css('margin-left', '-=90px');
     }
 
     // Update player sum if user joins mid game
@@ -914,7 +914,7 @@ if (response.method === "dealersHiddenCard") {
         for(let c = 0; c < deckImg.length; c++) {
           if(player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card === deckImg[c]) {
             playerSlot[z].lastElementChild.innerHTML += 
-            `<img class="cardImg` + " card" + cardIndex + ` cardAnimation" src="/imgs/` + deckImg[c] + `.svg" width="100" height="150">`;
+            `<img class="cardImg` + " card" + cardIndex + ` cardAnimation" src="/imgs/` + deckImg[c] + `.svg">`;
 
           }
         }
@@ -951,7 +951,7 @@ if (response.method === "dealersHiddenCard") {
         for(let c = 0; c < deckImg.length; c++) {
         if(dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[c]) {
           dealerSlot.lastElementChild.firstElementChild.innerHTML += 
-          `<img class="dealerCardImg cardAnimationDealer" src="/imgs/` + deckImg[c] + `.svg" width="100" height="150">`
+          `<img class="dealerCardImg cardAnimationDealer" src="/imgs/` + deckImg[c] + `.svg">`
         }
       }      
     }
@@ -963,7 +963,7 @@ if (response.method === "dealersHiddenCard") {
     if(dealer.hiddenCard.length === 0 && dealer.cards.length === 2) {
       $(".flip-card-inner").css('transform', 'rotateY(-180deg)');
     } else {
-      $(".dealer-cards").css('margin-left', '-=50px');  
+      $(".dealer-cards").css('margin-left', '-=45px');
     }
 
     } else {
@@ -983,8 +983,8 @@ if (response.method === "dealersHiddenCard") {
       `;
 
       // setTimeout(function() {
-        $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg" width="100" height="150">`)
-        $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card +`.svg" width="100" height="150">`)
+        $(".flip-card-front").html(`<img class="dealerCardImg" src="/imgs/Card_back.svg">`)
+        $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card +`.svg">`)
         dealersHiddenCard = dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card
       // }, 1)
       setTimeout(function() {
@@ -999,7 +999,7 @@ if (response.method === "dealersHiddenCard") {
       //   <img src="/imgs/Card_back.svg" alt="">
       // </div>
       // `;
-      $(".dealer-cards").css('margin-left', '-=50px');
+      $(".dealer-cards").css('margin-left', '-=45px');
     // Animation
     setTimeout(function() {
       $(".hiddenCard").removeClass("cardAnimationDealer")

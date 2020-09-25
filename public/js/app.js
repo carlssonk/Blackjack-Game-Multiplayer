@@ -880,7 +880,6 @@ function compareSum() {
     givePlayerCard() // give player card
     // if(dealer.cards[1] === dealer.cards[2]) dealer.cards.splice(1, 1)
 
-
     if(dealersTurn === true) {
       setTimeout(outputCardSumDealer, 1000) // compare & output sum for dealer
     } else {
@@ -1092,7 +1091,7 @@ let bool2
 $("#how-to-play").click(function() {
   bool2 = !bool2;
   if(bool2 === true) {
-    $("#info-rules").css("right", "14px")
+    $("#info-rules").css("right", "0")
   } else {
     $("#info-rules").css("right", "")
   }
@@ -1390,26 +1389,25 @@ updateMediaQuery()
 function updateMediaQuery() {
   if($(".players").css("width") === "90px") {
     $("circle").attr({
-      r: "43",
-      cx: "45",
-      cy: "45"
+      r: "40",
+      cx: "43.5",
+      cy: "43.5"
     })
     $("#invite-label").text("Hover to see invite link")
   } else if($(".players").css("width") === "80px") {
     $("circle").attr({
-      r: "38",
-      cx: "40",
-      cy: "40"
+      r: "35",
+      cx: "38.5",
+      cy: "38.5"
     })
     $("#invite-label").text("invite link")
   } else if($(".players").css("width") === "100px") {
     $("circle").attr({
-      r: "48",
-      cx: "50",
-      cy: "50"
+      r: "45",
+      cx: "48.5",
+      cy: "48.5"
     })
   }
 }
 
 window.onresize = updateMediaQuery;
-

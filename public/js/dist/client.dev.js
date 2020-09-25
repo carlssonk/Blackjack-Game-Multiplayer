@@ -620,7 +620,7 @@ ws.onmessage = function (message) {
             for (var s = 0; s < playerSlotHTML.length; s++) {
               if (players[_i6].clientId === playerSlotHTML[s]) {
                 cardIndexJoin++;
-                playerSlot[s].lastElementChild.innerHTML += "<img class=\"cardImg" + " card" + cardIndexJoin + "\" src=\"/imgs/" + deckImg[d] + ".svg\" width=\"100\" height=\"150\">";
+                playerSlot[s].lastElementChild.innerHTML += "<img class=\"cardImg" + " card" + cardIndexJoin + "\" src=\"/imgs/" + deckImg[d] + ".svg\">";
               }
             }
           }
@@ -633,7 +633,7 @@ ws.onmessage = function (message) {
       for (var _d = 0; _d < deckImg.length; _d++) {
         for (var _c = 0; _c < dealer.cards.length; _c++) {
           if (dealer.cards[_c].suit + dealer.cards[_c].value.card === deckImg[_d]) {
-            dealerSlot.lastElementChild.firstElementChild.innerHTML += "<img class=\"dealerCardImg\" src=\"/imgs/" + deckImg[_d] + ".svg\" width=\"100\" height=\"150\">";
+            dealerSlot.lastElementChild.firstElementChild.innerHTML += "<img class=\"dealerCardImg\" src=\"/imgs/" + deckImg[_d] + ".svg\">";
           }
         }
       }
@@ -644,12 +644,12 @@ ws.onmessage = function (message) {
       return;
     } else {
       dealerSlot.lastElementChild.firstElementChild.innerHTML += "\n      <div class=\"flip-card\">\n        <div class=\"flip-card-inner\">\n          <div class=\"flip-card-front\">\n\n          </div>\n          <div class=\"flip-card-back\">\n\n          </div>\n        </div>\n      </div>\n      ";
-      $(".flip-card-front").html("<img class=\"dealerCardImg\" src=\"/imgs/Card_back.svg\" width=\"100\" height=\"150\">");
+      $(".flip-card-front").html("<img class=\"dealerCardImg\" src=\"/imgs/Card_back.svg\">");
       setTimeout(function () {
-        $(".flip-card-back").html("<img class=\"dealerCardImg\" src=\"/imgs/" + dealersHiddenCard + ".svg\" width=\"100\" height=\"150\">");
-      }, 50); // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg" width="100" height="150">`)
+        $(".flip-card-back").html("<img class=\"dealerCardImg\" src=\"/imgs/" + dealersHiddenCard + ".svg\">");
+      }, 50); // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg">`)
 
-      $(".dealer-cards").css('margin-left', '-=100px');
+      $(".dealer-cards").css('margin-left', '-=90px');
     } // Update player sum if user joins mid game
 
 
@@ -800,7 +800,7 @@ ws.onmessage = function (message) {
 
         for (var _c2 = 0; _c2 < deckImg.length; _c2++) {
           if (player.cards.slice(-1)[0].suit + player.cards.slice(-1)[0].value.card === deckImg[_c2]) {
-            playerSlot[z].lastElementChild.innerHTML += "<img class=\"cardImg" + " card" + cardIndex + " cardAnimation\" src=\"/imgs/" + deckImg[_c2] + ".svg\" width=\"100\" height=\"150\">";
+            playerSlot[z].lastElementChild.innerHTML += "<img class=\"cardImg" + " card" + cardIndex + " cardAnimation\" src=\"/imgs/" + deckImg[_c2] + ".svg\">";
           }
         } // Animation
 
@@ -837,7 +837,7 @@ ws.onmessage = function (message) {
       if ($(".flip-card-inner").css('transform') !== "none" || dealer.cards.length === 1) {
         for (var _c3 = 0; _c3 < deckImg.length; _c3++) {
           if (dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[_c3]) {
-            dealerSlot.lastElementChild.firstElementChild.innerHTML += "<img class=\"dealerCardImg cardAnimationDealer\" src=\"/imgs/" + deckImg[_c3] + ".svg\" width=\"100\" height=\"150\">";
+            dealerSlot.lastElementChild.firstElementChild.innerHTML += "<img class=\"dealerCardImg cardAnimationDealer\" src=\"/imgs/" + deckImg[_c3] + ".svg\">";
           }
         }
       } // Animation
@@ -850,14 +850,14 @@ ws.onmessage = function (message) {
       if (dealer.hiddenCard.length === 0 && dealer.cards.length === 2) {
         $(".flip-card-inner").css('transform', 'rotateY(-180deg)');
       } else {
-        $(".dealer-cards").css('margin-left', '-=50px');
+        $(".dealer-cards").css('margin-left', '-=45px');
       }
     } else {
       // dealerSlot.lastElementChild.innerHTML += 
       dealerSlot.lastElementChild.firstElementChild.innerHTML += "\n      <div class=\"flip-card cardAnimationDealer\">\n        <div class=\"flip-card-inner\">\n          <div class=\"flip-card-front\">\n\n          </div>\n          <div class=\"flip-card-back\">\n\n          </div>\n        </div>\n      </div>\n      "; // setTimeout(function() {
 
-      $(".flip-card-front").html("<img class=\"dealerCardImg\" src=\"/imgs/Card_back.svg\" width=\"100\" height=\"150\">");
-      $(".flip-card-back").html("<img class=\"dealerCardImg\" src=\"/imgs/" + dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card + ".svg\" width=\"100\" height=\"150\">");
+      $(".flip-card-front").html("<img class=\"dealerCardImg\" src=\"/imgs/Card_back.svg\">");
+      $(".flip-card-back").html("<img class=\"dealerCardImg\" src=\"/imgs/" + dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card + ".svg\">");
       dealersHiddenCard = dealer.hiddenCard[0].suit + dealer.hiddenCard[0].value.card; // }, 1)
 
       setTimeout(function () {
@@ -871,7 +871,7 @@ ws.onmessage = function (message) {
       // </div>
       // `;
 
-      $(".dealer-cards").css('margin-left', '-=50px'); // Animation
+      $(".dealer-cards").css('margin-left', '-=45px'); // Animation
 
       setTimeout(function () {
         $(".hiddenCard").removeClass("cardAnimationDealer");

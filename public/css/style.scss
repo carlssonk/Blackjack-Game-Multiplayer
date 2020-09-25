@@ -5,6 +5,12 @@
 // font-family: 'Rubik', sans-serif;
 
 
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 html {
   overflow: hidden;
   font-family: 'Open Sans', sans-serif;
@@ -31,7 +37,7 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   transform: scale(0.8);
-  bottom: -40px;
+  top: 20px;
   opacity: 0.15;
   pointer-events: none;
 }
@@ -303,9 +309,9 @@ body {
 
 #info-rules {
   position: absolute;
-  right: -504px;
+  right: -494px;
   top: 10px;
-  height: 800px;
+  height: 90%;
   width: 500px;
   color: white;
   background: radial-gradient(#153333, #0f2225);
@@ -386,7 +392,7 @@ body {
   margin: 0 auto;
   border-radius: 0px 0px 8px 0px;
   background-color: rgb(233, 233, 233);
-  top: -158px;
+  top: -196px;
   z-index: 0;
   transition: 250ms;
 
@@ -749,7 +755,7 @@ body {
   position: absolute;
   width: 400px;
   height: 80px;
-  top: 50%;
+  top: 52%;
   margin-top: -210px;
   left: 50%;
   margin-left: -200px;
@@ -801,7 +807,7 @@ body {
 #players-container {
   position:absolute;
   width: 80%;
-  height: 420px;
+  height: 50%;
   // background: #063;
   bottom: 0;
   left: 50%;
@@ -834,7 +840,7 @@ body {
 #players-timer-container {
   position:absolute;
   width: 80%;
-  height: 420px;
+  height: 50%;
   bottom: 0;
   left: 50%;
   margin-left: -40%;
@@ -1035,7 +1041,7 @@ body {
 
 .player-coin-animation {
   position: absolute !important;
-  margin-top: -35px !important;
+  margin-top: -35px;
   opacity: 1 !important;
   transition: 200ms !important;
   transform: rotate(0deg) !important;
@@ -1050,8 +1056,6 @@ body {
   align-items: center;
   font-size: 50px;
   border-radius: 100%;
-  margin-left: -2px;
-  margin-top: -2px;
   border: 2px solid rgba(255, 255, 255, 0);
   color: rgb(0, 255, 0);
   cursor: pointer;
@@ -1109,29 +1113,31 @@ i {
 .cardImg {
   position: absolute;
   opacity: 1;
-  top: -152px;
-  left: 0;
-  width: 100px;
+  top: -136px;
+  left: 2.5px;
+  width: 90px;
+  height: 135px;
+  transform-origin: top left;
   transition: 500ms;
 }
 
 // Card Seperation
 .card1 {z-index: 1;}
-.card2 {z-index: 2; margin-left: 20px; top: -177px;}
-.card3 {z-index: 3; margin-left: 40px; top: -202px;}
-.card4 {z-index: 4; margin-left: 60px; top: -227px;}
-.card5 {z-index: 5; margin-left: 80px; top: -252px;}
-.card6 {z-index: 6; margin-left: 100px; top: -277px;}
-.card7 {z-index: 7; margin-left: 120px; top: -302px;}
-.card8 {z-index: 8; margin-left: 140px; top: -327px;}
-.card9 {z-index: 9; margin-left: 160px; top: -352px;}
-.card10 {z-index: 10; margin-left: 180px; top: -377px;}
-.card11 {z-index: 11; margin-left: 200px; top: -402px;}
+.card2 {z-index: 2; margin-left: 20px; top: -156px;}
+.card3 {z-index: 3; margin-left: 40px; top: -176px;}
+.card4 {z-index: 4; margin-left: 60px; top: -196px;}
+.card5 {z-index: 5; margin-left: 80px; top: -216px;}
+.card6 {z-index: 6; margin-left: 100px; top: -236px;}
+.card7 {z-index: 7; margin-left: 120px; top: -256px;}
+.card8 {z-index: 8; margin-left: 140px; top: -276px;}
+.card9 {z-index: 9; margin-left: 160px; top: -296px;}
+.card10 {z-index: 10; margin-left: 180px; top: -316px;}
+.card11 {z-index: 11; margin-left: 200px; top: -336px;}
 // Card Seperation
 
 .dealerCardImg{
-  // width: 100px;
-  // height: 150px;
+  width: 90px;
+  height: 135px;
   transition: 500ms;
 }
 
@@ -1213,7 +1219,7 @@ i {
     // width: 34px;
     padding: 4px 8px;
     // height: 30px;
-    top: 170px;
+    top: 160px;
     // left: 50%;
     // margin-left: -17px;
     color: rgb(224, 224, 0);
@@ -1360,8 +1366,8 @@ i {
   position: absolute;
   width: 400px;
   height: 200px;
-  top: 50%;
-  margin-top: -230px;
+  top: 23%;
+  // margin-top: -230px;
   left: 50%;
   margin-left: -200px;
   font-size: 18px;
@@ -1385,7 +1391,7 @@ i {
   #your-turn-label {
     position: absolute;
     font-size: 24px;
-    top: 0;
+    top: 12px;
     pointer-events: none;
     // text-shadow: 0 0 50px black
   }
@@ -1492,8 +1498,8 @@ i {
 
 .flip-card {
   background-color: transparent;
-  width: 100px;
-  height: 150px;
+  width: 90px;
+  height: 135px;
   perspective: 1000px;
   transition: 500ms;
 }
@@ -1539,6 +1545,12 @@ i {
     height: 90px;
     .empty-slot {
       font-size: 42px;
+    }
+    .player-coin {
+      width: 62px;
+      height: 62px;
+      margin-top: -31px;
+      margin-left: -31px;
     }
   }
   .players-timer {
@@ -1587,6 +1599,12 @@ i {
     height: 80px;
     .empty-slot {
       font-size: 36px;
+    }
+    .player-coin {
+      width: 54px;
+      height: 54px;
+      margin-top: -27px;
+      margin-left: -27px;
     }
   }
   .players-timer {
