@@ -1,5 +1,17 @@
 # Blackjack-Game-Multiplayer
-In progress multiplayer online blackjack game.
+
+## Description
+[blackjack21.io](http://www.blackjack21.io) is a free online multiplayer casino game. You can choose to play alone or play in a private room with your friends. The goal of the game is to beat the dealer and win as much money as possible.
+
+## Installation
+If you want to download and use this project locally (or see gif below):
+1. First clone it to your prefered text editor (this example uses VS Code)
+2. Go to your terminal and install all the modules with **npm install**
+3. Open the index.js and navigate to the **Run** panel **(Crtl+Shift+D)**
+4. Now click on the button where it says **Node.js (preview)...** & click **Run current file**
+5. Open the **Run** tab and hit **Start Debugging (F5)** or **Run Without Debugging (Crtl+F5)**
+6. Open Google and type in **localhost:8081**
+
 
 RULES:
 Blackjack or Twenty-One, is a game usually played in casinos.
