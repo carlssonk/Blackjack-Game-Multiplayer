@@ -757,7 +757,7 @@ body {
   position: absolute;
   width: 400px;
   height: 80px;
-  top: 52%;
+  top: 54%;
   margin-top: -210px;
   left: 50%;
   margin-left: -200px;
@@ -809,7 +809,7 @@ body {
 #players-container {
   position:absolute;
   width: 80%;
-  height: 50%;
+  height: 48%;
   // background: #063;
   bottom: 0;
   left: 50%;
@@ -842,7 +842,7 @@ body {
 #players-timer-container {
   position:absolute;
   width: 80%;
-  height: 50%;
+  height: 48%;
   bottom: 0;
   left: 50%;
   margin-left: -40%;
@@ -1209,8 +1209,9 @@ i {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    font-size: 48px;
+    font-size: 36px;
     color: white;
+    top: 10px;
     text-shadow: 0 0 10px black;
     margin: 0;
     padding: 0;
@@ -1221,7 +1222,7 @@ i {
     // width: 34px;
     padding: 4px 8px;
     // height: 30px;
-    top: 160px;
+    top: 140px;
     // left: 50%;
     // margin-left: -17px;
     color: rgb(224, 224, 0);
@@ -1368,7 +1369,7 @@ i {
   position: absolute;
   width: 400px;
   height: 200px;
-  top: 23%;
+  top: 22%;
   // margin-top: -230px;
   left: 50%;
   margin-left: -200px;
