@@ -23,6 +23,8 @@ If you want to download and use this project locally (or see gif below):
 * Express
 * WebSocket
 
+## How To Play
+
 RULES:
 Blackjack or Twenty-One, is a game usually played in casinos.
 
