@@ -14,7 +14,7 @@ If you want to download and use this project locally (or see gif below):
 5. Open the **Run** tab and hit **Start Debugging (F5)** or **Run Without Debugging (Crtl+F5)**
 6. Open Google and type in **localhost:8081**
 
-![Install Tutorial](https://media.giphy.com/media/XaNTqly8ecPm3Zk8a9/giphy.gif)
+![Install Tutorial](https://media.giphy.com/media/4OIIpj05juLSARo8qD/giphy.gif)
 
 RULES:
 Blackjack or Twenty-One, is a game usually played in casinos.
