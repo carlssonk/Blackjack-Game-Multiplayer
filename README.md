@@ -3,7 +3,7 @@
 ![Game Screenshot](https://i.ibb.co/fHkyMJS/blackjack21-showcase.jpg)
 
 ## Description
-[blackjack21.io](http://www.blackjack21.io) is a free online multiplayer casino game. You can choose to play alone or play in a private room with your friends. The goal of the game is to beat the dealer and win as much money as possible.
+[blackjack21.io](http://www.blackjack21.io) is a free online multiplayer casino game. It's an online version of the traditional blackjack played at real casinos. You can choose to play alone or play in a private room with your friends. The goal of the game is to beat the dealer and win as much money as possible.
 
 ## Installation
 If you want to download and use this project locally (or see gif below):
@@ -25,34 +25,41 @@ If you want to download and use this project locally (or see gif below):
 
 ## How To Play
 
-RULES:
-Blackjack or Twenty-One, is a game usually played in casinos.
+### Object Of The Game
 
-This game uses ONE standard 52-card pack that shuffles after every game.
-This game allows up to 7 players at the time to play agains the dealer.
+Each participant attempts to beat the dealer by getting a count as close to 21 as possible, without going above 21.
 
-OBJECT OF THE GAME
-Each participant attempts to beat the dealer by getting a count as close to 21 as possible, without going above 21
+### Card Values/Scoring
 
-UNDER THE COURSE OF THE GAME
-Each player that is sitting at a table must place a bet to participate in the game.
-When all players have placed their bets and are ready the dealer clockwise deals out 2 cards to each participant as well as 2 cards to himself with one card facing down.
+Usually it's up to each individual player if an ace is worth 1 or 11. However in this game if a player stands with an ace, it will always count the ace as 11 if your total sum doesn't exceed 21. Face cards are 10 and any other card is its original value.
 
-When the intial 2 cards has been dealt:
-If a player gets a count to 21 on the first 2 cards, the player gets whats called Blackjack.
-Blakjack pays out 3:2 directly to the player and he will wait until next round to play again.
+### Betting
 
-The Play:
-Now the first player will make his action, he as 3 options.
-HIT - Gives player a card (a player can hit as many time as he wants untel he busts or hits stand)
-STAND - Moves to next player
-DOUBLE DOWN (when a player doubles down he cant draw any more card)
+Before the dealer begins dealing out cards, each player must place a bet.
 
-Dealers Play:
-When all players have played their turn its the dealers turn
-He begins with taking his own card facing down
-Dealer MUST hit until he reaches 17 and MUST stand if hi's count is 17 or above.
+### The Deal
 
-If dealer busts and another player does NOT bust. The player wins.
-If dealer busts and another player busts. The Dealer wins.
+The round starts with the dealer giving out 2 cards to each player. He also gives himself one card facing up & one card facing down.
+
+### Naturals
+
+If a player gets a count to 21 on the first 2 cards, the player gets Blackjack. Blakjack pays out 3:2 directly to the player and he will wait until next round to play again.
+
+### The Play
+
+Now its time for the first player to make his move. The player can Hit, Stand, Or Double Down.
+
+Hit = Ask for another card in attempt to get closer to 21.
+Stand = Don't ask for any cards, moves on to the next player
+Double Down = Double the bet and ask for another card. (You can only double down once per round & can't draw any more cards after double'd down).
+
+### The Dealer's Play
+
+Dealer starts with flipping his card facing down. Dealer will draw until he reaches 17, when dealer's sum is 17 or above, he stops taking cards.
+
+### Payout
+
+If the player busts, he will lose his bet, even if the dealer also busts.
+If player has higher value cards than the dealer, the player wins.
+If dealer has higher value cards than the player, the dealer wins.
 
