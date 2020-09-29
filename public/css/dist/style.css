@@ -8,7 +8,7 @@
 html {
   overflow: hidden;
   font-family: "Open Sans", sans-serif;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   padding: 0;
   margin: 0;
@@ -43,6 +43,10 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
   opacity: 0;
   transition: 400ms;
+}
+
+:root {
+  --info-rules-width: -492px;
 }
 
 .hide-element {
@@ -118,7 +122,7 @@ body {
   position: relative;
   height: 100vh;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 #main-menu #blackjack-title {
   position: absolute;
@@ -289,7 +293,7 @@ body {
 
 #info-rules {
   position: absolute;
-  right: -494px;
+  right: var(--info-rules-width);
   top: 10px;
   height: 90%;
   width: 500px;
@@ -1533,7 +1537,7 @@ i {
     flex-direction: column;
   }
   #balance-bet-box .balance-bet {
-    height: calc(48px - 10px);
+    height: calc(58px - 10px);
     width: calc(90px - 10px);
     margin-top: 8px;
   }
@@ -1584,5 +1588,141 @@ i {
   }
   #invite-link-box #invite-label {
     font-size: 14px;
+  }
+
+  #leave-table {
+    bottom: 20px;
+  }
+}
+@media all and (max-width: 768px) {
+  :root {
+    --info-rules-width: -392px;
+  }
+
+  #main-menu #blackjack-title {
+    font-size: 48px;
+    margin-top: 50px;
+  }
+
+  #info-rules {
+    width: 400px;
+  }
+
+  #players-container {
+    width: 90%;
+    margin-left: -45%;
+  }
+
+  #players-timer-container {
+    width: 90%;
+    margin-left: -45%;
+  }
+
+  .players {
+    width: 70px;
+    height: 70px;
+  }
+  .players .empty-slot {
+    font-size: 32px;
+  }
+
+  #volume-button {
+    right: 140px;
+  }
+
+  #balance-bet-box {
+    bottom: 140px;
+  }
+
+  #bets-container button {
+    width: 50px;
+    height: 50px;
+  }
+}
+@media all and (max-width: 576px) {
+  :root {
+    --info-rules-width: -292px;
+  }
+
+  #main-box {
+    width: 90%;
+  }
+  #main-box .play-btns {
+    width: 80%;
+  }
+  #main-box input {
+    width: 60%;
+  }
+
+  #about-box {
+    width: 85%;
+  }
+
+  #main-menu #blackjack-title {
+    font-size: 42px;
+    margin-top: 60px;
+  }
+
+  #info-rules {
+    width: 300px;
+  }
+  #info-rules #how-to-play {
+    font-size: 10px;
+    padding: 12px 6px;
+    left: -75px;
+  }
+
+  .players {
+    width: 50px;
+    height: 50px;
+  }
+  .players .empty-slot {
+    font-size: 22px;
+  }
+
+  #bg-color-box {
+    height: 180px;
+    top: 38px;
+    right: 10px;
+  }
+  #bg-color-box .bg-colors {
+    width: 32px;
+    height: 32px;
+  }
+
+  #volume-button {
+    top: 34px;
+    left: 10px;
+    width: 32px;
+    height: 32px;
+  }
+
+  #leave-button {
+    padding: 0;
+  }
+
+  #bets-container {
+    height: 200px;
+  }
+  #bets-container button {
+    width: 30px;
+    height: 30px;
+  }
+}
+@media all and (max-width: 386px) {
+  #about-box {
+    padding: 6px;
+  }
+  #about-box ul {
+    padding: 12px 0px 12px 12px;
+  }
+
+  #main-menu #blackjack-title {
+    font-size: 36px;
+    margin-top: 70px;
+  }
+
+  #leave-button {
+    font-size: 10px;
   }
 }
