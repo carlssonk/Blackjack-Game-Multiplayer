@@ -13,7 +13,9 @@ app.listen(process.env.PORT || 8081, () =>
 const websocketServer = require("websocket").server;
 const httpServer = http.createServer();
 // Before 8080
-httpServer.listen(8080, () => console.log("Listening... on 8080"));
+httpServer.listen(process.env.PORT || 8080, () =>
+  console.log("Listening... on 8080")
+);
 // hashmap clients
 const clients = {};
 const games = {};
@@ -50,7 +52,7 @@ wsServer.on("request", (request) => {
       const playerSlotHTML = result.playerSlotHTML;
       const offline = result.offline;
       const roomId = partyId();
-      const gameId = "http://localhost:8081/" + roomId;
+      const gameId = "https://blackjack-multiplayer.herokuapp.com/" + roomId;
 
       app.get("/" + roomId, (req, res) => {
         res.sendFile(__dirname + "/public/index.html");
