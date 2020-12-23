@@ -27,7 +27,9 @@ let timerStarted = false;
 let newPlayer = null;
 let offline = null;
 
-let ws = new WebSocket("ws://blackjack-multiplayer.herokuapp.com");
+// let HOST = location.origin.replace(/^http/, "ws");
+// let ws = new WebSocket(HOST);
+
 const btnCreate = document.getElementById("btnCreate");
 const btnOffline = document.getElementById("btnOffline");
 const btnJoin = document.getElementById("btnJoin");

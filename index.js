@@ -6,11 +6,12 @@ const { join } = require("path");
 const app = express();
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
+// process.env.PORT ||
 // Before 8081
 app.listen(process.env.PORT || 8081, () =>
   console.log("Listening on http port 8081")
 );
-const websocketServer = require("websocket").server;
+const websocketServer = require("ws").server; // websocket || ws
 const httpServer = http.createServer();
 // Before 8080
 httpServer.listen(process.env.PORT || 8080, () =>
