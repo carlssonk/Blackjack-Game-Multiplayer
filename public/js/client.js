@@ -29,7 +29,7 @@ let offline = null;
 
 let HOST = location.origin.replace(/^http/, "ws");
 console.log(HOST)
-let ws = new WebSocket("ws://localhost:8080");
+let ws = new WebSocket("ws://blackjack-multiplayer.herokuapp.com:8080");
 
 const btnCreate = document.getElementById("btnCreate");
 const btnOffline = document.getElementById("btnOffline");
