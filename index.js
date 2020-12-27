@@ -4,11 +4,12 @@ const express = require("express");
 const { client } = require("websocket");
 const { join } = require("path");
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
 // Before 8081
-app.listen(8081, () =>
+app.listen(PORT, () =>
   console.log("Listening on http port 8081")
 );
 
