@@ -1055,7 +1055,7 @@ function hasPlayers0Left() {
 // ########## DOM MANIPULATION ##########
 // Note: this section uses jQuery
 // When a player joins with invite link, He can click the button "Join Room"
-if (window.location.href.length > 44) {
+if (window.location.href.length - 1 > window.origin.length) {
   $("#btnCreate").addClass("hide-element");
   $("#btnJoin").removeClass("hide-element");
 }

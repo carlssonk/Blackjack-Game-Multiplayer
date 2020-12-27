@@ -1,4 +1,4 @@
-if (window.location.href.length === 44) {
+if (window.location.href.length === window.origin.length + 1) {
   $("#btnJoin").removeClass("noclick-nohide");
   $("#btnCreate").removeClass("noclick-nohide");
   $("#btnOffline").removeClass("noclick-nohide");
@@ -28,8 +28,7 @@ let newPlayer = null;
 let offline = null;
 
 let HOST = location.origin.replace(/^http/, "ws");
-console.log(HOST)
-let ws = new WebSocket("ws://blackjack-multiplayer.herokuapp.com:8080");
+let ws = new WebSocket(HOST);
 
 const btnCreate = document.getElementById("btnCreate");
 const btnOffline = document.getElementById("btnOffline");
@@ -414,7 +413,7 @@ function resetGameState() {
 }
 
 window.addEventListener("load", (event) => {
-  if (window.location.href.length > 44) {
+  if (window.location.href.length - 1 > window.origin.length) {
     const str2 = window.location.href;
     getRouteId = str2.substring(str2.length - 6);
     const payLoadRoute = {
@@ -1434,11 +1433,11 @@ function setPlayersBet() {
 setTimeout(joinByUrl, 200);
 function joinByUrl() {
   // If player has a roomId in his url
-  if (window.location.href.length > 44) {
+  if (window.location.href.length - 1 > window.origin.length) {
     // Get last 6 values from url
     const str = window.location.href;
     roomId = str.substring(str.length - 6);
-    gameId = "http://localhost:8081/" + roomId;
+    gameId = `${location.origin}/` + roomId;
 
     // To prevent bug at 714
     playerSlotIndex = [];

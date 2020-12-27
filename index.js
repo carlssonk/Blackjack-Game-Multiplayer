@@ -4,24 +4,32 @@ const express = require("express");
 const { client } = require("websocket");
 const { join } = require("path");
 const app = express();
+const server = require("http").createServer(app);
 const PORT = process.env.PORT || 3000;
+const WebSocket = require("ws")
+
+const wss = new WebSocket.Server({ server:server })
+
+
+
 
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
 // Before 8081
-app.listen(PORT, () =>
-  console.log(`Listening on http port 8081 or ${process.env.PORT}`)
+server.listen(PORT, () =>
+  console.log(`Listening on ${process.env.PORT} or 3000`)
 );
 
 
-const websocketServer = require("websocket").server; // websocket || ws
 
 
-const httpServer = http.createServer();
-// Before 8080
-httpServer.listen(process.env.PORT || 8080, () =>
-  console.log("Listening... on 8080")
-);
+
+
+
+
+
+
+
 
 
 // hashmap clients
@@ -35,22 +43,23 @@ let dealer = null;
 let gameOn = null;
 let player = null;
 
-const wsServer = new websocketServer({
-  httpServer: httpServer,
-});
 
 
-wsServer.on("request", request => { // wsServer || wss AND request || connection
+
+
+
+wss.on("connection", (ws) => { // wsServer || wss AND request || connection
   console.log("FIRE BITCH")
   // Someone trying to connect
-  const connection = request.accept(null, request.origin);
-  connection.on("open", () => console.log("opened")); // connection || wss
-  connection.on("close", () => { // connection || wss
+  // const connection = connection.accept(null, connection.origin);
+  ws.on("open", () => console.log("opened")); // connection || wss
+  ws.on("close", () => { // connection || wss
     console.log("closed");
   });
 
-  connection.on("message", (message) => { // connection || wss
-    const result = JSON.parse(message.utf8Data);
+  ws.on("message", (message) => { // connection || wss
+    const result = JSON.parse(message);
+    // console.log(message)
 
     // a user want to create a new game
     if (result.method === "create") {
@@ -61,7 +70,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       const playerSlotHTML = result.playerSlotHTML;
       const offline = result.offline;
       const roomId = partyId();
-      const gameId = "http://localhost:8081/" + roomId;
+      const gameId = `http://localhost:3000/` + roomId;
 
       app.get("/" + roomId, (req, res) => {
         res.sendFile(__dirname + "/public/index.html");
@@ -97,7 +106,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
         offline: offline,
       };
 
-      const con = clients[clientId].connection;
+      const con = clients[clientId].ws;
       con.send(JSON.stringify(payLoad));
     }
 
@@ -152,7 +161,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       // if(game.players.length === 0) {
       if (!game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          clients[c.clientId].ws.send(JSON.stringify(payLoad));
         });
       }
 
@@ -169,7 +178,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
       // Send theClient to THE CLIENT
       if (!game.gameOn === true) {
-        clients[clientId].connection.send(JSON.stringify(payLoadClient));
+        clients[clientId].ws.send(JSON.stringify(payLoadClient));
       }
 
       const newPlayer = theClient;
@@ -186,7 +195,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       // if(game.players.length === 0) {
       if (!game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].connection.send(
+          clients[c.clientId].ws.send(
             JSON.stringify(payLoadClientArray)
           );
         });
@@ -201,7 +210,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       if (game.gameOn === true) {
-        clients[clientId].connection.send(JSON.stringify(payLoadMidGame));
+        clients[clientId].ws.send(JSON.stringify(payLoadMidGame));
       }
 
       // Send this to ALL clients, to let them know that a new spectator joined
@@ -212,7 +221,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
       if (game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].connection.send(
+          clients[c.clientId].ws.send(
             JSON.stringify(payLoadMidGameUpdate)
           );
         });
@@ -245,7 +254,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -264,7 +273,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -281,7 +290,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -298,7 +307,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -315,14 +324,14 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
 
       if (dealersTurn === false) {
         spectators.forEach((c) => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          clients[c.clientId].ws.send(JSON.stringify(payLoad));
         });
       }
 
       if (dealersTurn === true) {
         players.pop(players.slice(-1)[0]);
         spectators.forEach((c) => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          clients[c.clientId].ws.send(JSON.stringify(payLoad));
         });
       }
     }
@@ -344,7 +353,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -365,10 +374,10 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
         // "theClient": theClient
       };
 
-      // players[currentPlayer].clientId.connection.send(JSON.stringify(payLoad))
+      // players[currentPlayer].clientId.ws.send(JSON.stringify(payLoad))
       if (dealersTurn === false) {
         game.players.forEach((c) => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          clients[c.clientId].ws.send(JSON.stringify(payLoad));
         });
       }
     }
@@ -383,7 +392,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -432,7 +441,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
 
       // Send this to the client who pressed join
@@ -454,7 +463,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       // }
 
       // spectators.forEach(c => {
-      //   clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      //   clients[c.clientId].ws.send(JSON.stringify(payLoad))
       // })
     }
 
@@ -471,7 +480,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
         resetCards: resetCards,
       };
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -492,14 +501,14 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
       if (dealersTurn === false) {
         spectators.forEach((c) => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          clients[c.clientId].ws.send(JSON.stringify(payLoad));
         });
       }
 
       if (dealersTurn === true) {
         players.pop(players.slice(-1)[0]);
         spectators.forEach((c) => {
-          clients[c.clientId].connection.send(JSON.stringify(payLoad));
+          clients[c.clientId].ws.send(JSON.stringify(payLoad));
         });
       }
     }
@@ -513,7 +522,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
         dealersTurn: dealersTurn,
       };
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -626,15 +635,15 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
 
       // lobbySpectators.forEach(c => {
-      //   clients[c.clientId].connection.send(JSON.stringify(payLoad))
+      //   clients[c.clientId].ws.send(JSON.stringify(payLoad))
       // });
 
       // // Send to THE client
-      // const con = clients[clientId].connection
+      // const con = clients[clientId].ws
       // con.send(JSON.stringify(payLoad));
     }
 
@@ -649,7 +658,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
         playersLength: playersLength,
       };
 
-      connection.send(JSON.stringify(payLoadLength));
+      ws.send(JSON.stringify(payLoadLength));
     }
 
     if (result.method === "resetRound") {
@@ -662,7 +671,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -676,7 +685,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -692,7 +701,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -709,7 +718,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -726,7 +735,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -752,7 +761,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       if (isRouteDefined === false) {
-        connection.send(JSON.stringify(payLoadRoute));
+        ws.send(JSON.stringify(payLoadRoute));
       }
     }
 
@@ -766,7 +775,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -778,7 +787,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
       };
 
       spectators.forEach((c) => {
-        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+        clients[c.clientId].ws.send(JSON.stringify(payLoad));
       });
     }
 
@@ -808,7 +817,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
   const clientId = guid();
   // The Client
   clients[clientId] = {
-    connection: connection,
+    ws: ws,
   };
 
   // The client object
@@ -827,14 +836,14 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
   let player = null;
   // The players Array
   players[theClient] = {
-    connection: connection,
+    ws: ws,
   };
   players[player] = {
-    connection: connection,
+    ws: ws,
   };
   // The spectator Array
   spectators[theClient] = {
-    connection: connection,
+    ws: ws,
   };
 
   // Send this to client
@@ -845,7 +854,7 @@ wsServer.on("request", request => { // wsServer || wss AND request || connection
   };
 
   // Send the payLoad to the client
-  connection.send(JSON.stringify(payLoad));
+  ws.send(JSON.stringify(payLoad));
 });
 
 // Generates unique guid (i.e. unique user ID)
