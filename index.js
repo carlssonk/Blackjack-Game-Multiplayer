@@ -70,7 +70,7 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
       const playerSlotHTML = result.playerSlotHTML;
       const offline = result.offline;
       const roomId = partyId();
-      const gameId = `http://localhost:3000/` + roomId;
+      const gameId = `https://blackjack-multiplayer.herokuapp.com/` + roomId;
 
       app.get("/" + roomId, (req, res) => {
         res.sendFile(__dirname + "/public/index.html");
