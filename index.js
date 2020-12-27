@@ -4,25 +4,30 @@ const express = require("express");
 const { client } = require("websocket");
 const { join } = require("path");
 const app = express();
+
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
-// process.env.PORT ||
 // Before 8081
-app.listen(process.env.PORT || 8081, () =>
+app.listen(8081, () =>
   console.log("Listening on http port 8081")
 );
-const websocketServer = require("ws").server; // websocket || ws
+
+
+const websocketServer = require("websocket").server; // websocket || ws
+
+
 const httpServer = http.createServer();
 // Before 8080
 httpServer.listen(process.env.PORT || 8080, () =>
   console.log("Listening... on 8080")
 );
+
+
 // hashmap clients
 const clients = {};
 const games = {};
 const players = {};
 const spectators = {};
-// const lobbySpectators = {};
 const playerSlotHTML = {};
 
 let dealer = null;
@@ -33,15 +38,17 @@ const wsServer = new websocketServer({
   httpServer: httpServer,
 });
 
-wsServer.on("request", (request) => {
+
+wsServer.on("request", request => { // wsServer || wss AND request || connection
+  console.log("FIRE BITCH")
   // Someone trying to connect
   const connection = request.accept(null, request.origin);
-  connection.on("open", () => console.log("opened"));
-  connection.on("close", () => {
+  connection.on("open", () => console.log("opened")); // connection || wss
+  connection.on("close", () => { // connection || wss
     console.log("closed");
   });
 
-  connection.on("message", (message) => {
+  connection.on("message", (message) => { // connection || wss
     const result = JSON.parse(message.utf8Data);
 
     // a user want to create a new game
@@ -53,7 +60,7 @@ wsServer.on("request", (request) => {
       const playerSlotHTML = result.playerSlotHTML;
       const offline = result.offline;
       const roomId = partyId();
-      const gameId = "https://blackjack-multiplayer.herokuapp.com/" + roomId;
+      const gameId = "http://localhost:8081/" + roomId;
 
       app.get("/" + roomId, (req, res) => {
         res.sendFile(__dirname + "/public/index.html");

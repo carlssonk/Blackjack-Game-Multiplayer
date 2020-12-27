@@ -27,8 +27,9 @@ let timerStarted = false;
 let newPlayer = null;
 let offline = null;
 
-// let HOST = location.origin.replace(/^http/, "ws");
-// let ws = new WebSocket(HOST);
+let HOST = location.origin.replace(/^http/, "ws");
+console.log(HOST)
+let ws = new WebSocket("ws://localhost:8080");
 
 const btnCreate = document.getElementById("btnCreate");
 const btnOffline = document.getElementById("btnOffline");
@@ -56,6 +57,10 @@ let resetCards = false;
 
 const leaveTable = document.querySelector("#leave-table");
 // CSS
+
+ws.addEventListener("open", () => {
+  console.log("We are connected!")
+});
 
 // wiring events
 window.addEventListener("load", function () {
@@ -172,6 +177,7 @@ leaveTable.addEventListener("click", (e) => {
 
 function playerJoin() {
   nickname = nickname.value;
+  console.log(theClient)
   theClient.nickname = nickname.value;
 
   avatar = avatar[slideIndex - 1].dataset.value;
@@ -1432,7 +1438,7 @@ function joinByUrl() {
     // Get last 6 values from url
     const str = window.location.href;
     roomId = str.substring(str.length - 6);
-    gameId = "https://blackjack-multiplayer.herokuapp.com/" + roomId;
+    gameId = "http://localhost:8081/" + roomId;
 
     // To prevent bug at 714
     playerSlotIndex = [];
