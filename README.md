@@ -9,12 +9,8 @@
 If you want to download and use this project locally (or see gif below):
 1. First clone it to your prefered text editor (this example uses VS Code)
 2. Go to your terminal and install all the modules with **npm install**
-3. Open the index.js and navigate to the **Run** panel **(Crtl+Shift+D)**
-4. Now click on the button where it says **Node.js (preview)...** & click **Run Current File** or **Run Script: start**
-5. Open the **Run** tab and hit **Start Debugging (F5)** or **Run Without Debugging (Crtl+F5)**
-6. Open Google and type in **localhost:8081**
-
-![Install Tutorial](https://media.giphy.com/media/rSFhVddVL932aTyOIf/giphy.gif)
+3. When all the modules have been installed, start the server by typing **node index.js** in the terminal
+4. Open Google and type in **localhost:3000**
 
 ## Technologies
 * JavaScript
