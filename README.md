@@ -6,8 +6,8 @@
 [blackjack21.io](http://www.blackjack21.io) is a free online multiplayer casino game. It's an online version of the traditional blackjack played at real casinos. You can choose to play alone or play in a private room with your friends. The goal of the game is to beat the dealer and win as much money as possible.
 
 ## Installation
-If you want to download and use this project locally (or see gif below):
-1. First clone it to your prefered text editor (this example uses VS Code)
+If you want to download and use this project locally:
+1. First clone it to your prefered text editor
 2. Go to your terminal and install all the modules with **npm install**
 3. When all the modules have been installed, start the server by typing **node index.js** in the terminal
 4. Open Google and type in **localhost:3000**
