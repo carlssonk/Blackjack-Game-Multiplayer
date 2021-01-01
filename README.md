@@ -7,7 +7,7 @@
 
 ## Installation
 If you want to download and use this project locally:
-1. First clone it to your prefered text editor
+1. First clone the project to your prefered text editor
 2. Go to your terminal and install all the modules with **npm install**
 3. When all the modules have been installed, start the server by typing **node index.js** in the terminal
 4. Open Google and type in **localhost:3000**
