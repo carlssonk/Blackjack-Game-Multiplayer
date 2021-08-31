@@ -31,45 +31,45 @@ var clientDeal = {}; // Cards (suit)
 var suit = ["Heart", "Diamond", "Spade", "Club"]; // Cards (values)
 
 var values = [{
-  "card": "A",
-  "value": [1, 11],
-  "hasAce": true
+  card: "A",
+  value: [1, 11],
+  hasAce: true
 }, {
-  "card": "2",
-  "value": 2
+  card: "2",
+  value: 2
 }, {
-  "card": "3",
-  "value": 3
+  card: "3",
+  value: 3
 }, {
-  "card": "4",
-  "value": 4
+  card: "4",
+  value: 4
 }, {
-  "card": "5",
-  "value": 5
+  card: "5",
+  value: 5
 }, {
-  "card": "6",
-  "value": 6
+  card: "6",
+  value: 6
 }, {
-  "card": "7",
-  "value": 7
+  card: "7",
+  value: 7
 }, {
-  "card": "8",
-  "value": 8
+  card: "8",
+  value: 8
 }, {
-  "card": "9",
-  "value": 9
+  card: "9",
+  value: 9
 }, {
-  "card": "10",
-  "value": 10
+  card: "10",
+  value: 10
 }, {
-  "card": "J",
-  "value": 10
+  card: "J",
+  value: 10
 }, {
-  "card": "Q",
-  "value": 10
+  card: "Q",
+  value: 10
 }, {
-  "card": "K",
-  "value": 10
+  card: "K",
+  value: 10
 }];
 var deckImg = ["Heart2", "Heart3", "Heart4", "Heart5", "Heart6", "Heart7", "Heart8", "Heart9", "Heart10", "HeartJ", "HeartQ", "HeartK", "HeartA", "Diamond2", "Diamond3", "Diamond4", "Diamond5", "Diamond6", "Diamond7", "Diamond8", "Diamond9", "Diamond10", "DiamondJ", "DiamondQ", "DiamondK", "DiamondA", "Spade2", "Spade3", "Spade4", "Spade5", "Spade6", "Spade7", "Spade8", "Spade9", "Spade10", "SpadeJ", "SpadeQ", "SpadeK", "SpadeA", "Club2", "Club3", "Club4", "Club5", "Club6", "Club7", "Club8", "Club9", "Club10", "ClubJ", "ClubQ", "ClubK", "ClubA"];
 var chipImg = ["White", "Red", "Blue", "Green", "Gray", "Orange", "Purple", "Brown", "Black"]; // Actual deck (suit & values combined)
@@ -83,11 +83,11 @@ var ThePlay = false; // let player = null;
 // Dealer
 
 var dealer = {
-  "cards": [],
-  "hiddenCard": [],
-  "sum": null,
-  "hasAce": false,
-  "hasLeft": null
+  cards: [],
+  hiddenCard: [],
+  sum: null,
+  hasAce: false,
+  hasLeft: null
 }; // Players
 
 var players = [];
@@ -107,9 +107,8 @@ function mapOrder(array, order, key) {
     }
   });
   return array.reverse();
-}
+} // INIT
 
-; // INIT
 
 Init();
 
@@ -212,7 +211,6 @@ function dealCards() {
 
   var _loop2 = function _loop2(i) {
     setTimeout(function () {
-      // console.log(deck[0])
       player.cards.push(deck[0]);
       deck.shift();
       updatePlayerCards();
@@ -229,7 +227,6 @@ function dealCards() {
 
 function dealDealerCards() {
   setTimeout(function () {
-    // console.log(deck[0])
     if (dealer.cards.length === 1) {
       // If dealer has 1 card, push next card to hidden card
       dealer.hiddenCard.push(deck[0]);
@@ -274,18 +271,7 @@ function naturals() {
             playerNaturalIndex = x;
             playerResultNatural();
           }
-        } // } else if(players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {         // Checks if player has TWO aces
-        //   console.log("TWO aces")
-        //   naturalBlackjack(i)
-        //   players[i].hasAce = true;
-        //   // Send player index to webSocket
-        //   for(let x = 0; x < playerSlotHTML.length; x++) {
-        //     if(players[i].clientId === playerSlotHTML[x]) {
-        //       playerNaturalIndex = x;
-        //       playerResultNatural();
-        //     }
-        //   }
-
+        }
       } else {
         // Checks all cards except for ACE and TEN
         naturalPlayerAceSum(i);
@@ -370,7 +356,7 @@ function playerHit() {
   }
 
   if (player.hasAce === false && deck[0].value.hasAce === undefined) {
-    compareSum(); // <--- compare sum if ACE is not included in the hit 
+    compareSum(); // <--- compare sum if ACE is not included in the hit
   }
 }
 
@@ -583,7 +569,7 @@ function resetGame() {
       spectators.splice(_i, 1);
       game.spectators.splice(_i, 1);
     }
-  } // Reset Players 
+  } // Reset Players
 
 
   $(".player-bet").text("");
@@ -610,7 +596,7 @@ function resetGame() {
   $("#dealerSum").removeClass("current-player-highlight");
   $(".players-timer circle").removeClass("circle-animation");
   $(".dealer-cards").html("<div class=\"visibleCards\"></div>");
-  $(".dealer-cards").css('margin-left', '0'); // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
+  $(".dealer-cards").css("margin-left", "0"); // IF DEALER IS IN THE PLAYERS ARRAY, REMOVE HIM
 
   if (players.some(function (e) {
     return e.hiddenCard;
@@ -658,12 +644,12 @@ function resetGame() {
   $(".player-result").addClass("hide-element");
   $(".player-result").removeClass("result-lose result-draw result-win result-blackjack");
   $(".player-sum").css({
-    "opacity": "",
-    "transform": ""
+    opacity: "",
+    transform: ""
   });
   $("#dealerSum").css({
-    "opacity": "",
-    "transform": ""
+    opacity: "",
+    transform: ""
   }); // Send to all players
 
   if (resetCards === true) {
@@ -936,7 +922,7 @@ function hasPlayers0Left() {
 // When a player joins with invite link, He can click the button "Join Room"
 
 
-if (window.location.href.length > 22) {
+if (window.location.href.length - 1 > window.origin.length) {
   $("#btnCreate").addClass("hide-element");
   $("#btnJoin").removeClass("hide-element");
 }
@@ -1029,17 +1015,17 @@ $(".max-clear").click(function () {
         $(".ready").addClass("hide-element");
 
         if (parseInt($(".players:eq(" + i + ") .player-bet").text()) > 1) {
-          // 
+          //
           theClient.balance = theClient.balance + theClient.bet - parseInt($(".players:eq(" + i + ") .player-bet").text());
           theClient.bet = parseInt($(".players:eq(" + i + ") .player-bet").text());
           $("#total-bet").text(theClient.bet);
-          $("#balance").text(theClient.balance); // 
+          $("#balance").text(theClient.balance); //
         } else {
-          // 
+          //
           theClient.balance = theClient.balance + theClient.bet;
           theClient.bet = 0;
           $("#total-bet").text(theClient.bet);
-          $("#balance").text(theClient.balance); // 
+          $("#balance").text(theClient.balance); //
         }
       } else if (this.innerText === "MAX") {
         theClient.bet = theClient.bet + theClient.balance;
@@ -1142,8 +1128,8 @@ function setTimer(duration) {
 
       setTimeout(function () {
         var payLoad = {
-          "method": "startTimer",
-          "spectators": spectators
+          method: "startTimer",
+          spectators: spectators
         };
         ws.send(JSON.stringify(payLoad));
       }, 100); // setTimeout(function() {
@@ -1210,7 +1196,6 @@ function startTimer() {
   $("#deal-start-label").removeClass("hide-element");
 }
 
-;
 var thePlayTime;
 
 function startPlayTimer() {
@@ -1228,9 +1213,8 @@ function startPlayTimer() {
       $(".user-action-container").addClass("hide-element");
     }
   }, 1000);
-}
+} // MEDIA QUERIES
 
-; // MEDIA QUERIES
 
 updateMediaQuery();
 

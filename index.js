@@ -6,12 +6,9 @@ const { join } = require("path");
 const app = express();
 const server = require("http").createServer(app);
 const PORT = process.env.PORT || 3000;
-const WebSocket = require("ws")
+const WebSocket = require("ws");
 
-const wss = new WebSocket.Server({ server:server })
-
-
-
+const wss = new WebSocket.Server({ server: server });
 
 // Serve all the static files, (ex. index.html app.js style.css)
 app.use(express.static("public/"));
@@ -19,18 +16,6 @@ app.use(express.static("public/"));
 server.listen(PORT, () =>
   console.log(`Listening on ${process.env.PORT} or 3000`)
 );
-
-
-
-
-
-
-
-
-
-
-
-
 
 // hashmap clients
 const clients = {};
@@ -43,27 +28,22 @@ let dealer = null;
 let gameOn = null;
 let player = null;
 
-
-
-
-
-
-wss.on("connection", (ws) => { // wsServer || wss AND request || connection
-  console.log("FIRE BITCH")
+wss.on("connection", (ws) => {
+  // wsServer || wss AND request || connection
   // Someone trying to connect
   // const connection = connection.accept(null, connection.origin);
   ws.on("open", () => console.log("opened")); // connection || wss
-  ws.on("close", () => { // connection || wss
+  ws.on("close", () => {
+    // connection || wss
     console.log("closed");
   });
 
-  ws.on("message", (message) => { // connection || wss
+  ws.on("message", (message) => {
+    // connection || wss
     const result = JSON.parse(message);
-    // console.log(message)
 
     // a user want to create a new game
     if (result.method === "create") {
-      // console.log("create")
       const clientId = result.clientId;
       const theClient = result.theClient;
       const playerSlot = result.playerSlot;
@@ -195,9 +175,7 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
       // if(game.players.length === 0) {
       if (!game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].ws.send(
-            JSON.stringify(payLoadClientArray)
-          );
+          clients[c.clientId].ws.send(JSON.stringify(payLoadClientArray));
         });
       }
       // }
@@ -221,25 +199,9 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
       };
       if (game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].ws.send(
-            JSON.stringify(payLoadMidGameUpdate)
-          );
+          clients[c.clientId].ws.send(JSON.stringify(payLoadMidGameUpdate));
         });
       }
-    }
-
-    if (result.method === "terminateRoom") {
-      // let roomId = result.roomId
-      // // console.log(app._router.stack[3].route.path)
-      // for(let i = 3; i < app._router.stack.length; i++) {
-      //   // console.log(app._router.stack[i])
-      //   console.log(app._router.stack[i].route.path)
-      //   console.log("/" + roomId)
-      //   if(app._router.stack[i].route.path === "/" + roomId) {
-      //     console.log(app._router.stack[i].route.path)
-      //     app._router.stack.splice(i,1);
-      //   }
-      // }
     }
 
     // bets
@@ -876,8 +838,6 @@ function partyId() {
   }
   return result;
 }
-
-// console.log(partyId());
 
 app.get("/offline", (req, res) => {
   res.sendFile(__dirname + "/public/offline.html");
