@@ -1,9 +1,9 @@
 # Blackjack-Game-Multiplayer
 
-![Game Screenshot](https://i.ibb.co/0fkxtbj/blackjack-screenshot.jpg)
+![Game Screenshot](https://i.ibb.co/S3vjPCX/blackjack-background.jpg)
 
 ## Description
-[blackjack21.io](https://blackjack-multiplayer.herokuapp.com) is a free online multiplayer casino game. It's an online version of the traditional blackjack played at real casinos. You can choose to play alone or play in a private room with your friends. The goal of the game is to beat the dealer and win as much money as possible.
+[Blackjack-Game-Multiplayer](https://blackjack-multiplayer.herokuapp.com) is a free online multiplayer casino game. It's an online version of the traditional blackjack played at real casinos. You can choose to play alone or play in a private room with your friends. The goal of the game is to beat the dealer and win as much money as possible.
 
 ## Installation
 If you want to download and use this project locally:
