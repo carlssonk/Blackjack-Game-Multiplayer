@@ -50,8 +50,6 @@ let playerCards = document.querySelectorAll(".player-cards");
 let dealerCards = document.querySelectorAll(".dealer-cards");
 let dealerSlot = document.querySelector("#dealer");
 let playerName = document.querySelectorAll(".player-name");
-// let dealerHiddenCard = null;
-// let dealerHiddenCardRemoveNext = false;
 let resetCards = false;
 
 const leaveTable = document.querySelector("#leave-table");
@@ -60,6 +58,8 @@ const leaveTable = document.querySelector("#leave-table");
 ws.addEventListener("open", () => {
   console.log("We are connected!")
 });
+
+
 
 // wiring events
 window.addEventListener("load", function () {
@@ -176,7 +176,6 @@ leaveTable.addEventListener("click", (e) => {
 
 function playerJoin() {
   nickname = nickname.value;
-  console.log(theClient)
   theClient.nickname = nickname.value;
 
   avatar = avatar[slideIndex - 1].dataset.value;
@@ -427,12 +426,10 @@ window.addEventListener("load", (event) => {
 ws.onmessage = (message) => {
   // message.data
   const response = JSON.parse(message.data);
-  // console.log(response);
   // connect
   if (response.method === "connect") {
     clientId = response.clientId;
     theClient = response.theClient;
-    // console.log("Client id Set successfully " + clientId);
   }
 
   if (response.method === "leave") {
@@ -517,9 +514,6 @@ ws.onmessage = (message) => {
     gameId = response.game.id;
     roomId = response.roomId;
     offline = response.offline;
-    // console.log(roomId)
-    // console.log(gameId)
-    // console.log("Game successfully created with id " + response.game.id);
 
     if (offline === true) {
       window.history.pushState("offline_page", "Offline Mode", "/");
