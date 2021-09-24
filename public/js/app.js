@@ -290,7 +290,6 @@ function dealCards() {
   // Give each player 1 card
   for (let i = 0; i < players.length; i++) {
     setTimeout(function () {
-      // console.log(deck[0])
       player.cards.push(deck[0]);
       deck.shift();
       updatePlayerCards();
@@ -303,7 +302,6 @@ function dealCards() {
 
 function dealDealerCards() {
   setTimeout(function () {
-    // console.log(deck[0])
     if (dealer.cards.length === 1) {
       // If dealer has 1 card, push next card to hidden card
       dealer.hiddenCard.push(deck[0]);
@@ -355,17 +353,6 @@ function naturals() {
             playerResultNatural();
           }
         }
-        // } else if(players[i].cards[0].value.card === "A" && players[i].cards[1].value.card === "A") {         // Checks if player has TWO aces
-        //   console.log("TWO aces")
-        //   naturalBlackjack(i)
-        //   players[i].hasAce = true;
-        //   // Send player index to webSocket
-        //   for(let x = 0; x < playerSlotHTML.length; x++) {
-        //     if(players[i].clientId === playerSlotHTML[x]) {
-        //       playerNaturalIndex = x;
-        //       playerResultNatural();
-        //     }
-        //   }
       } else {
         // Checks all cards except for ACE and TEN
         naturalPlayerAceSum(i);
