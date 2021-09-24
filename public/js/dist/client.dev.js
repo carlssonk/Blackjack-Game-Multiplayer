@@ -1,6 +1,6 @@
 "use strict";
 
-if (window.location.href.length === 22) {
+if (window.location.href.length === window.origin.length + 1) {
   $("#btnJoin").removeClass("noclick-nohide");
   $("#btnCreate").removeClass("noclick-nohide");
   $("#btnOffline").removeClass("noclick-nohide");
@@ -27,7 +27,8 @@ var dealersHiddenCard = "";
 var timerStarted = false;
 var newPlayer = null;
 var offline = null;
-var ws = new WebSocket("ws://localhost:8080");
+var HOST = location.origin.replace(/^http/, "ws");
+var ws = new WebSocket(HOST);
 var btnCreate = document.getElementById("btnCreate");
 var btnOffline = document.getElementById("btnOffline");
 var btnJoin = document.getElementById("btnJoin");
@@ -52,9 +53,12 @@ var playerName = document.querySelectorAll(".player-name"); // let dealerHiddenC
 
 var resetCards = false;
 var leaveTable = document.querySelector("#leave-table"); // CSS
-// wiring events
 
-window.addEventListener('load', function () {
+ws.addEventListener("open", function () {
+  console.log("We are connected!");
+}); // wiring events
+
+window.addEventListener("load", function () {
   setTimeout(function () {
     //wait 500ms before you can click a button, to prevent error
     $("#btnJoin").removeClass("noclick-nohide");
@@ -64,8 +68,8 @@ window.addEventListener('load', function () {
     btnJoin.addEventListener("click", function (e) {
       $("#loading-screen").removeClass("hide-element");
       var payLoadLength = {
-        "method": "playersLength",
-        "gameId": gameId
+        method: "playersLength",
+        gameId: gameId
       };
       ws.send(JSON.stringify(payLoadLength)); // Set 50ms delay so above method response before below function starts
 
@@ -87,12 +91,12 @@ window.addEventListener('load', function () {
     btnCreate.addEventListener("click", function (e) {
       $("#loading-screen").removeClass("hide-element");
       var payLoad = {
-        "method": "create",
-        "clientId": clientId,
-        "theClient": theClient,
-        "playerSlot": playerSlot,
-        "playerSlotHTML": playerSlotHTML,
-        "roomId": roomId
+        method: "create",
+        clientId: clientId,
+        theClient: theClient,
+        playerSlot: playerSlot,
+        playerSlotHTML: playerSlotHTML,
+        roomId: roomId
       };
       ws.send(JSON.stringify(payLoad)); // setTimeout(playerJoin, 500)
 
@@ -107,13 +111,13 @@ window.addEventListener('load', function () {
       var offline = true;
       $("#loading-screen").removeClass("hide-element");
       var payLoad = {
-        "method": "create",
-        "clientId": clientId,
-        "theClient": theClient,
-        "playerSlot": playerSlot,
-        "playerSlotHTML": playerSlotHTML,
-        "roomId": roomId,
-        "offline": offline
+        method: "create",
+        clientId: clientId,
+        theClient: theClient,
+        playerSlot: playerSlot,
+        playerSlotHTML: playerSlotHTML,
+        roomId: roomId,
+        offline: offline
       };
       ws.send(JSON.stringify(payLoad)); // setTimeout(playerJoin, 500)
 
@@ -166,49 +170,49 @@ function playerJoin() {
   // }
 
   var payLoad = {
-    "method": "join",
-    "clientId": clientId,
-    "gameId": gameId,
-    "roomId": roomId,
-    "theClient": theClient,
-    "playerSlot": playerSlot,
-    "playerSlotHTML": playerSlotHTML,
-    "players": players,
-    "spectators": spectators,
-    "nickname": nickname,
-    "avatar": avatar
+    method: "join",
+    clientId: clientId,
+    gameId: gameId,
+    roomId: roomId,
+    theClient: theClient,
+    playerSlot: playerSlot,
+    playerSlotHTML: playerSlotHTML,
+    players: players,
+    spectators: spectators,
+    nickname: nickname,
+    avatar: avatar
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function sendPlayerBets() {
   var payLoad = {
-    "method": "bet",
-    "players": players,
-    "spectators": spectators
+    method: "bet",
+    players: players,
+    spectators: spectators
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function updatePlayerCards() {
   var payLoad = {
-    "method": "updatePlayerCards",
-    "players": players,
-    "spectators": spectators,
-    "player": player,
-    "resetCards": resetCards
+    method: "updatePlayerCards",
+    players: players,
+    spectators: spectators,
+    player: player,
+    resetCards: resetCards
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function updateDealerCards() {
   var payLoad = {
-    "method": "updateDealerCards",
-    "players": players,
-    "spectators": spectators,
-    "player": player,
-    "dealer": dealer,
-    "dealersTurn": dealersTurn // "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
+    method: "updateDealerCards",
+    players: players,
+    spectators: spectators,
+    player: player,
+    dealer: dealer,
+    dealersTurn: dealersTurn // "dealerHiddenCardRemoveNext": dealerHiddenCardRemoveNext
 
   };
   ws.send(JSON.stringify(payLoad));
@@ -216,190 +220,190 @@ function updateDealerCards() {
 
 function sendPlayerDeck() {
   var payLoad = {
-    "method": "deck",
-    "players": players,
-    "spectators": spectators,
-    "deck": deck,
-    "clientDeal": clientDeal,
-    "gameOn": gameOn
+    method: "deck",
+    players: players,
+    spectators: spectators,
+    deck: deck,
+    clientDeal: clientDeal,
+    gameOn: gameOn
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function clientIsReady() {
   var payLoad = {
-    "method": "isReady",
-    "players": players,
-    "spectators": spectators,
-    "theClient": theClient
+    method: "isReady",
+    players: players,
+    spectators: spectators,
+    theClient: theClient
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function clientHasLeft() {
   var payLoad = {
-    "method": "hasLeft",
-    "players": players,
-    "spectators": spectators,
-    "theClient": theClient
+    method: "hasLeft",
+    players: players,
+    spectators: spectators,
+    theClient: theClient
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function updatePlayers() {
   var payLoad = {
-    "method": "update",
-    "players": players,
-    "spectators": spectators,
-    "dealer": dealer,
-    "deck": deck,
-    "gameOn": gameOn
+    method: "update",
+    players: players,
+    spectators: spectators,
+    dealer: dealer,
+    deck: deck,
+    gameOn: gameOn
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function updateCurrentPlayer() {
   var payLoad = {
-    "method": "currentPlayer",
-    "players": players,
-    "spectators": spectators,
-    "player": player,
-    "dealersTurn": dealersTurn
+    method: "currentPlayer",
+    players: players,
+    spectators: spectators,
+    player: player,
+    dealersTurn: dealersTurn
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function sendPlayerThePlay() {
   var payLoad = {
-    "method": "thePlay",
-    "players": players,
-    "spectators": spectators,
-    "player": player,
-    "currentPlayer": currentPlayer,
-    "theClient": theClient,
-    "dealersTurn": dealersTurn,
-    "gameId": gameId
+    method: "thePlay",
+    players: players,
+    spectators: spectators,
+    player: player,
+    currentPlayer: currentPlayer,
+    theClient: theClient,
+    dealersTurn: dealersTurn,
+    gameId: gameId
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function sendShowSum() {
   var payLoad = {
-    "method": "showSum",
-    "players": players,
-    "spectators": spectators
+    method: "showSum",
+    players: players,
+    spectators: spectators
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function joinTable() {
   var payLoad = {
-    "method": "joinTable",
-    "players": players,
-    "spectators": spectators,
-    "theClient": theClient,
-    "theSlot": theSlot,
-    "playerSlotHTML": playerSlotHTML,
-    "gameId": gameId
+    method: "joinTable",
+    players: players,
+    spectators: spectators,
+    theClient: theClient,
+    theSlot: theSlot,
+    playerSlotHTML: playerSlotHTML,
+    gameId: gameId
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function updateTable() {
   var payLoad = {
-    "method": "updateTable",
-    "players": players,
-    "spectators": spectators,
-    "theClient": theClient,
-    "theSlot": theSlot,
-    "playerSlot": playerSlot
+    method: "updateTable",
+    players: players,
+    spectators: spectators,
+    theClient: theClient,
+    theSlot: theSlot,
+    playerSlot: playerSlot
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function sendDealersTurn() {
   var payLoad = {
-    "method": "dealersTurn",
-    "players": players,
-    "spectators": spectators,
-    "dealersTurn": dealersTurn
+    method: "dealersTurn",
+    players: players,
+    spectators: spectators,
+    dealersTurn: dealersTurn
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function terminatePlayer() {
   var payLoad = {
-    "method": "terminate",
-    "spectators": spectators,
+    method: "terminate",
+    spectators: spectators,
     // "lobbySpectators": lobbySpectators,
-    "theClient": theClient,
-    "gameId": gameId,
-    "playerSlotHTML": playerSlotHTML,
-    "players": players,
-    "reload": reload,
-    "clientDeal": clientDeal,
-    "playersCanPlay": playersCanPlay,
-    "player": player,
-    "gameOn": gameOn
+    theClient: theClient,
+    gameId: gameId,
+    playerSlotHTML: playerSlotHTML,
+    players: players,
+    reload: reload,
+    clientDeal: clientDeal,
+    playersCanPlay: playersCanPlay,
+    player: player,
+    gameOn: gameOn
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function resetRound() {
   var payLoad = {
-    "method": "resetRound",
-    "spectators": spectators,
-    "theClient": theClient
+    method: "resetRound",
+    spectators: spectators,
+    theClient: theClient
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function playerResult() {
   var payLoad = {
-    "method": "playerResult",
-    "spectators": spectators,
-    "players": players
+    method: "playerResult",
+    spectators: spectators,
+    players: players
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function playerResultNatural() {
   var payLoad = {
-    "method": "playerResultNatural",
-    "spectators": spectators,
-    "players": players,
-    "playerNaturalIndex": playerNaturalIndex
+    method: "playerResultNatural",
+    spectators: spectators,
+    players: players,
+    playerNaturalIndex: playerNaturalIndex
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function finalCompare() {
   var payLoad = {
-    "method": "finalCompare",
-    "gameId": gameId,
-    "spectators": spectators,
-    "players": players
+    method: "finalCompare",
+    gameId: gameId,
+    spectators: spectators,
+    players: players
   };
   ws.send(JSON.stringify(payLoad));
 }
 
 function resetGameState() {
   var payLoad = {
-    "method": "resetGameState",
-    "gameId": gameId,
-    "spectators": spectators,
-    "players": players
+    method: "resetGameState",
+    gameId: gameId,
+    spectators: spectators,
+    players: players
   };
   ws.send(JSON.stringify(payLoad));
 }
 
-window.addEventListener('load', function (event) {
-  if (window.location.href.length > 22) {
+window.addEventListener("load", function (event) {
+  if (window.location.href.length - 1 > window.origin.length) {
     var str2 = window.location.href;
     getRouteId = str2.substring(str2.length - 6);
     var payLoadRoute = {
-      "method": "getRoute",
-      "getRouteId": getRouteId
+      method: "getRoute",
+      getRouteId: getRouteId
     };
     ws.send(JSON.stringify(payLoadRoute));
   }
@@ -407,12 +411,11 @@ window.addEventListener('load', function (event) {
 
 ws.onmessage = function (message) {
   // message.data
-  var response = JSON.parse(message.data); // console.log(response);
-  // connect
+  var response = JSON.parse(message.data); // connect
 
   if (response.method === "connect") {
     clientId = response.clientId;
-    theClient = response.theClient; // console.log("Client id Set successfully " + clientId);
+    theClient = response.theClient;
   }
 
   if (response.method === "leave") {
@@ -485,12 +488,10 @@ ws.onmessage = function (message) {
   if (response.method === "create") {
     gameId = response.game.id;
     roomId = response.roomId;
-    offline = response.offline; // console.log(roomId)
-    // console.log(gameId)
-    // console.log("Game successfully created with id " + response.game.id);
+    offline = response.offline;
 
     if (offline === true) {
-      window.history.pushState('offline_page', 'Offline Mode', '/');
+      window.history.pushState("offline_page", "Offline Mode", "/");
       $("#invite-link-box").remove();
       $("#users-online-label").text("OFFLINE MODE");
     }
@@ -506,7 +507,7 @@ ws.onmessage = function (message) {
     roomId = gameId.substring(gameId.length - 6);
 
     if (offline !== true) {
-      window.history.pushState('game', 'Title', '/' + roomId);
+      window.history.pushState("game", "Title", "/" + roomId);
     }
   } // Assigns the "clientId" to "theClient" + some styling
 
@@ -517,7 +518,7 @@ ws.onmessage = function (message) {
     players = response.players;
     spectators = game.spectators;
     playerSlotHTML = response.playerSlotHTML;
-    $('#invite-link').val(gameId); // get all the names and avatars for all the players currently on the table when client joins and a player already is on a slot
+    $("#invite-link").val(gameId); // get all the names and avatars for all the players currently on the table when client joins and a player already is on a slot
 
     setTimeout(function () {
       for (var _i = 0; _i < playerSlotHTML.length; _i++) {
@@ -564,7 +565,7 @@ ws.onmessage = function (message) {
     player = game.player;
     dealer = game.dealer;
     gameOn = game.gameOn; // if(dealer.hiddenCard.length > 0) {
-    //   dealerSlot.lastElementChild.innerHTML += 
+    //   dealerSlot.lastElementChild.innerHTML +=
     //   `
     //   <div class="hiddenCard">
     //     <img src="/imgs/Card_back.svg" alt="">
@@ -575,7 +576,7 @@ ws.onmessage = function (message) {
     //   }
     // Add invite link to input
 
-    $('#invite-link').val(gameId); // Add label that says game is currently running
+    $("#invite-link").val(gameId); // Add label that says game is currently running
 
     $("#join-mid-game-label").removeClass("hide-element"); // Append users in room html
 
@@ -649,7 +650,7 @@ ws.onmessage = function (message) {
         $(".flip-card-back").html("<img class=\"dealerCardImg\" src=\"/imgs/" + dealersHiddenCard + ".svg\">");
       }, 50); // $(".flip-card-back").html(`<img class="dealerCardImg" src="/imgs/`+ deck[0].suit + dealer.cards[1].value.card +`.svg">`)
 
-      $(".dealer-cards").css('margin-left', '-=90px');
+      $(".dealer-cards").css("margin-left", "-=90px");
     } // Update player sum if user joins mid game
 
 
@@ -685,9 +686,9 @@ ws.onmessage = function (message) {
     if (players.length > 0) {
       // Send dealersHiddenCard to the new player who joined
       var payLoad = {
-        "method": "dealersHiddenCard",
-        "spectators": spectators,
-        "dealersHiddenCard": dealersHiddenCard
+        method: "dealersHiddenCard",
+        spectators: spectators,
+        dealersHiddenCard: dealersHiddenCard
       };
 
       if (players[players.findIndex(function (players) {
@@ -747,7 +748,7 @@ ws.onmessage = function (message) {
 
 
   if (response.method === "deck") {
-    players = mapOrder(players, playerSlotHTML, 'clientId');
+    players = mapOrder(players, playerSlotHTML, "clientId");
     deck = response.deck;
     clientDeal = response.clientDeal;
     gameOn = response.gameOn; // Optimize this later so it doesnt fire like every second
@@ -834,7 +835,7 @@ ws.onmessage = function (message) {
 
 
     if (dealer.hiddenCard.length === 0 || dealer.hiddenCard.length === undefined) {
-      if ($(".flip-card-inner").css('transform') !== "none" || dealer.cards.length === 1) {
+      if ($(".flip-card-inner").css("transform") !== "none" || dealer.cards.length === 1) {
         for (var _c3 = 0; _c3 < deckImg.length; _c3++) {
           if (dealer.cards.slice(-1)[0].suit + dealer.cards.slice(-1)[0].value.card === deckImg[_c3]) {
             dealerSlot.lastElementChild.firstElementChild.innerHTML += "<img class=\"dealerCardImg cardAnimationDealer\" src=\"/imgs/" + deckImg[_c3] + ".svg\">";
@@ -848,12 +849,12 @@ ws.onmessage = function (message) {
       }, 50);
 
       if (dealer.hiddenCard.length === 0 && dealer.cards.length === 2) {
-        $(".flip-card-inner").css('transform', 'rotateY(-180deg)');
+        $(".flip-card-inner").css("transform", "rotateY(-180deg)");
       } else {
-        $(".dealer-cards").css('margin-left', '-=45px');
+        $(".dealer-cards").css("margin-left", "-=45px");
       }
     } else {
-      // dealerSlot.lastElementChild.innerHTML += 
+      // dealerSlot.lastElementChild.innerHTML +=
       dealerSlot.lastElementChild.firstElementChild.innerHTML += "\n      <div class=\"flip-card cardAnimationDealer\">\n        <div class=\"flip-card-inner\">\n          <div class=\"flip-card-front\">\n\n          </div>\n          <div class=\"flip-card-back\">\n\n          </div>\n        </div>\n      </div>\n      "; // setTimeout(function() {
 
       $(".flip-card-front").html("<img class=\"dealerCardImg\" src=\"/imgs/Card_back.svg\">");
@@ -862,7 +863,7 @@ ws.onmessage = function (message) {
 
       setTimeout(function () {
         $(".flip-card").removeClass("cardAnimationDealer");
-      }, 50); // dealerSlot.lastElementChild.firstElementChild.innerHTML += 
+      }, 50); // dealerSlot.lastElementChild.firstElementChild.innerHTML +=
       //   `<img class="dealerCardImg" src="/imgs/` + deckImg[c] + `.svg">`
       // `<img class="dealerCardImg" src="/imgs/Card_back.svg">`;
       // `
@@ -871,7 +872,7 @@ ws.onmessage = function (message) {
       // </div>
       // `;
 
-      $(".dealer-cards").css('margin-left', '-=45px'); // Animation
+      $(".dealer-cards").css("margin-left", "-=45px"); // Animation
 
       setTimeout(function () {
         $(".hiddenCard").removeClass("cardAnimationDealer");
@@ -1046,7 +1047,7 @@ function updateAllPlayers() {
       theClient = players[_i16];
     } // Keep the values for game array in sync, so when a player joins mid game, everything will display correctly.
     // for(let g = 0; g < game.players.length; g++) {
-    //   game.players[g].cards = players[i].cards 
+    //   game.players[g].cards = players[i].cards
     // }
 
   } // UPDATE STYLE ON TABLE
@@ -1083,14 +1084,14 @@ function updateAllPlayers() {
 
 function syncTheGame() {
   var syncGame = {
-    "method": "syncGame",
-    "gameId": gameId,
-    "player": player,
-    "players": players,
-    "spectators": spectators,
-    "playerSlotHTML": playerSlotHTML,
-    "dealer": dealer,
-    "gameOn": gameOn
+    method: "syncGame",
+    gameId: gameId,
+    player: player,
+    players: players,
+    spectators: spectators,
+    playerSlotHTML: playerSlotHTML,
+    dealer: dealer,
+    gameOn: gameOn
   };
   ws.send(JSON.stringify(syncGame));
 } // Player joins a slot on the table
@@ -1142,7 +1143,6 @@ function setPlayersBet() {
           chipIndex = "Black";
         }
 
-        ;
         $(".players:eq(" + _s3 + ") .player-bet").text(players[i].bet);
         $(".players:eq(" + _s3 + ") .player-coin").css("background", "url(/imgs/chips/Casino_Chip_" + chipIndex + ".svg)");
 
@@ -1169,18 +1169,18 @@ setTimeout(joinByUrl, 200);
 
 function joinByUrl() {
   // If player has a roomId in his url
-  if (window.location.href.length > 22) {
+  if (window.location.href.length - 1 > window.origin.length) {
     // Get last 6 values from url
     var str = window.location.href;
     roomId = str.substring(str.length - 6);
-    gameId = "http://localhost:8081/" + roomId; // To prevent bug at 714
+    gameId = "".concat(location.origin, "/") + roomId; // To prevent bug at 714
 
     playerSlotIndex = [];
   }
 } // Before player exits/resets window, terminate him from the room
 
 
-window.addEventListener('beforeunload', function () {
+window.addEventListener("beforeunload", function () {
   reload = true;
   theClient.hasLeft = true;
 

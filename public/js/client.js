@@ -56,7 +56,7 @@ const leaveTable = document.querySelector("#leave-table");
 // CSS
 
 ws.addEventListener("open", () => {
-  console.log("We are connected!")
+  console.log("We are connected!");
 });
 
 

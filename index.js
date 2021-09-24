@@ -33,11 +33,13 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
   // Someone trying to connect
   // const connection = connection.accept(null, connection.origin);
   ws.on("open", () => console.log("opened")); // connection || wss
-  ws.on("close", () => { // connection || wss
+  ws.on("close", () => {
+    // connection || wss
     console.log("closed");
   });
 
-  ws.on("message", (message) => { // connection || wss
+  ws.on("message", (message) => {
+    // connection || wss
     const result = JSON.parse(message);
 
     // a user want to create a new game
@@ -163,9 +165,7 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
 
       if (!game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].ws.send(
-            JSON.stringify(payLoadClientArray)
-          );
+          clients[c.clientId].ws.send(JSON.stringify(payLoadClientArray));
         });
       }
 
@@ -188,9 +188,7 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
       };
       if (game.gameOn === true) {
         game.spectators.forEach((c) => {
-          clients[c.clientId].ws.send(
-            JSON.stringify(payLoadMidGameUpdate)
-          );
+          clients[c.clientId].ws.send(JSON.stringify(payLoadMidGameUpdate));
         });
       }
     }
@@ -768,7 +766,6 @@ function partyId() {
   }
   return result;
 }
-
 
 app.get("/offline", (req, res) => {
   res.sendFile(__dirname + "/public/offline.html");
