@@ -512,7 +512,6 @@ ws.onmessage = (message) => {
   // create
   if (response.method === "create") {
     gameId = response.game.id;
-    console.log(gameId)
     roomId = response.roomId;
     offline = response.offline;
 
@@ -1433,7 +1432,6 @@ function joinByUrl() {
     const str = window.location.href;
     roomId = str.substring(str.length - 6);
     gameId = `${location.origin}/` + roomId;
-    console.log(gameId)
 
     // To prevent bug at 714
     playerSlotIndex = [];

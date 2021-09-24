@@ -50,9 +50,6 @@ wss.on("connection", (ws) => { // wsServer || wss AND request || connection
       const roomId = partyId();
       const gameId = WEB_URL + roomId;
 
-      console.log(gameId);
-      console.log(PORT);
-
       app.get("/" + roomId, (req, res) => {
         res.sendFile(__dirname + "/public/index.html");
       });
