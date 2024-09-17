@@ -12,14 +12,14 @@ const wss = new WebSocket.Server({ server:server })
 const cacheDuration = 1000 * 60 * 60 * 24 * 365; // 1 year
 
 // Serve all the static files, (ex. index.html app.js style.css)
-app.use(express.static("public/"), {
+app.use(express.static("public", {
   maxAge: cacheDuration,
-  setHeaders: (res) => {
+  setHeaders: (res, path) => {
     // Set caching headers
     res.setHeader('Cache-Control', `public, max-age=${cacheDuration}`);
-    res.setHeader('Expires', new Date(Date.now() + cacheDuration * 1000).toUTCString());
+    res.setHeader('Expires', new Date(Date.now() + cacheDuration).toUTCString());
   }
-});
+}));
 
 server.listen(PORT, () =>
   console.log(`Listening on ${process.env.PORT} or 8080`)
