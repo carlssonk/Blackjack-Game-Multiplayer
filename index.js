@@ -4,7 +4,7 @@ const app = express();
 const server = require("http").createServer(app);
 const PORT = process.env.PORT || 8080;
 const WebSocket = require("ws")
-const WEB_URL = process.NODE_ENV === "production" ? "https://blackjack.carlssonk.com/" : `http://localhost:${PORT}/`;
+const WEB_URL = process.env.NODE_ENV === "production" ? "https://blackjack.carlssonk.com/" : `http://localhost:${PORT}/`;
 
 const wss = new WebSocket.Server({ server:server })
 
