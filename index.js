@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const WebSocket = require("ws")
 const WEB_URL = process.NODE_ENV === "production" ? "https://blackjack.carlssonk.com/" : `http://localhost:${PORT}/`;
 
@@ -13,7 +13,7 @@ const wss = new WebSocket.Server({ server:server })
 app.use(express.static("public/"));
 // Before 8081
 server.listen(PORT, () =>
-  console.log(`Listening on ${process.env.PORT} or 3000`)
+  console.log(`Listening on ${process.env.PORT} or 8080`)
 );
 
 

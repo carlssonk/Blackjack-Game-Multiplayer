@@ -15,7 +15,7 @@ COPY . .
 
 # Set default environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=8080
 
 # Expose the port the app runs on
 EXPOSE $PORT
